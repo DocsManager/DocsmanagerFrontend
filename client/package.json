@@ -3,6 +3,8 @@
  "version": "0.1.0",
  "private": true,
  "dependencies": {
+  "axios": "^0.27.2",
+  "http-proxy-middleware": "^2.0.6",
   "medium-editor": "^5.23.3",
   "quill-image-resize": "^3.0.9",
   "react": "^16.8.6",
