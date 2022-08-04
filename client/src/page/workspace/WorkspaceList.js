@@ -1,12 +1,33 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import {
+  deleteUserWorkspace,
+  getUserWorkspace,
+} from "../../api/workspaceUserApi";
 
 function WorkspaceList() {
+  const [workspaces, setWorkspace] = useState([]);
+  useEffect(() => {
+    getUserWorkspace(1, setWorkspace);
+  }, []);
+  console.log(workspaces);
   return (
     <div>
-      <Link to="document">
-        <button>입장</button>
-      </Link>
+      {workspaces.map((workspace) => (
+        <div className="workspaceList" key={workspace.workspaceNo.workspaceNo}>
+          <span>{workspace.workspaceNo.title}</span>
+          <span>{workspace.workspaceNo.master.name}</span>
+          <a href={`/main/document/${workspace.workspaceNo.workspaceNo}`}>
+            <button>입장</button>
+          </a>
+          <button
+            onClick={() =>
+              deleteUserWorkspace(1, workspace.workspaceNo.workspaceNo)
+            }
+          >
+            나가기
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

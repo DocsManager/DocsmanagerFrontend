@@ -1,4 +1,3 @@
-import React from "react";
 import axios from "axios";
 
 const baseUrl = "/api/workspace/user/";
@@ -9,4 +8,8 @@ export function getUserWorkspace(userNo, setWorkspace) {
     .get(url)
     .then((res) => setWorkspace(res.data))
     .catch((err) => console.log(err));
+}
+export function deleteUserWorkspace(userNo, workspaceNo) {
+  const url = `${baseUrl}${userNo}/${workspaceNo}`;
+  axios.delete(url).catch((err) => console.log(err));
 }
