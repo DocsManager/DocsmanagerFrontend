@@ -1,11 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Head from "./Head";
+import Header from "./main/Header";
+import Sidebar from "./main/Sidebar";
 
 function Main() {
   return (
     <div>
-      <Head />
+      {/* <Head /> */}
+      <Header />
+      <Sidebar />
       <Outlet />
     </div>
   );

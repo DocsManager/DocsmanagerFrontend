@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "react-app",
-    "airbnb"
-  ],
+  "extends": ["react-app", "airbnb"],
   "rules": {
     "comma-dangle": ["error", "never"],
     "func-names": 0,
@@ -13,19 +10,23 @@
     "no-nested-ternary": 1,
     "no-param-reassign": ["error", { "props": false }],
     "no-plusplus": ["error", { "allowForLoopAfterthoughts": true }],
-    "semi" : 2,
+    "semi": 2,
     "quotes": 0,
+    "linebreak-style": 0,
     "react/sort-comp": [0],
     "react/destructuring-assignment": 0,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
     "react/jsx-first-prop-new-line": [0],
     "react/jsx-max-props-per-line": [1, { "when": "multiline", "maximum": 4 }],
     "react/prop-types": 0,
-    "max-len": [1, {
-      "code": 200,
-      "ignoreComments": true,
-      "ignoreUrls": true,
-      "ignoreRegExpLiterals": true
-    }]
+    "max-len": [
+      1,
+      {
+        "code": 200,
+        "ignoreComments": true,
+        "ignoreUrls": true,
+        "ignoreRegExpLiterals": true
+      }
+    ]
   }
 }
