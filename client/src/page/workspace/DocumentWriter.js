@@ -1,16 +1,19 @@
 import React, { Component } from "react";
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import Identicon from "react-identicons";
-import { Navbar, NavbarBrand, UncontrolledTooltip } from "reactstrap";
+import { UncontrolledTooltip } from "reactstrap";
 import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/default.css";
 import "../../App.css";
 import "react-quill/dist/quill.snow.css";
 import BoardWriter from "../../component/editor/QuillEditor";
 
-const client = new W3CWebSocket("ws://127.0.0.1:8000");
-const contentDefaultMessage = "Start writing your document here";
-
+var client = null;
+var contentDefaultMessage = null;
+if (window.location.href.includes("main/document")) {
+  client = new W3CWebSocket("ws://127.0.0.1:8000");
+  contentDefaultMessage = "Start writing your document here";
+}
 class DocumentWriter extends Component {
   constructor(props) {
     super(props);
@@ -164,6 +167,8 @@ current content of the editor to the server. */
                 </UncontrolledTooltip>
               </React.Fragment>
             ))}
+            <button>임시 저장</button>
+            <button>저장</button>
           </div>
 
           <BoardWriter props={this} />
@@ -183,9 +188,6 @@ current content of the editor to the server. */
     const { username } = this.state;
     return (
       <React.Fragment>
-        <Navbar color="light" light>
-          <NavbarBrand href="/">Real-time document editor</NavbarBrand>
-        </Navbar>
         <div className="container-fluid">
           {username ? this.showEditorSection() : this.showLoginSection()}
         </div>
