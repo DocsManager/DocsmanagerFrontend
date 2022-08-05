@@ -6,20 +6,22 @@ export const SidebarData = [
     title: "내 문서함",
     path: "workspace",
     icon: <FaIcons.FaFolder />,
+    path: "/main",
   },
   {
     title: "공유 문서함",
-    path: "workspace",
     icon: <FaIcons.FaFolder />,
+    path: "share",
   },
   {
     title: "워크스페이스",
     path: "workspace",
     icon: <FaIcons.FaLaptop />,
+    path: "workspace",
   },
   {
     title: "휴지통",
-    path: "workspace",
     icon: <FaIcons.FaTrashAlt />,
+    path: "trash",
   },
 ];
