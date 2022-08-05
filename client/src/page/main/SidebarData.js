@@ -4,6 +4,7 @@ import * as FaIcons from "react-icons/fa";
 export const SidebarData = [
   {
     title: "내 문서함",
+    path: "workspace",
     icon: <FaIcons.FaFolder />,
     path: "/main",
   },
@@ -14,6 +15,7 @@ export const SidebarData = [
   },
   {
     title: "워크스페이스",
+    path: "workspace",
     icon: <FaIcons.FaLaptop />,
     path: "workspace",
   },
