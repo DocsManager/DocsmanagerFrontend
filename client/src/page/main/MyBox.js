@@ -5,12 +5,10 @@ import axios from "axios";
 import SucessModal from "./SucessModal";
 
 const getList = (setList, page) => {
-  axios
-    .get("http://localhost:8080/api/documents/" + 1 + "?page=" + page)
-    .then((res) => {
-      setList(res.data);
-      console.log(res.data);
-    });
+  axios.get("/api/documents/" + 1 + "?page=" + page).then((res) => {
+    setList(res.data);
+    console.log(res.data);
+  });
 };
 
 const openModal = (setModalOpen, documentNo, setDocument) => {

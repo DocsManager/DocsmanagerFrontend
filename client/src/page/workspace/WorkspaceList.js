@@ -1,27 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   deleteUserWorkspace,
   getUserWorkspace,
 } from "../../api/workspaceUserApi";
+import { UserContext } from "../../component/context/UserContext";
+import { getUser } from "../../component/getUser/getUser";
 
 function WorkspaceList() {
+  const { user } = useContext(UserContext);
+  console.log(user);
   const [workspaces, setWorkspace] = useState([]);
   useEffect(() => {
     getUserWorkspace(1, setWorkspace);
   }, []);
+  console.log(getUser());
 
-  console.log(workspaces);
+  // console.log(JSON.parse(window.localStorage.getItem("event")));
   return (
     <div>
       {workspaces.map((workspace) => (
         <div className="workspaceList" key={workspace.workspaceNo.workspaceNo}>
           <span>{workspace.workspaceNo.title}</span>
           <span>{workspace.workspaceNo.master.name}</span>
-          <a
-            href={`/main/document/${workspace.workspaceNo.workspaceNo}?room=${
-              workspace.workspaceNo.workspaceNo
-            }`}
-          >
+          <a href={`/main/document?room=${workspace.workspaceNo.workspaceNo}`}>
             <button>입장</button>
           </a>
           <button

@@ -9,22 +9,19 @@ import MyBox from "./page/main/MyBox";
 import NotFound from "./page/notfound/NotFound";
 import WorkspaceList from "./page/workspace/WorkspaceList";
 import DocumentWriter from "./page/workspace/DocumentWriter";
-import UserContextProvide from "./component/context/UserContext";
 
 ReactDOM.render(
   <BrowserRouter>
-    <UserContextProvide>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/main" element={<Main />}>
-          <Route index element={<MyBox />} />
-          <Route path="workspace" element={<WorkspaceList />} />
-          <Route path="document/:documentNo" element={<DocumentWriter />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </UserContextProvide>
+    <Routes>
+      <Route path="/" element={<Login />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/main" element={<Main />}>
+        <Route index element={<MyBox />} />
+        <Route path="workspace" element={<WorkspaceList />} />
+        <Route path="document" element={<DocumentWriter />} />
+      </Route>
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   </BrowserRouter>,
   document.getElementById("root")
 );
