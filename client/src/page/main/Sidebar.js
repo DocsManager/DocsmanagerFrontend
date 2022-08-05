@@ -16,11 +16,7 @@ function Sidebar() {
           </div>
           <div className="sidebar-wrap">
             {SidebarData.map((item, i) => {
-              return (
-                <div>
-                  <SubMenu item={item} key={i} />
-                </div>
-              );
+              return <SubMenu item={item} key={i} />;
             })}
           </div>
         </div>

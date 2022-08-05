@@ -91,41 +91,43 @@ function MyBox() {
               })}
           </tbody>
         </table>
-      </div>
-      <div>
-        <button
-          onClick={() =>
-            setPage(list.start - list.size >= 1 ? list.start - list.size : page)
-          }
-        >
-          이전
-        </button>
+        <div>
+          <button
+            onClick={() =>
+              setPage(
+                list.start - list.size >= 1 ? list.start - list.size : page
+              )
+            }
+          >
+            이전
+          </button>
 
-        {list &&
-          list.pageList.map((listPage) => {
-            return (
-              <span
-                className={page === listPage ? "pageNum" : "pageOut"}
-                onClick={() => {
-                  setPage(listPage);
-                }}
-                key={listPage}
-              >
-                {listPage}
-              </span>
-            );
-          })}
-        <button
-          onClick={() =>
-            setPage(
-              list.start + list.size > list.totalPage
-                ? page
-                : list.start + list.size
-            )
-          }
-        >
-          다음
-        </button>
+          {list &&
+            list.pageList.map((listPage) => {
+              return (
+                <span
+                  className={page === listPage ? "pageNum" : "pageOut"}
+                  onClick={() => {
+                    setPage(listPage);
+                  }}
+                  key={listPage}
+                >
+                  {listPage}
+                </span>
+              );
+            })}
+          <button
+            onClick={() =>
+              setPage(
+                list.start + list.size > list.totalPage
+                  ? page
+                  : list.start + list.size
+              )
+            }
+          >
+            다음
+          </button>
+        </div>
       </div>
 
       <Modal
