@@ -1,10 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { login } from "../../api/userApi";
-import { UserContext } from "../../component/context/UserContext";
 
 function Login() {
-  const { setUserHandler } = useContext(UserContext);
   return (
     <>
       <input id="userId" placeholder="ID를 입력해주세요." />
@@ -16,7 +14,7 @@ function Login() {
               id: document.getElementById("userId").value,
               password: document.getElementById("userPwd").value,
             };
-            login(user, setUserHandler);
+            login(user);
           }}
         >
           로그인

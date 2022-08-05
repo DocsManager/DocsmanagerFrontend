@@ -1,4 +1,5 @@
 import axios from "axios";
+import { setUser } from "../component/getUser/getUser";
 
 const baseUrl = "/api/";
 export function signUp(newUser) {
@@ -13,13 +14,13 @@ export function signUp(newUser) {
     });
 }
 
-export function login(user, setUserHandler) {
+export function login(user) {
   const url = baseUrl + "login";
   axios
     .post(url, user)
     .then((res) => {
       if (res.data) {
-        setUserHandler(res.data);
+        setUser(res.data);
       } else {
         alert("로그인 실패");
       }
