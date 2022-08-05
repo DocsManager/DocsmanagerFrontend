@@ -3,12 +3,10 @@ export function setUser(user) {
 }
 
 export function getUser() {
-  // const user = window.localStorage.getItem("user");
-  sessionStorage.getItem("user");
-  return sessionStorage.getItem("user");
+  const user = sessionStorage.getItem("user");
+  return JSON.parse(user);
 }
 
 export function deleteUser() {
-  // window.localStorage.removeItem("user");
   sessionStorage.removeItem("user");
 }

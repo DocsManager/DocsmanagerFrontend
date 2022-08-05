@@ -93,7 +93,7 @@ current content of the editor to the server. */
     );
   };
 
-  componentWillMount() {
+  componentDidMount() {
     client.onopen = () => {
       console.log("WebSocket Client Connected");
     };

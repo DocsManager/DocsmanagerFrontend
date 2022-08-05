@@ -1,14 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   deleteUserWorkspace,
   getUserWorkspace,
 } from "../../api/workspaceUserApi";
-import { UserContext } from "../../component/context/UserContext";
 import { getUser } from "../../component/getUser/getUser";
 
 function WorkspaceList() {
-  const { user } = useContext(UserContext);
-  console.log(user);
   const [workspaces, setWorkspace] = useState([]);
   useEffect(() => {
     getUserWorkspace(1, setWorkspace);
