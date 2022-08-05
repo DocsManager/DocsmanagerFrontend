@@ -9,6 +9,7 @@ function WorkspaceList() {
   useEffect(() => {
     getUserWorkspace(1, setWorkspace);
   }, []);
+
   console.log(workspaces);
   return (
     <div>
@@ -16,7 +17,11 @@ function WorkspaceList() {
         <div className="workspaceList" key={workspace.workspaceNo.workspaceNo}>
           <span>{workspace.workspaceNo.title}</span>
           <span>{workspace.workspaceNo.master.name}</span>
-          <a href={`/main/document/${workspace.workspaceNo.workspaceNo}`}>
+          <a
+            href={`/main/document/${workspace.workspaceNo.workspaceNo}?room=${
+              workspace.workspaceNo.workspaceNo
+            }`}
+          >
             <button>입장</button>
           </a>
           <button

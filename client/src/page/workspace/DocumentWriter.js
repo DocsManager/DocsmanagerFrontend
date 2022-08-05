@@ -11,7 +11,9 @@ import BoardWriter from "../../component/editor/QuillEditor";
 var client = null;
 var contentDefaultMessage = null;
 if (window.location.href.includes("main/document")) {
-  client = new W3CWebSocket("ws://127.0.0.1:8000");
+  const url = window.location.search;
+  console.log(url);
+  client = new W3CWebSocket("ws://127.0.0.1:8000" + url);
   contentDefaultMessage = "Start writing your document here";
 }
 class DocumentWriter extends Component {
@@ -96,6 +98,7 @@ current content of the editor to the server. */
     };
     client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
+      console.log(dataFromServer);
       const stateToChange = {};
       if (dataFromServer.type === "userevent") {
         stateToChange.currentUsers = Object.values(dataFromServer.data.users);
@@ -105,6 +108,7 @@ current content of the editor to the server. */
           dataFromServer.data.editorContent || contentDefaultMessage;
       }
       stateToChange.userActivity = dataFromServer.data.userActivity;
+      console.log(stateToChange);
       this.setState({
         ...stateToChange,
       });
