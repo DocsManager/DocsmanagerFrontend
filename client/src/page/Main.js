@@ -6,10 +6,11 @@ import Sidebar from "./main/Sidebar";
 function Main() {
   return (
     <div>
-      {/* <Head /> */}
       <Header />
-      <Sidebar />
-      <Outlet />
+      <div style={{ display: "grid", gridTemplateColumns: "0.5fr 2fr" }}>
+        <Sidebar />
+        <Outlet />
+      </div>
     </div>
   );
 }
