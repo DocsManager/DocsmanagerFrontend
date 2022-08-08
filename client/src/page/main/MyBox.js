@@ -5,12 +5,10 @@ import axios from "axios";
 import SucessModal from "./SucessModal";
 
 const getList = (setList, page) => {
-  axios
-    .get("http://localhost:8080/api/documents/" + 1 + "?page=" + page)
-    .then((res) => {
-      setList(res.data);
-      console.log(res.data);
-    });
+  axios.get("http://localhost:8080/api/documents/user/2").then((res) => {
+    setList(res.data);
+    console.log(res.data);
+  });
 };
 
 const openModal = (setModalOpen, documentNo, setDocument) => {
@@ -64,6 +62,7 @@ function MyBox() {
               <th>
                 <input type="checkbox" />
               </th>
+              <th>No</th>
               <th>제목</th>
               <th>작성자</th>
               <th>등록일</th>
@@ -73,19 +72,29 @@ function MyBox() {
             {list.dtoList &&
               list.dtoList.map((docs) => {
                 return (
-                  <tr key={docs.documentNo}>
+                  <tr key={docs.documentNo.documentNo}>
                     <td>
                       <input type="checkbox" />
                     </td>
+                    <td>{docs.documentNo.documentNo}</td>
+
                     <td
                       onClick={() =>
-                        openModal(setModalOpen, docs.documentNo, setDocument)
+                        openModal(
+                          setModalOpen,
+                          docs.documentNo.documentNo,
+                          setDocument
+                        )
                       }
                     >
-                      {docs.originalName}
+                      {docs.documentNo.originalName}
                     </td>
-                    <td>{docs.user && docs && docs.user.name}</td>
-                    <td>{docs.registerDate && docs && docs.registerDate}</td>
+                    <td>{docs.userNo && docs && docs.userNo.name}</td>
+                    <td>
+                      {docs.documentNo.registerDate &&
+                        docs &&
+                        docs.documentNo.registerDate}
+                    </td>
                   </tr>
                 );
               })}
