@@ -9,7 +9,7 @@ const QuillEditor = ({ props }) => {
   const modules = {
     toolbar: [
       [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      ["bold", "italic", "underline", "strike", "blockqoute"],
+      ["bold", "italic", "underline", "strike"],
       [
         { list: "ordered" },
         { list: "bullet" },
@@ -33,12 +33,10 @@ const QuillEditor = ({ props }) => {
         modules={modules}
         placeholder="내용을 입력해주세요."
         ref={test}
-        onChange={() => test.current.onKeyUp}
-        onKeyUp={() => {
-          console.log(test.current.state.value);
-          test.current.state.value &&
-            props.onEditorStateChange(test.current.state.value);
+        onChange={(e) => {
+          props.onEditorStateChange(e);
         }}
+        preserveWhitespace={true}
         value={props.state.text}
       />
     </div>
