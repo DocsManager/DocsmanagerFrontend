@@ -1,9 +1,15 @@
 import React from "react";
+import SucessModal from "./SucessModal";
 import "./Modal.css";
 
-const DelModal = (props) => {
+const openSuccessModal = (success, info) => {
+  success(false);
+  info(false);
+};
+
+const ConfirmModal = (props) => {
   // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
-  const { open, close, header, del } = props;
+  const { open, close, header, del, success, info, successModalOpen } = props;
 
   return (
     // 모달이 열릴때 openModal 클래스가 생성된다.
@@ -17,13 +23,23 @@ const DelModal = (props) => {
               취소
             </button>
             <button className="close" onClick={del}>
-              삭제
+              확인
             </button>
           </footer>
         </section>
       ) : null}
+      {
+        <SucessModal
+          open={successModalOpen}
+          close={() => openSuccessModal(success, info)}
+        >
+          <main>
+            <div>삭제 완료</div>
+          </main>
+        </SucessModal>
+      }
     </div>
   );
 };
 
-export default DelModal;
+export default ConfirmModal;
