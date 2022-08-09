@@ -29,11 +29,16 @@ let editorContent = null;
 let userActivity = [];
 const roomActivity = new Map();
 
-const sendMessage = (json, room) => {
+const sendMessage = (json, room, userID) => {
   // We are sending the current data to all connected clients
   rooms.get(room).map((client) => {
     var clientID = Object.keys(client)[0];
-    client[clientID].sendUTF(JSON.stringify(json));
+    // if (json.type === "contentchange") {
+    // userID !== clientID && client[clientID].sendUTF(JSON.stringify(json));
+    userID !== clientID && client[clientID].sendUTF(JSON.stringify(json));
+    // } else {
+    //   client[clientID].sendUTF(JSON.stringify(json));
+    // }
   });
 };
 
@@ -59,7 +64,6 @@ wsServer.on("request", function (request) {
   } else {
     rooms.set(room, [{ [userID]: connection }]);
   }
-  console.log(rooms);
   console.log(
     "connected: " + userID + " in " + Object.getOwnPropertyNames(clients)
   );
@@ -108,7 +112,6 @@ function msgSender(identify, message, userID, room) {
               user.set(room, { [userID]: dataFromClient });
             }
             users = user.get(room);
-            console.log(users);
             if (roomActivity.get(room)) {
               roomActivity.set(room, [
                 ...roomActivity.get(room),
@@ -121,12 +124,15 @@ function msgSender(identify, message, userID, room) {
             }
             userActivity = roomActivity.get(room);
             users = user.get(room);
-            json.data = { users, userActivity };
+            // json.data = { users, userActivity };
           } else if (dataFromClient.type === typesDef.CONTENT_CHANGE) {
             editorContent = dataFromClient.content;
-            json.data = { editorContent, userActivity };
+            // json.data = { editorContent, userActivity };
           }
-          sendMessage(json, room);
+          json.data = { users, editorContent, userActivity };
+          json.userEvent = dataFromClient.type;
+          json.len = dataFromClient.len;
+          sendMessage(json, room, userID);
         }
       }
     }
