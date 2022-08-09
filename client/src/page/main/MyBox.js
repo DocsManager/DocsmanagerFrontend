@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { getList, openInfoModal } from "../../api/documentApi";
 import Page from "./Page";
+import DelModal from "./DelModal";
+import axios from "axios";
+import SucessModal from "./SucessModal";
+import DmTable from "./DmTable";
 
 function MyBox() {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -13,61 +17,10 @@ function MyBox() {
     getList(setList, page);
   }, [page, infoModalOpen]);
   return (
-    <React.Fragment>
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>
-                <input type="checkbox" />
-              </th>
-              <th>No</th>
-              <th>제목</th>
-              <th>작성자</th>
-              <th>등록일</th>
-            </tr>
-          </thead>
-          <tbody>
-            {list.dtoList &&
-              list.dtoList.map((docs) => {
-                return (
-                  <tr key={docs.documentNo.documentNo}>
-                    <td>
-                      <input type="checkbox" />
-                    </td>
-                    <td>{docs.documentNo.documentNo}</td>
-
-                    <td
-                      onClick={() =>
-                        openInfoModal(
-                          setInfoModalOpen,
-                          docs.documentNo.documentNo,
-                          setDocument
-                        )
-                      }
-                    >
-                      {docs.documentNo.originalName}
-                    </td>
-                    <td>{docs.userNo && docs && docs.userNo.name}</td>
-                    <td>
-                      {docs.documentNo.registerDate &&
-                        docs &&
-                        docs.documentNo.registerDate}
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
-      <Page list={list} page={page} setPage={setPage} />
-
-      <Modal
-        open={infoModalOpen}
-        document={document}
-        infoModalOpen={setInfoModalOpen}
-      />
-    </React.Fragment>
+    <div style={{ display: "grid", gridTemplateRows: "0.3fr  3fr" }}>
+      <h2 style={{ textAlign: "left", padding: "15px" }}>내 문서함</h2>
+      <DmTable />
+    </div>
   );
 }
 

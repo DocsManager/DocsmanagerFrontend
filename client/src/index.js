@@ -5,11 +5,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./page/login/Login";
 import SignUp from "./page/login/SignUp";
 import Main from "./page/Main";
-import MyBox from "./page/main/MyBox";
+// import MyBox from "./page/main/MyBox";
 import NotFound from "./page/notfound/NotFound";
 import WorkspaceList from "./page/workspace/WorkspaceList";
-import DocumentWriter from "./page/workspace/DocumentWriter";
 import TrashCan from "./page/main/TrashCan";
+import DocumentWriter from "./page/workspace/DocumentWriter";
+import MyBox from "./page/main/MyBox";
+import ShareBox from "./page/main/ShareBox";
+import Important from "./page/main/Important";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -18,9 +21,11 @@ ReactDOM.render(
       <Route path="/signup" element={<SignUp />} />
       <Route path="/main" element={<Main />}>
         <Route index element={<MyBox />} />
+        <Route path="share" element={<ShareBox />} />
+        <Route path="important" element={<Important />} />
         <Route path="workspace" element={<WorkspaceList />} />
         <Route path="document" element={<DocumentWriter />} />
-        <Route path="trash" element={<TrashCan />} />
+        <Route path="trashcan" element={<TrashCan />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

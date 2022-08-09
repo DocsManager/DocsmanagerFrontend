@@ -1,89 +1,93 @@
 import React, { useState, useEffect } from "react";
-import ConfirmModal from "./ConfirmModal";
-import SucessModal from "./SucessModal";
-import {
-  deleteFile,
-  getRecycleBinList,
-  openModal,
-  restoreFile,
-} from "../../api/documentApi";
-import Page from "./Page";
+import axios from "axios";
+import { Button, styled, Pagination } from "@mui/material";
+import DmTable from "./DmTable";
 
-const openSuccessRestoreModal = (setRestoreSuccess) => {
-  setRestoreSuccess(true);
-};
-const closeSuccessRestoreModal = (setRestoreSuccess) => {
-  setRestoreSuccess(false);
-};
-
-const closeConfirmDeleteModal = (setDeleteConfirm) => {
-  setDeleteConfirm(false);
-};
-const openConfirmDeleteModal = (setDeleteConfirm) => {
-  setDeleteConfirm(true);
+const getList = (setList, page) => {
+  axios
+    .get("/api/documents/" + 5 + "?page=" + 1)
+    .then((res) => res.data)
+    .then((datas) => {
+      datas.dtoList.map(
+        (data, index) => (
+          (data.id = index + 1), (data.userName = data.user.name)
+        )
+      );
+      setList(datas.dtoList);
+    });
 };
 
-const openSuccessDeleteModal = (setDeleteSuccess) => {
-  setDeleteSuccess(true);
-};
-const closeSuccessDeleteModal = (setDeleteSuccess, setDeleteConfirm) => {
-  setDeleteSuccess(false);
-  setDeleteConfirm(false);
-};
+const columns = [
+  {
+    field: "originalName",
+    headerName: "제목",
+    width: 400,
+    headerAlign: "center",
+  },
 
-function TrashCan() {
-  useEffect(() => {
-    getRecycleBinList(setList, page);
-  }, [page, restoreSuccess, deleteSuccess]);
+  {
+    field: "userName",
 
-  const [deleteConfirm, setDeleteConfirm] = useState(false);
-  const [deleteSuccess, setDeleteSuccess] = useState(false);
-  const [restoreSuccess, setRestoreSuccess] = useState(false);
+    headerName: "작성자",
+    width: 100,
+    headerAlign: "center",
+  },
+  {
+    field: "registerDate",
+    headerName: "등록일",
+    type: "date",
+    width: 200,
+    headerAlign: "center",
+  },
+  {
+    field: "modifyDate",
+    headerName: "수정일",
+    type: "date",
+    width: 200,
+    headerAlign: "center",
+  },
+];
+const EnrollBtn = styled(Button)({
+  backgroundColor: "#3791f8",
+  marginLeft: "10px",
+});
+
+export default function Table() {
+  const [list, setList] = useState([]);
+  const [page, setPage] = useState(1);
+
+  //   console.log(rows);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen2, setModalOpen2] = useState(false);
+  const [modalOpen3, setModalOpen3] = useState(false);
   const [document, setDocument] = useState("");
 
-  const [page, setPage] = useState(1);
-  const [list, setList] = useState("");
+  //   const [openModal, setOpenModal] = useState(false);
+  const [openSecModal, setOpenSecModal] = useState(false);
+
+  const openModal = (documentNo) => {
+    setModalOpen(true);
+    axios.get("/api/document/" + 5).then((res) => setDocument(res.data));
+  };
+  console.log(document);
+
+  const openModal2 = (setModalOpen2) => {
+    setModalOpen2(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  useEffect(() => {
+    getList(setList);
+    console.log(list);
+  }, []);
+
   return (
-    <div>
-      <div>테이블~~</div>
-      <Page list={list} page={page} setPage={setPage} />
-      <div />
-      <button onClick={() => openSuccessRestoreModal(setRestoreSuccess)}>
-        복원
-      </button>
-      <button onClick={() => openConfirmDeleteModal(setDeleteConfirm)}>
-        영구 삭제
-      </button>
-      <SucessModal
-        open={restoreSuccess}
-        close={() => closeSuccessRestoreModal(setRestoreSuccess)}
-      >
-        <main>
-          <div>복원 완료</div>
-        </main>
-      </SucessModal>
-      <ConfirmModal
-        header="파일이름"
-        open={deleteConfirm}
-        close={() => closeConfirmDeleteModal(setDeleteConfirm)}
-        del={() => deleteFile(162, setDeleteSuccess)}
-      >
-        <main>
-          <div>영구 삭제 하시겠습니까?</div>
-        </main>
-      </ConfirmModal>
-      <SucessModal
-        open={deleteSuccess}
-        close={() =>
-          closeSuccessDeleteModal(setDeleteConfirm, setDeleteSuccess)
-        }
-      >
-        <main>
-          <div>영구 삭제 완료</div>
-        </main>
-      </SucessModal>
+    <div style={{ display: "grid", gridTemplateRows: "0.3fr 3fr" }}>
+      <h2 style={{ textAlign: "left", padding: "15px" }}>휴지통</h2>
+      <DmTable />
     </div>
   );
 }
-
-export default TrashCan;
