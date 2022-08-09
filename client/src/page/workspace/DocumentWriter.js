@@ -11,7 +11,9 @@ import BoardWriter from "../../component/editor/QuillEditor";
 var client = null;
 var contentDefaultMessage = null;
 if (window.location.href.includes("main/document")) {
-  client = new W3CWebSocket("ws://127.0.0.1:8000");
+  const url = window.location.search;
+  console.log(url);
+  client = new W3CWebSocket("ws://127.0.0.1:8000" + url);
   contentDefaultMessage = "Start writing your document here";
 }
 class DocumentWriter extends Component {
@@ -57,6 +59,7 @@ class DocumentWriter extends Component {
     "background",
   ];
   logInUser = () => {
+    console.log(this);
     const username = this.username.value;
     if (username.trim()) {
       const data = {
@@ -90,58 +93,61 @@ current content of the editor to the server. */
     );
   };
 
-  componentWillMount() {
+  componentDidMount() {
     client.onopen = () => {
       console.log("WebSocket Client Connected");
     };
     client.onmessage = (message) => {
       const dataFromServer = JSON.parse(message.data);
+      console.log(dataFromServer);
       const stateToChange = {};
       if (dataFromServer.type === "userevent") {
         stateToChange.currentUsers = Object.values(dataFromServer.data.users);
       } else if (dataFromServer.type === "contentchange") {
-        console.log(dataFromServer.data.editorContent);
         stateToChange.text =
           dataFromServer.data.editorContent || contentDefaultMessage;
       }
       stateToChange.userActivity = dataFromServer.data.userActivity;
+      console.log(stateToChange);
       this.setState({
         ...stateToChange,
       });
     };
   }
 
-  showLoginSection = () => (
-    <div className="account">
-      <div className="account__wrapper">
-        <div className="account__card">
-          <div className="account__profile">
-            <Identicon
-              className="account__avatar"
-              size={64}
-              string="randomness"
+  showLoginSection = () => {
+    return (
+      <div className="account">
+        <div className="account__wrapper">
+          <div className="account__card">
+            <div className="account__profile">
+              <Identicon
+                className="account__avatar"
+                size={64}
+                string="randomness"
+              />
+              <p className="account__name">Hello, user!</p>
+              <p className="account__sub">Join to edit the document</p>
+            </div>
+            <input
+              name="username"
+              ref={(input) => {
+                this.username = input;
+              }}
+              className="form-control"
             />
-            <p className="account__name">Hello, user!</p>
-            <p className="account__sub">Join to edit the document</p>
+            <button
+              type="button"
+              onClick={() => this.logInUser()}
+              className="btn btn-primary account__btn"
+            >
+              Join
+            </button>
           </div>
-          <input
-            name="username"
-            ref={(input) => {
-              this.username = input;
-            }}
-            className="form-control"
-          />
-          <button
-            type="button"
-            onClick={() => this.logInUser()}
-            className="btn btn-primary account__btn"
-          >
-            Join
-          </button>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   showEditorSection = () => {
     return (

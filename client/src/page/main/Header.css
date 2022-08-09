@@ -1,0 +1,41 @@
+.header-box {
+  display: grid;
+  grid-template-columns: 7fr 2fr;
+  flex-direction: row;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 55px;
+  background-color: #8bc7ff;
+  list-style-type: none;
+  justify-content: space-around;
+}
+
+.header-logo {
+  background-repeat: no-repeat;
+  padding-left: 5%;
+  align-items: center;
+}
+.header-profile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.header-user {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  margin-right: 2.5vw;
+  font-size: 0.812em;
+}
+
+.header-user p {
+  margin-right: 1em;
+  margin-left: 0.5em;
+  margin-top: 1rem;
+}
+.header-user span {
+  font-size: 1.125em;
+  font-weight: 700;
+}

@@ -1,7 +1,11 @@
 import React from "react";
 
 function ShareBox() {
-  return <>sharebox</>;
+  return (
+    <>
+      <div>ddasa</div>
+    </>
+  );
 }
 
 export default ShareBox;
