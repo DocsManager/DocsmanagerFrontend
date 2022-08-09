@@ -4,24 +4,27 @@ import * as FaIcons from "react-icons/fa";
 export const SidebarData = [
   {
     title: "내 문서함",
-    path: "workspace",
     icon: <FaIcons.FaFolder />,
     path: "/main",
   },
   {
     title: "공유 문서함",
     icon: <FaIcons.FaFolder />,
-    path: "share",
+    path: "/main/share",
+  },
+  {
+    title: "중요 문서함",
+    icon: <FaIcons.FaStar />,
+    path: "/main/important",
   },
   {
     title: "워크스페이스",
-    path: "workspace",
     icon: <FaIcons.FaLaptop />,
-    path: "workspace",
+    path: "/main/workspace",
   },
   {
     title: "휴지통",
     icon: <FaIcons.FaTrashAlt />,
-    path: "trash",
+    path: "/main/trashcan",
   },
 ];
