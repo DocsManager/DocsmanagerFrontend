@@ -1,14 +1,7 @@
 .header-box {
-  display: grid;
-  grid-template-columns: 7fr 2fr;
-  flex-direction: row;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  height: 55px;
   background-color: #8bc7ff;
   list-style-type: none;
-  justify-content: space-around;
 }
 
 .header-logo {
@@ -25,17 +18,25 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-
   margin-right: 2.5vw;
-  font-size: 0.812em;
+  font-size: 0.8em;
 }
 
 .header-user p {
   margin-right: 1em;
   margin-left: 0.5em;
   margin-top: 1rem;
+  /* color: white; */
+}
+.header-user-text span {
+  color: white;
 }
 .header-user span {
-  font-size: 1.125em;
-  font-weight: 700;
+  font-size: 1.5em;
+  font-weight: bold;
+  /* color: #3791f8; */
+  color: black;
+}
+.header-alert span {
+  color: white;
 }
