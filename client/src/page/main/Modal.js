@@ -94,7 +94,7 @@ const Modal = (props) => {
                           <button className="close">down</button>
                         </a>
                         <button className="close" onClick={() => {}}>
-                          수정~~~
+                          수정~~~~
                         </button>
                       </div>
                     );
