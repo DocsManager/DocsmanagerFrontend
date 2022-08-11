@@ -6,7 +6,11 @@ function Login() {
   return (
     <>
       <input id="userId" placeholder="ID를 입력해주세요." />
-      <input id="userPwd" placeholder="비밀번호를 입력해주세요." />
+      <input
+        type="password"
+        id="userPwd"
+        placeholder="비밀번호를 입력해주세요."
+      />
       <Link to={"main"}>
         <button
           onClick={() => {

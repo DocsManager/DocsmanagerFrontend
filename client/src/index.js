@@ -8,8 +8,8 @@ import Main from "./page/Main";
 // import MyBox from "./page/main/MyBox";
 import NotFound from "./page/notfound/NotFound";
 import WorkspaceList from "./page/workspace/WorkspaceList";
+import Workspace from "./page/workspace/Workspace";
 import TrashCan from "./page/main/TrashCan";
-import DocumentWriter from "./page/workspace/DocumentWriter";
 import MyBox from "./page/main/MyBox";
 import ShareBox from "./page/main/ShareBox";
 import Important from "./page/main/Important";
@@ -24,7 +24,7 @@ ReactDOM.render(
         <Route path="share" element={<ShareBox />} />
         <Route path="important" element={<Important />} />
         <Route path="workspace" element={<WorkspaceList />} />
-        <Route path="document" element={<DocumentWriter />} />
+        <Route path="document" element={<Workspace />} />
         <Route path="trashcan" element={<TrashCan />} />
       </Route>
       <Route path="*" element={<NotFound />} />

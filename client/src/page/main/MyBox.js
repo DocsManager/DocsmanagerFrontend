@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Modal from "./Modal";
 import { getList, openInfoModal } from "../../api/documentApi";
 import Page from "./Page";
-import DelModal from "./DelModal";
 import axios from "axios";
 import SucessModal from "./SucessModal";
 import DmTable from "./DmTable";
