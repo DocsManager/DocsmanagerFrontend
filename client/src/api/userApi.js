@@ -19,6 +19,7 @@ export function login(user) {
   axios
     .post(url, user)
     .then((res) => {
+      console.log(res);
       if (res.data) {
         setUser(res.data);
       } else {
