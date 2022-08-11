@@ -1,87 +1,99 @@
 import axios from "axios";
+import { getUser } from "../component/getUser/getUser";
 
 const baseUrl = "/api/";
+const documentBaseUrl = baseUrl + "documents/user/";
 
-export function getList(setList, page) {
-  const url = baseUrl + "documents/user/1?page=" + page;
+// 페이지별 리스트 출력
+export function getList(setList, documentUrl) {
+  const url = documentBaseUrl + documentUrl + getUser().userNo;
   axios.get(url).then((res) => {
-    setList(res.data);
-    console.log(res.data);
+    res.data.dtoList.map((data, index) => {
+      data.id = index + 1;
+      data.userName = data.userNo.name;
+    });
+    // console.log(res.data);
+    setList(res.data.dtoList);
   });
 }
 
-export function updateRecycleBinFile(documentNo, setModalOpen2, setModalOpen3) {
-  const url = baseUrl + "documents/1";
+// 휴지통 보내기
+export function updateRecycleBinFile(
+  documentNo,
+  setConfirmModalOpen,
+  setSuccessModalOpen
+) {
+  const url = baseUrl + "documents/" + getUser().userNo;
+  let arr = [];
+  documentNo.map((v) =>
+    arr.push({ documentNo: { documentNo: v }, recycleBin: 1 })
+  );
   axios
-    .put(url, [
-      {
-        documentNo: {
-          documentNo: documentNo,
-        },
-        recycleBin: 1,
+    .put(url, arr)
+    .then(setConfirmModalOpen(false))
+    .then(setSuccessModalOpen(true))
+    .catch((err) => console.log(err));
+}
+
+// 영구 삭제
+export function deleteFile(
+  newSelected,
+  setConfirmModalOpen,
+  setSuccessModalOpen
+) {
+  const url = baseUrl + "document/" + getUser().userNo;
+  console.log(newSelected);
+  axios
+    .delete(url, {
+      headers: {
+        "Content-Type": `application/json`,
       },
-    ])
-    .then(setModalOpen2(false));
-  setModalOpen3(true);
+      data: newSelected,
+    })
+    .then(setConfirmModalOpen(false))
+    .then(setSuccessModalOpen(true))
+    .catch((err) => console.log(err));
 }
 
-export function deleteFile(documentNo, setDeleteSuccess) {
-  const url = baseUrl + "documents";
-  axios.delete(url, documentNo).then(setDeleteSuccess(true));
-}
-
+// 파일 정보 모달
 export function openInfoModal(setInfoModalOpen, documentNo, setDocument) {
   setInfoModalOpen(true);
   const url = baseUrl + "document/" + documentNo;
-  axios.get(url).then((res) => setDocument(res.data));
-}
-
-export function getRecycleBinList(setList, page) {
-  const url = baseUrl + "documents/user/recycle/1?page=" + page;
   axios.get(url).then((res) => {
-    setList(res.data);
-    console.log(res.data);
+    setDocument(res.data);
   });
 }
 
-export function restoreFile(setRestoreConfirm, setRestoreSuccess, documentNo) {
-  const url = baseUrl + "documents/1";
-  axios
-    .put(url, [
-      {
-        documentNo: {
-          documentNo: documentNo,
-        },
-        recycleBin: 0,
-      },
-    ])
-    .then(setRestoreConfirm(false));
-  setRestoreSuccess(true);
+// 파일 복원
+export function restoreFile(documentNo, setSuccessModalOpen) {
+  const url = baseUrl + "documents/" + getUser().userNo;
+  let arr = [];
+  documentNo.map((v) =>
+    arr.push({ documentNo: { documentNo: v }, recycleBin: 0 })
+  );
+  console.log(documentNo);
+  axios.put(url, arr).then(setSuccessModalOpen(true));
 }
 
-export function getImportantList(setList, page) {
-  const url = baseUrl + "documents/user/important/1?page=" + page;
-  axios.get(url).then((res) => {
-    setList(res.data);
-    console.log(res.data);
-  });
-}
-
+// 중요 표시
 export function importantFile(documentNo) {
-  const url = baseUrl + "documents/1";
+  const url = baseUrl + "documents/" + getUser().userNo;
   axios
     .put(url, [
       {
         documentNo: {
           documentNo: documentNo,
         },
+
         important: 1,
       },
     ])
     .then((res) => console.log(res.data));
 }
+
+//중요 표시 해제
 export function removeImportantFile(documentNo) {
-  const url = baseUrl + "documents/1";
+  const url = baseUrl + "documents/" + getUser().userNo;
   axios
     .put(url, [
       {
