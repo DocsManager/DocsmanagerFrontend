@@ -8,7 +8,27 @@ const wsServer = new webSocketServer({
   httpServer: server,
 });
 
-// Generates unique ID for every new connection
+// 방 목록 생성
+const rooms = new Map();
+// 방에 유저 상태
+const roomActivity = new Map();
+// 유저 정보
+const user = new Map();
+// 클라이언트
+const clients = {};
+// 현재 방에 있는 채팅 내용
+const roomContent = new Map();
+// 메시지 content
+let editorContent = null;
+
+// 메시지 타입
+const typesDef = {
+  USER_EVENT: "userevent",
+  CONTENT_CHANGE: "contentchange",
+  OPEN_USER: "open",
+};
+
+// uniqueID 생성
 const getUniqueID = () => {
   const s4 = () =>
     Math.floor((1 + Math.random()) * 0x10000)
@@ -17,39 +37,25 @@ const getUniqueID = () => {
   return s4() + s4() + "-" + s4();
 };
 
-// I'm maintaining all active connections in this object
-const clients = {};
-// I'm maintaining all active users in this object
-let users = {};
-const user = new Map();
-
-// The current editor content is maintained here.
-let editorContent = null;
-// User activity history.
-let userActivity = [];
-const roomActivity = new Map();
-
-const sendMessage = (json, room, userID) => {
-  // We are sending the current data to all connected clients
-  rooms.get(room).map((client) => {
-    var clientID = Object.keys(client)[0];
-    // if (json.type === "contentchange") {
-    // userID !== clientID && client[clientID].sendUTF(JSON.stringify(json));
-    userID !== clientID && client[clientID].sendUTF(JSON.stringify(json));
-    // } else {
-    //   client[clientID].sendUTF(JSON.stringify(json));
-    // }
+const sendMessage = (json) => {
+  // 자신과 같은 방에 있는 유저 검색
+  const workspace = rooms.get(json.data.room);
+  const message = JSON.stringify(json);
+  // 자신과 같은 방에 있는 유저에게 메시지 전달
+  workspace.map((client) => {
+    for (let id in client) {
+      client[id].sendUTF(message);
+    }
   });
 };
-
-const typesDef = {
-  USER_EVENT: "userevent",
-  CONTENT_CHANGE: "contentchange",
+const sendMyId = (json, connection) => {
+  connection.sendUTF(JSON.stringify(json));
 };
 
-const rooms = new Map();
 wsServer.on("request", function (request) {
-  var userID = getUniqueID();
+  // 유저에게 UniqueID 할당
+  let userID = getUniqueID();
+  // 요청받은 주소의 room번호를 가져옴
   const room = request.resourceURL.query.room;
   console.log(
     new Date() +
@@ -57,85 +63,127 @@ wsServer.on("request", function (request) {
       request.origin +
       "."
   );
-  // You can rewrite this part of the code to accept only the requests from allowed origin
+
   const connection = request.accept(null, request.origin);
-  if (rooms.get(room)) {
-    rooms.set(room, [...rooms.get(room), { [userID]: connection }]);
-  } else {
-    rooms.set(room, [{ [userID]: connection }]);
-  }
+
+  // 자신의 ID 전송
+  sendMyId(
+    roomContent.get(room)
+      ? {
+          id: userID,
+          room: room,
+          type: typesDef.OPEN_USER,
+          prevData: roomContent.get(room),
+        }
+      : { id: userID, room: room, type: typesDef.OPEN_USER },
+    connection
+  );
+
   console.log(
     "connected: " + userID + " in " + Object.getOwnPropertyNames(clients)
   );
+  // 키값은 room번호로하여 해당 room에 들어온 유저 목록 추가
+  rooms.set(
+    room,
+    rooms.get(room)
+      ? [...rooms.get(room), { [userID]: connection }]
+      : [{ [userID]: connection }]
+  );
+
+  // client가 메시지를 전송하였을때 실행
   connection.on("message", function (message) {
-    msgSender(rooms.get(room), message, userID, room);
+    msgSender(message, room, userID);
   });
-  // user disconnected
-  connection.on("close", function (connection) {
+
+  //유저가 방을 나갔을 때
+  connection.on("close", function (message) {
     console.log(new Date() + " Peer " + userID + " disconnected.");
     const json = { type: typesDef.USER_EVENT };
-    users = user.get(room);
-    if (roomActivity.get(room)) {
-      roomActivity.set(room, [
-        ...roomActivity.get(room),
-        `${users[userID].username} 님이 퇴장하셨습니다.`,
-      ]);
-    } else {
-      roomActivity.set(room, [
-        `${users[userID].username} 님이 퇴장하셨습니다.`,
-      ]);
+    const roomUser = user.get(room);
+
+    let sender = "";
+    if (roomUser.length) {
+      roomUser.map((exitUser, index) => {
+        if (exitUser[userID]) {
+          sender = exitUser[userID].user;
+          roomActivity.set(
+            room,
+            roomActivity.get(room)
+              ? [...roomActivity.get(room), `${sender}님이 퇴장하셨습니다.`]
+              : [`${sender}님이 퇴장하셨습니다.`]
+          );
+          const arr = user.get(room).filter((v) => v !== user.get(room)[index]);
+          user.set(room, arr);
+
+          // 유저가 퇴장 후 방에 유저가 아무도 없으면 방 삭제
+          if (user.get(room).length === 0) {
+            rooms.delete(room);
+            roomActivity.delete(room);
+            // 유저가 퇴장 후 방에 유저가 있으면 퇴장메시지 전송
+          } else {
+            userActivity = roomActivity.get(room);
+            json.data = {
+              users: user.get(room),
+              senderID: userID,
+              senderName: sender,
+              userActivity: roomActivity.get(room),
+              room,
+            };
+            sendMessage(json);
+          }
+        }
+      });
     }
-    userActivity = roomActivity.get(room);
-    users = user.get(room);
-    json.data = { users, userActivity };
-    delete rooms.get(room)[userID];
-    delete clients[userID];
-    delete users[userID];
-    sendMessage(json, room);
   });
 });
-function msgSender(identify, message, userID, room) {
-  return new Promise((resolve, reject) => {
+
+function msgSender(message, room, userID) {
+  return new Promise((resolve) => {
     for (let target of rooms.entries()) {
-      //방 목록 객체를 반복문을 활용해 발송
+      // 같은방에 있는 사람인지 반복문으로 확인해 메시지 발송
       if (room == target[0]) {
-        //같은방에 있는 사람이면 전송
-        //타입별 전송 구간(최초접속,메시지전송,방나감)
         if (message.type === "utf8") {
           var dataFromClient = JSON.parse(message.utf8Data);
           dataFromClient.room = room;
           const json = { type: dataFromClient.type };
+          // 유저가 접속했을 때
           if (dataFromClient.type === typesDef.USER_EVENT) {
-            if (user.get(room)) {
-              user.set(room, { ...user.get(room), [userID]: dataFromClient });
-            } else {
-              user.set(room, { [userID]: dataFromClient });
-            }
-            users = user.get(room);
-            if (roomActivity.get(room)) {
-              roomActivity.set(room, [
-                ...roomActivity.get(room),
-                `${users[userID].username} 님이 입장하셨습니다.`,
-              ]);
-            } else {
-              roomActivity.set(room, [
-                `${users[userID].username} 님이 입장하셨습니다.`,
-              ]);
-            }
-            userActivity = roomActivity.get(room);
-            users = user.get(room);
-            // json.data = { users, userActivity };
+            //유저 목록에 유저 추가
+            user.set(
+              room,
+              user.get(room)
+                ? [...user.get(room), { [userID]: dataFromClient }]
+                : [{ [userID]: dataFromClient }]
+            );
+            roomActivity.set(
+              room,
+              roomActivity.get(room)
+                ? [
+                    ...roomActivity.get(room),
+                    `${dataFromClient.user} 님이 입장하셨습니다.`,
+                  ]
+                : [`${dataFromClient.user}님이 입장하셨습니다.`]
+            );
           } else if (dataFromClient.type === typesDef.CONTENT_CHANGE) {
             editorContent = dataFromClient.content;
-            // json.data = { editorContent, userActivity };
+            roomContent.set(room, editorContent);
           }
-          json.data = { users, editorContent, userActivity };
+          // 전송 목록 (현재 유저목록, content, 유저 기록, 방 번호,senderID,메시지 길이)
+          json.data = {
+            users: user.get(room),
+            editorContent,
+            senderID: userID,
+            senderName: dataFromClient.user,
+            userActivity: roomActivity.get(room),
+            prevData: roomContent.get(room) ? roomContent.get(room) : null,
+            room,
+          };
+          // console.log(json.data);
           json.userEvent = dataFromClient.type;
           json.len = dataFromClient.len;
-          sendMessage(json, room, userID);
+          sendMessage(json);
         }
       }
     }
-    resolve("succ");
   });
 }
