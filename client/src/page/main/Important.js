@@ -5,7 +5,7 @@ function Important() {
   return (
     <div style={{ display: "grid", gridTemplateRows: "0.3fr 3fr" }}>
       <h2 style={{ textAlign: "left", padding: "15px" }}>중요 문서함</h2>
-      <DmTable />
+      <DmTable documentUrl="important/" />
     </div>
   );
 }

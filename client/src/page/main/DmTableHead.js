@@ -1,10 +1,12 @@
 import React from "react";
-import { TableHead, TableCell, Checkbox, TableRow } from "@mui/material";
 import {
-  StarBorderOutlined,
-  StarOutlined,
-  WindowSharp,
-} from "@mui/icons-material";
+  TableHead,
+  TableCell,
+  Checkbox,
+  TableRow,
+  IconButton,
+} from "@mui/material";
+import { StarOutlined } from "@mui/icons-material";
 import { visuallyHidden } from "@mui/utils";
 import DmTableHeadCell from "./DmTableHeadCell";
 
@@ -66,12 +68,8 @@ const contentOrTitle = () => {
   switch (window.location.href.split("/main")[1]) {
     case "":
       return headCell2;
-    case "/share":
+    default:
       return headCells;
-    case "/important":
-      return headCell2;
-    case "/trashcan":
-      return headCell2;
   }
 };
 
@@ -83,20 +81,19 @@ function DmTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
-    onSelectAllStar,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
-  const arr = [headCell2, headCells];
-  const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  // const arr = [headCell2, headCells];
+  // const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
+            // indeterminate={numSelected > 0 && numSelected < rowCount}
             //선택된 행의 개수가 0보다 크지만 전체 리스트의 총 길이보다는 작은 상태
             checked={rowCount > 0 && numSelected === rowCount}
             //리스트의 총 길이가 0보다 크고 선택된 행의 개수가 리스트 총 길이와 같으면 전체 체크
@@ -107,12 +104,9 @@ function DmTableHead(props) {
           />
         </TableCell>
         <TableCell>
-          <Checkbox
-            onChange={onSelectAllStar}
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            icon={<StarBorderOutlined />}
-            checkedIcon={<StarOutlined sx={{ color: "#F4E029" }} />}
-          />
+          <IconButton disabled>
+            <StarOutlined sx={{ color: "#F4E029", margin: " 0.0390625vw" }} />
+          </IconButton>
         </TableCell>
         {contentOrTitle().map((headCell) => (
           <DmTableHeadCell

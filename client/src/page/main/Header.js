@@ -5,9 +5,10 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Badge } from "@mui/material";
 import { Notifications } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getUser } from "../../component/getUser/getUser";
 
 const Header = () => {
-  const name = "곽예영";
+  const name = getUser().name;
   return (
     <div style={{ backGroundColor: "#8bc7ff" }}>
       <Navbar className="header-box">
