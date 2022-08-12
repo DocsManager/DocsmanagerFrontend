@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getUser } from "../../component/getUser/getUser";
 
 const Header = () => {
+  console.log(getUser());
   const name = getUser().name;
   return (
     <div style={{ backGroundColor: "#8bc7ff" }}>

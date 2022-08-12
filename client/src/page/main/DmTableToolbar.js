@@ -58,19 +58,23 @@ const openDeleteModal = (confirmDeleteModalOpen, setConfirmDeleteModalOpen) => {
 const closeSuccessModal = (
   setSuccessDeleteModalOpen,
   check,
-  setCheckHandler
+  setCheckHandler,
+  setSelected
 ) => {
   setSuccessDeleteModalOpen(false);
   check ? setCheckHandler(false) : setCheckHandler(true);
+  setSelected([]);
 };
 
 const closeRestoreSuccessModal = (
   setSuccessRestoreModalOpen,
   check,
-  setCheckHandler
+  setCheckHandler,
+  setSelected
 ) => {
   setSuccessRestoreModalOpen(false);
   check ? setCheckHandler(false) : setCheckHandler(true);
+  setSelected([]);
 };
 
 const handleTrashcanBtn = (
@@ -120,7 +124,7 @@ const handleTrashcanBtn = (
   }
 };
 
-const DmTableToolbar = ({ numSelected, newSelected }) => {
+const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
@@ -219,7 +223,12 @@ const DmTableToolbar = ({ numSelected, newSelected }) => {
         <SucessModal
           open={successDeleteModalOpen}
           close={() =>
-            closeSuccessModal(setSuccessDeleteModalOpen, check, setCheckHandler)
+            closeSuccessModal(
+              setSuccessDeleteModalOpen,
+              check,
+              setCheckHandler,
+              setSelected
+            )
           }
         >
           <main>
@@ -234,7 +243,8 @@ const DmTableToolbar = ({ numSelected, newSelected }) => {
             closeRestoreSuccessModal(
               setSuccessRestoreModalOpen,
               check,
-              setCheckHandler
+              setCheckHandler,
+              setSelected
             )
           }
         >

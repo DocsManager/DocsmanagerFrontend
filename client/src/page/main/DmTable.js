@@ -155,6 +155,7 @@ export default function DmTable(props) {
           <DmTableToolbar
             numSelected={selected.length}
             newSelected={selected}
+            setSelected={setSelected}
           />
         </MyContext.Provider>
         <TableContainer>
