@@ -105,3 +105,24 @@ export function removeImportantFile(documentNo) {
     ])
     .then((res) => console.log(res.data));
 }
+
+// 문서 작성
+
+export function writeFile(file, text) {
+  const url = baseUrl + "document";
+  axios
+    .post(url, file, {
+      user: {
+        userNo: getUser().userNo,
+        dept: {
+          deptNo: getUser().dept.deptNo,
+        },
+      },
+      content: text,
+      userList: [
+        { userNo: getUser().userNo, dept: { deptNo: getUser.dept.deptNo } },
+      ],
+    })
+    .then((res) => console.log(res.data));
+  // console.log(getUser().dept.deptNo);
+}
