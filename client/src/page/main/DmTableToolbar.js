@@ -7,10 +7,12 @@ import {
   deleteFile,
   restoreFile,
   updateRecycleBinFile,
+  writeFile,
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import { MyContext } from "./DmTable";
+import WriteModal from "./WriteModal";
 
 //문서 등록, 중요 문서 안내 버튼 styled 컴포넌트로
 const EnrollBtn = styled(Button)({
@@ -19,7 +21,7 @@ const EnrollBtn = styled(Button)({
   outline: "none !important",
 });
 
-const handleToolbarBtn = () => {
+const handleToolbarBtn = (writeModalOpen, setWriteModalOpen) => {
   switch (window.location.href.split("/main")[1]) {
     case "/important":
       return (
@@ -40,7 +42,11 @@ const handleToolbarBtn = () => {
           <EnrollBtn
             variant="contained"
             endIcon={<Outbox />}
-            onClick={() => {}}
+            onClick={() => {
+              writeModalOpen
+                ? setWriteModalOpen(false)
+                : setWriteModalOpen(true);
+            }}
           >
             문서 등록
           </EnrollBtn>
@@ -75,6 +81,10 @@ const closeRestoreSuccessModal = (
   setSuccessRestoreModalOpen(false);
   check ? setCheckHandler(false) : setCheckHandler(true);
   setSelected([]);
+};
+
+const wirteOpen = (writeModalOpen, setWriteModalOpen) => {
+  writeModalOpen ? setWriteModalOpen(false) : setWriteModalOpen(true);
 };
 
 const handleTrashcanBtn = (
@@ -128,6 +138,8 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
+  const [writeModalOpen, setWriteModalOpen] = useState(false);
+  const [writeSuccessModalOpen, setWriteSuccessModalOpen] = useState(false);
 
   const { check, setCheckHandler } = useContext(MyContext);
 
@@ -164,7 +176,7 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
             </div>
           </Typography>
         ) : (
-          <div>{handleToolbarBtn()}</div>
+          <div>{handleToolbarBtn(writeModalOpen, setWriteModalOpen)}</div>
         )}
       </Toolbar>
       {(() => {
@@ -250,6 +262,27 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
         >
           <main>
             <div>복원 완료</div>
+          </main>
+        </SucessModal>
+      }
+      {
+        <WriteModal
+          open={writeModalOpen}
+          close={() => wirteOpen(writeModalOpen, setWriteModalOpen)}
+        >
+          <div>파일 선택</div>
+        </WriteModal>
+      }
+      {
+        <SucessModal
+          open={writeSuccessModalOpen}
+          close={() => {
+            setWriteModalOpen(false);
+            setWriteSuccessModalOpen(false);
+          }}
+        >
+          <main>
+            <div>저장 완료</div>
           </main>
         </SucessModal>
       }
