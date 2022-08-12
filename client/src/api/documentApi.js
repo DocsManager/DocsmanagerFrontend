@@ -12,7 +12,7 @@ export function getList(setList, documentUrl) {
       data.id = index + 1;
       data.userName = data.userNo.name;
     });
-    // console.log(res.data);
+    console.log(res.data);
     setList(res.data.dtoList);
   });
 }
