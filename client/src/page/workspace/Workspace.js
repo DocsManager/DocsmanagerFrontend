@@ -8,14 +8,27 @@ import { UncontrolledTooltip } from "reactstrap";
 import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/default.css";
 import "../../App.css";
+import { getTempContent, getWorkspace } from "../../api/workspaceApi";
 
 function Workspace() {
   const [client, setClient] = useState(null);
   const [message, setMessage] = useState({});
   const [myId, setMyId] = useState("");
   const [users, setUsers] = useState({});
+  const [workspace, setWorkspace] = useState({});
+  const URLSearch = new URLSearchParams(window.location.search);
+  const workspaceNo = URLSearch.get("room");
   const user = getUser();
 
+  const sendChat = (chat) => {
+    client.send(
+      JSON.stringify({
+        type: "chat",
+        user: user.name,
+        chat: chat,
+      })
+    );
+  };
   const onEditorStateChange = (text) => {
     const textList = cutByLen(text);
     textList.forEach((message, index) => {
@@ -23,7 +36,7 @@ function Workspace() {
         JSON.stringify({
           type: "contentchange",
           // username: this.state.username,
-          user: getUser().name,
+          user: user.name,
           content: message,
           len: textList.length - index,
         })
@@ -33,6 +46,7 @@ function Workspace() {
 
   useEffect(() => {
     setClient(new w3cwebsocket("ws://127.0.0.1:8000" + window.location.search));
+    getWorkspace(workspaceNo, setWorkspace);
   }, []);
   if (client) {
     client.onopen = () => {
@@ -50,27 +64,29 @@ function Workspace() {
         if (dataFromServer.data.senderID !== myId) {
           text += dataFromServer.data.editorContent;
           if (dataFromServer.len === 1) {
-            // dataFromServer.data.editorContent = text;
             setMessage(text);
             text = "";
-            // dataFromServer.data.editorContent = "";
           }
         }
         // 유저 접속시
       } else if (dataFromServer.type === "open") {
         setMyId(dataFromServer.id);
-        dataFromServer.prevData && setMessage(dataFromServer.prevData);
-        console.log(dataFromServer.id);
+        if (dataFromServer.user.length == 0) {
+          workspace.tempFile.fileNo &&
+            getTempContent(workspace.tempFile.fileNo, setMessage);
+        } else {
+          dataFromServer.prevData && setMessage(dataFromServer.prevData);
+        }
       } else {
-        // console. log({dataFromServer.data.users});
         setUsers({
           users: dataFromServer.data.users,
           userActivity: dataFromServer.data.userActivity,
+          senderID: dataFromServer.data.senderID,
         });
-        // dataFromServer.preData && setMessage(dataFromServer.prevData);
       }
     };
   }
+
   return (
     <React.Fragment>
       <div className="container-fluid">
@@ -105,15 +121,54 @@ function Workspace() {
               onEditorStateChange={onEditorStateChange}
               setMessage={setMessage}
               message={message}
+              workspace={workspace}
             />
           </div>
           <div className="history-holder">
             <ul>
               {users.userActivity &&
-                users.userActivity.map((activity, index) => (
-                  <li key={`activity-${index}`}>{activity}</li>
-                ))}
+                users.userActivity.map((activity, index) => {
+                  console.log(activity);
+                  if (activity.username) {
+                    console.log(myId);
+                    if (activity.sender === myId) {
+                      return (
+                        <li key={`activity-${index}`} className="myChat">
+                          {activity.time}
+                          {"    "}
+                          {activity.message}
+                        </li>
+                      );
+                    } else {
+                      return (
+                        <li key={`activity-${index}`} className="userChat">
+                          {activity.username} : {activity.message}{" "}
+                          {activity.time}
+                        </li>
+                      );
+                    }
+                  } else {
+                    return (
+                      <li key={`activity-${index}`} className="attend">
+                        {activity.message} {activity.time}
+                      </li>
+                    );
+                  }
+                })}
             </ul>
+            <div>
+              <input id="chat" />
+              <button
+                onClick={() => {
+                  const chatMessage = document.getElementById("chat");
+                  chatMessage.value && sendChat(chatMessage.value);
+                  chatMessage.value = "";
+                  chatMessage.focus();
+                }}
+              >
+                전송
+              </button>
+            </div>
           </div>
         </div>
       </div>

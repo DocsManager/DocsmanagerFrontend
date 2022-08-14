@@ -4,13 +4,13 @@ export function pdfSend(pdf) {
   const url = "/api/document";
   const documentDTO = {
     user: {
-      userNo: 1,
+      userNo: 6,
       dept: {
         deptNo: 1,
       },
     },
     content: "test66",
-    userList: [{ userNo: 2, dept: { deptNo: 10 } }],
+    userList: [{ userNo: 7, dept: { deptNo: 10 } }],
   };
   const fd = new FormData();
   fd.append("file", pdf, "test.pdf");

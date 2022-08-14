@@ -7,10 +7,10 @@ import { getUser } from "../../component/getUser/getUser";
 
 function WorkspaceList() {
   const [workspaces, setWorkspace] = useState([]);
+  const user = getUser();
   useEffect(() => {
-    getUserWorkspace(1, setWorkspace);
+    getUserWorkspace(user.userNo, setWorkspace);
   }, []);
-  console.log(getUser());
 
   // console.log(JSON.parse(window.localStorage.getItem("event")));
   return (

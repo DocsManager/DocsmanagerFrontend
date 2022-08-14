@@ -77,6 +77,8 @@ button {
 }
 
 .history-holder {
+  display: flex;
+  flex-direction: column;
   width: 300px;
   background: #fff;
   min-width: 300px;

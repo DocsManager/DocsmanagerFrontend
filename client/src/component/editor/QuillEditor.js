@@ -2,7 +2,7 @@ import ReactQuill, { Quill } from "react-quill";
 import React, { useRef } from "react";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize";
-import { getWorkspace, updateWorkspace } from "../../api/workspaceApi";
+import { updateWorkspace } from "../../api/workspaceApi";
 import { onHtmlPng } from "./pdfSave";
 Quill.register("modules/ImageResize", ImageResize);
 
@@ -25,16 +25,25 @@ const modules = {
   },
 };
 
-const QuillEditor = ({ onEditorStateChange, message, setMessage }) => {
+const QuillEditor = ({
+  onEditorStateChange,
+  message,
+  setMessage,
+  workspace,
+}) => {
+  // const [workspace, setWorkspace] = useState({});
   const editor = useRef();
-  const URLSearch = new URLSearchParams(window.location.search);
-  const workspaceNo = URLSearch.get("room");
+  // const URLSearch = new URLSearchParams(window.location.search);
+  // const workspaceNo = URLSearch.get("room");
+  // console.log(workspace.tempFile && workspace.tempFile.fileNo);
+  // useEffect(() => {
+  //   getWorkspace(workspaceNo, setWorkspace);
+  // }, []);
   return (
     <div style={{ height: "650px" }}>
       <button
         onClick={() => {
-          const workspace = { content: editor.current.value };
-          updateWorkspace(workspace, workspaceNo);
+          updateWorkspace(message, workspace.workspaceNo);
         }}
       >
         임시 저장
@@ -47,7 +56,7 @@ const QuillEditor = ({ onEditorStateChange, message, setMessage }) => {
         placeholder="내용을 입력해주세요."
         ref={editor}
         onChange={(e) => {
-          // console.log(e);
+          console.log(e);
           if (document.activeElement === document.querySelector(".ql-editor")) {
             onEditorStateChange(e);
             setMessage(e);

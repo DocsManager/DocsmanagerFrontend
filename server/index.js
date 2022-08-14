@@ -26,6 +26,7 @@ const typesDef = {
   USER_EVENT: "userevent",
   CONTENT_CHANGE: "contentchange",
   OPEN_USER: "open",
+  CHAT: "chat",
 };
 
 // uniqueID 생성
@@ -37,6 +38,7 @@ const getUniqueID = () => {
   return s4() + s4() + "-" + s4();
 };
 
+// 메시지 전송
 const sendMessage = (json) => {
   // 자신과 같은 방에 있는 유저 검색
   const workspace = rooms.get(json.data.room);
@@ -48,9 +50,28 @@ const sendMessage = (json) => {
     }
   });
 };
+// 채팅 메시지 전송
+const sendChat = (json, room) => {
+  // 자신과 같은 방에 있는 유저 검색
+  const workspace = rooms.get(room);
+  const message = JSON.stringify(json);
+  // 자신과 같은 방에 있는 유저에게 메시지 전달
+  workspace.map((client) => {
+    for (let id in client) {
+      client[id].sendUTF(message);
+    }
+  });
+};
+// 연결되었을 때 아이디 전송
 const sendMyId = (json, connection) => {
   connection.sendUTF(JSON.stringify(json));
 };
+
+// 채팅메시지를 전송
+// const sendChat = (json, room) => {
+//   const workspace = rooms.get(room);
+//   console.log(client);
+// };
 
 wsServer.on("request", function (request) {
   // 유저에게 UniqueID 할당
@@ -67,6 +88,7 @@ wsServer.on("request", function (request) {
   const connection = request.accept(null, request.origin);
 
   // 자신의 ID 전송
+  console.log(user.get(room));
   sendMyId(
     roomContent.get(room)
       ? {
@@ -74,8 +96,14 @@ wsServer.on("request", function (request) {
           room: room,
           type: typesDef.OPEN_USER,
           prevData: roomContent.get(room),
+          user: user.get(room),
         }
-      : { id: userID, room: room, type: typesDef.OPEN_USER },
+      : {
+          id: userID,
+          room: room,
+          type: typesDef.OPEN_USER,
+          user: user.get(room),
+        },
     connection
   );
 
@@ -105,12 +133,26 @@ wsServer.on("request", function (request) {
     if (roomUser.length) {
       roomUser.map((exitUser, index) => {
         if (exitUser[userID]) {
+          let today = new Date();
           sender = exitUser[userID].user;
           roomActivity.set(
             room,
             roomActivity.get(room)
-              ? [...roomActivity.get(room), `${sender}님이 퇴장하셨습니다.`]
-              : [`${sender}님이 퇴장하셨습니다.`]
+              ? [
+                  ...roomActivity.get(room),
+                  {
+                    message: `${sender}님이 퇴장하셨습니다.`,
+                    sender: userID,
+                    time: `${today.getHours()} : ${today.getMinutes()}`,
+                  },
+                ]
+              : [
+                  {
+                    message: `${sender}님이 퇴장하셨습니다.`,
+                    sender: userID,
+                    time: `${today.getHours()} : ${today.getMinutes()}`,
+                  },
+                ]
           );
           const arr = user.get(room).filter((v) => v !== user.get(room)[index]);
           user.set(room, arr);
@@ -147,6 +189,7 @@ function msgSender(message, room, userID) {
           dataFromClient.room = room;
           const json = { type: dataFromClient.type };
           // 유저가 접속했을 때
+          let today = new Date();
           if (dataFromClient.type === typesDef.USER_EVENT) {
             //유저 목록에 유저 추가
             user.set(
@@ -160,13 +203,31 @@ function msgSender(message, room, userID) {
               roomActivity.get(room)
                 ? [
                     ...roomActivity.get(room),
-                    `${dataFromClient.user} 님이 입장하셨습니다.`,
+                    {
+                      message: `${dataFromClient.user}님이 입장하셨습니다.`,
+                      sender: userID,
+                      time: `${today.getHours()} : ${today.getMinutes()}`,
+                    },
                   ]
-                : [`${dataFromClient.user}님이 입장하셨습니다.`]
+                : [
+                    {
+                      message: `${dataFromClient.user}님이 입장하셨습니다.`,
+                      sender: userID,
+                      time: `${today.getHours()} : ${today.getMinutes()}`,
+                    },
+                  ]
             );
           } else if (dataFromClient.type === typesDef.CONTENT_CHANGE) {
             editorContent = dataFromClient.content;
             roomContent.set(room, editorContent);
+          } else if (dataFromClient.type === typesDef.CHAT) {
+            roomActivity.get(room).push({
+              message: dataFromClient.chat,
+              sender: userID,
+              username: dataFromClient.user,
+              time: `${today.getHours()} : ${today.getMinutes()}`,
+            });
+            // roomActivity.set(room,)
           }
           // 전송 목록 (현재 유저목록, content, 유저 기록, 방 번호,senderID,메시지 길이)
           json.data = {
@@ -177,6 +238,7 @@ function msgSender(message, room, userID) {
             userActivity: roomActivity.get(room),
             prevData: roomContent.get(room) ? roomContent.get(room) : null,
             room,
+            chat: dataFromClient.chat,
           };
           // console.log(json.data);
           json.userEvent = dataFromClient.type;
