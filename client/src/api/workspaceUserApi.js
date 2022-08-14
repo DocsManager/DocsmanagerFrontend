@@ -6,7 +6,10 @@ export function getUserWorkspace(userNo, setWorkspace) {
   const url = baseUrl + userNo;
   axios
     .get(url)
-    .then((res) => setWorkspace(res.data))
+    .then((res) => {
+      console.log(res.data);
+      setWorkspace(res.data);
+    })
     .catch((err) => console.log(err));
 }
 export function deleteUserWorkspace(userNo, workspaceNo) {
