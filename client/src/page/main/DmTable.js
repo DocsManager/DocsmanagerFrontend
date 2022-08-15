@@ -33,8 +33,9 @@ function getComparator(order, orderBy) {
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
+  console.log(stabilizedThis);
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
+    const order = comparator(a[0].documentNo, b[0].documentNo);
     if (order !== 0) {
       return order;
     }
@@ -42,6 +43,21 @@ function stableSort(array, comparator) {
   });
   return stabilizedThis.map((el) => el[0]);
 }
+// function stableSort(array, comparator) {
+//   const stabilizedThis = array.map((el, index) => [el, index]);
+//   stabilizedThis.sort((a, b) => {
+//     const order = comparator(a[0], b[0]);
+//     if (order !== 0) {
+//       console.log(order);
+//       return order;
+//     }
+//     console.log(order);
+//     return a[1] - b[1];
+//   });
+
+//   return stabilizedThis.map((el) => el[0]);
+// }
+
 export const MyContext = createContext({
   check: "",
   setCheckHandler: (check) => {},
@@ -68,11 +84,11 @@ export default function DmTable(props) {
   let newSelected = [];
 
   const handleRequestSort = (event, property) => {
+    console.log(property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       //체크 표시할 시, 모든 documentNo를 담음
@@ -87,7 +103,8 @@ export default function DmTable(props) {
   //각 table row에 걸려있는 클릭 이벤트
   const handleClick = (event, documentNo) => {
     const selectedIndex = selected.indexOf(documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
-    console.log(selectedIndex);
+    console.log(documentNo);
+
     // let newSelected = [];
 
     if (selectedIndex === -1) {
@@ -185,6 +202,9 @@ export default function DmTable(props) {
                       tabIndex={-1} //탭 순서 임의로 컨트롤
                       key={li.documentNo.documentNo}
                       selected={isItemSelected}
+                      // onClick={(event) =>
+                      //   handleClick(event, li.documentNo.documentNo)
+                      // }
                     >
                       <TableCell padding="checkbox">
                         <Checkbox

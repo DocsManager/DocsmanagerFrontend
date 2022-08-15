@@ -139,7 +139,7 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
   const [writeModalOpen, setWriteModalOpen] = useState(false);
-  const [writeSuccessModalOpen, setWriteSuccessModalOpen] = useState(false);
+  // const [writeSuccessModalOpen, setWriteSuccessModalOpen] = useState(false);
 
   const { check, setCheckHandler } = useContext(MyContext);
 
@@ -191,7 +191,7 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
                     setConfirmDeleteModalOpen
                   );
                 }}
-                del={() =>
+                act={() =>
                   deleteFile(
                     newSelected,
                     setConfirmDeleteModalOpen,
@@ -215,7 +215,7 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
                     setConfirmDeleteModalOpen
                   );
                 }}
-                del={() =>
+                act={() =>
                   updateRecycleBinFile(
                     newSelected,
                     setConfirmDeleteModalOpen,
@@ -269,11 +269,12 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
         <WriteModal
           open={writeModalOpen}
           close={() => wirteOpen(writeModalOpen, setWriteModalOpen)}
+          setWriteModal={setWriteModalOpen}
         >
           <div>파일 선택</div>
         </WriteModal>
       }
-      {
+      {/* {
         <SucessModal
           open={writeSuccessModalOpen}
           close={() => {
@@ -285,7 +286,7 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
             <div>저장 완료</div>
           </main>
         </SucessModal>
-      }
+      } */}
     </React.Fragment>
   );
 };
