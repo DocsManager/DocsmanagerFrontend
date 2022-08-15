@@ -133,11 +133,11 @@ const Modal = (props) => {
                   close={() =>
                     openConfirmModal(setConfirmModalOpen, confirmModalOpen)
                   }
-                  delclose={() =>
-                    openSuccessModal(setSuccessModalOpen, infoModalOpen)
-                  }
+                  // delclose={() =>
+                  //   openSuccessModal(setSuccessModalOpen, infoModalOpen)
+                  // }
                   successModalOpen={successModalOpen}
-                  del={() =>
+                  act={() =>
                     deleteFile(
                       [document.documentNo],
                       setConfirmModalOpen,
@@ -162,7 +162,7 @@ const Modal = (props) => {
                     openSuccessModal(setSuccessModalOpen, infoModalOpen)
                   }
                   successModalOpen={successModalOpen}
-                  del={() =>
+                  act={() =>
                     updateRecycleBinFile(
                       [document.documentNo],
                       setConfirmModalOpen,

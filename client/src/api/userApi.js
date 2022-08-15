@@ -28,3 +28,18 @@ export function login(user) {
     })
     .catch((err) => console.log(err));
 }
+
+export function allUser(setUserList) {
+  const url = baseUrl + "alluser";
+  axios
+    .get(url)
+    .then((res) => {
+      {
+        console.log(res.data);
+        setUserList(res.data);
+      }
+    })
+    .catch(() => {
+      console.log("실패");
+    });
+}

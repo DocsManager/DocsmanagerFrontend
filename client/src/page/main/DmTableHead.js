@@ -83,8 +83,15 @@ function DmTableHead(props) {
     onRequestSort,
   } = props;
   const createSortHandler = (property) => (event) => {
+    // console.log(event);
     onRequestSort(event, property);
   };
+  // const createSortHandler = (property) => (event) => {
+  //   console.log(event);
+  //   console.log("1111");
+  //   onRequestSort(event, property);
+  // };
+
   // const arr = [headCell2, headCells];
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
   return (

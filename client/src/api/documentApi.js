@@ -108,21 +108,21 @@ export function removeImportantFile(documentNo) {
 
 // 문서 작성
 
-export function writeFile(file, text) {
-  const url = baseUrl + "document";
+export function writeFile(file, documentDTO, fileName) {
+  const url = "/api/document";
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append(
+    "documentDTO",
+    new Blob([JSON.stringify(documentDTO)], { type: "application/json" })
+  );
   axios
-    .post(url, file, {
-      user: {
-        userNo: getUser().userNo,
-        dept: {
-          deptNo: getUser().dept.deptNo,
-        },
+    .post(url, fd, {
+      headers: {
+        "Content-Type": "multipart/form-data;",
       },
-      content: text,
-      userList: [
-        { userNo: getUser().userNo, dept: { deptNo: getUser.dept.deptNo } },
-      ],
     })
-    .then((res) => console.log(res.data));
-  // console.log(getUser().dept.deptNo);
+    .then((res) => {
+      console.log(res.data);
+    });
 }
