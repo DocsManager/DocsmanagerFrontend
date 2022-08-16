@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setUser } from "../component/getUser/getUser";
+import { setSessionUser } from "../component/getUser/getUser";
 
 const baseUrl = "/api/";
 export function signUp(newUser) {
@@ -14,7 +14,7 @@ export function signUp(newUser) {
     });
 }
 
-export function login(user) {
+export function login(user, setUser) {
   const url = baseUrl + "login";
   axios
     .post(url, user)
@@ -22,6 +22,7 @@ export function login(user) {
       console.log(res);
       if (res.data) {
         setUser(res.data);
+        setSessionUser(res.data);
       } else {
         alert("로그인 실패");
       }
