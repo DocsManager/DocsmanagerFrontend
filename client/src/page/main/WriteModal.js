@@ -52,17 +52,16 @@ const WriteModal = (props) => {
   //   allUser(setUserList);
   // }, []);
 
+  const user = getUser();
   const documentDTO = {
     user: {
-      userNo: getUser().userNo,
+      userNo: user.userNo,
       dept: {
-        deptNo: getUser().dept.deptNo,
+        deptNo: user.dept.deptNo,
       },
     },
     content: text,
-    userList: [
-      { userNo: getUser().userNo, dept: { deptNo: getUser().dept.deptNo } },
-    ],
+    userList: [{ userNo: user.userNo, dept: { deptNo: user.dept.deptNo } }],
   };
   const { check, setCheckHandler } = useContext(MyContext);
 
