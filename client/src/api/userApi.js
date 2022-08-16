@@ -43,3 +43,18 @@ export function allUser(setUserList) {
       console.log("실패");
     });
 }
+
+export function findUser(userName, setUserList) {
+  const url = baseUrl + "user/name/" + userName;
+  axios
+    .get(url)
+    .then((res) => {
+      {
+        // console.log(res.data);
+        setUserList(res.data);
+      }
+    })
+    .catch(() => {
+      console.log("실패");
+    });
+}
