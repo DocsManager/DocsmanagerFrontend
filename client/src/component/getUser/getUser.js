@@ -1,4 +1,4 @@
-export function setUser(user) {
+export function setSessionUser(user) {
   sessionStorage.setItem("user", JSON.stringify(user));
 }
 

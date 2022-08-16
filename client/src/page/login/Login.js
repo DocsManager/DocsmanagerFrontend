@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../../api/userApi";
+import { getUser } from "../../component/getUser/getUser";
 
 function Login() {
+  const [user, setUser] = useState({});
+  if (user.userNo) {
+    window.location.href = "main";
+  }
+
   return (
     <>
       <input id="userId" placeholder="ID를 입력해주세요." />
@@ -14,11 +20,11 @@ function Login() {
       <Link to={"main"}>
         <button
           onClick={() => {
-            const user = {
+            const userInfo = {
               id: document.getElementById("userId").value,
               password: document.getElementById("userPwd").value,
             };
-            login(user);
+            login(userInfo, setUser);
           }}
         >
           로그인

@@ -43,7 +43,13 @@ export function getTempContent(fileNo, setMessage) {
 }
 
 export function getTempText(url, setMessage) {
-  fetch(url)
-    .then((res) => res.text())
-    .then((text) => setMessage(text));
+  // console.log(url);
+  // fetch(url)
+  //   .then((res) => res.text())
+  //   .then((text) => {
+  //     console.log(text);
+  //     setMessage(text);
+  //   });
+  console.log(url);
+  axios.get(url).then((res) => setMessage(res.data));
 }

@@ -71,7 +71,7 @@ function Workspace() {
         // 유저 접속시
       } else if (dataFromServer.type === "open") {
         setMyId(dataFromServer.id);
-        if (dataFromServer.user.length == 0) {
+        if (dataFromServer.user.length === 0) {
           workspace.tempFile.fileNo &&
             getTempContent(workspace.tempFile.fileNo, setMessage);
         } else {
