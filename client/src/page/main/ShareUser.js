@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useReducer } from "react";
 import { allUser, findUser } from "../../api/userApi";
-import { getUser } from "../../component/getUser/getUser";
+import { getUser, setUser } from "../../component/getUser/getUser";
 
 function removeItem(userGetList, user, setUserGetList) {
   var checkElem = document.getElementById(user.userNo);
@@ -18,9 +18,19 @@ function insertItem(userGetList, setUserGetList, user, userList, setUserList) {
   } else {
     setUserGetList(userGetList.filter((list) => list.userNo !== user.userNo));
   }
+  console.log(userGetList);
 }
 
-function ShareUser() {
+function userInfoList(e, user, setUserInfo, userInfo) {
+  const userDTO = {
+    userNo: user.userNo,
+    deptNo: user.dept.deptNo,
+    authority: e.target.value,
+  };
+  setUserInfo([...userInfo, userDTO]);
+}
+
+function ShareUser({ userInfo, setUserInfo }) {
   const [userList, setUserList] = useState([]);
   const [userName, setUserName] = useState("");
   const [userGetList, setUserGetList] = useState([]);
@@ -57,13 +67,15 @@ function ShareUser() {
                         type="checkbox"
                         id={user.userNo}
                         onChange={() => {
-                          insertItem(
-                            userGetList,
-                            setUserGetList,
-                            user,
-                            userList,
-                            setUserList
-                          );
+                          {
+                            insertItem(
+                              userGetList,
+                              setUserGetList,
+                              user,
+                              userList,
+                              setUserList
+                            );
+                          }
                         }}
                       />
                     </td>
@@ -94,7 +106,12 @@ function ShareUser() {
                   <td>{user.dept.deptName}</td>
                   <td>{user.name}</td>
                   <td>
-                    <select name="auth">
+                    <select
+                      name="auth"
+                      onChange={(e) =>
+                        userInfoList(e, user, setUserInfo, userInfo)
+                      }
+                    >
                       <option value="">선택</option>
                       <option value="READ">읽기</option>
                       <option value="WRITE">쓰기</option>

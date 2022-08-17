@@ -116,6 +116,7 @@ export function writeFile(file, documentDTO, fileName) {
     "documentDTO",
     new Blob([JSON.stringify(documentDTO)], { type: "application/json" })
   );
+
   axios
     .post(url, fd, {
       headers: {
