@@ -1,3 +1,4 @@
+
 import {
   Button,
   TextField,
@@ -31,6 +32,7 @@ const headCells = [
 ];
 
 function ShareUser({ searchList, setSearchList, type }) {
+
   const [userList, setUserList] = useState([]);
   const [authority, setAuthority] = useState("");
   const user = getUser();
@@ -65,6 +67,7 @@ function ShareUser({ searchList, setSearchList, type }) {
         {userList.map((users) => {
           if (users.userNo !== user.userNo) {
             return (
+
               <Typography key={users.userNo}>
                 <input
                   type="checkbox"
