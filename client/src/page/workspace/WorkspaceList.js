@@ -4,6 +4,7 @@ import {
   getUserWorkspace,
 } from "../../api/workspaceUserApi";
 import { getUser } from "../../component/getUser/getUser";
+import WorkspaceTable from "./WorkspaceTable";
 
 function WorkspaceList() {
   const [workspaces, setWorkspace] = useState([]);
@@ -15,7 +16,7 @@ function WorkspaceList() {
   // console.log(JSON.parse(window.localStorage.getItem("event")));
   return (
     <div>
-      {workspaces.map((workspace) => (
+      {/* {workspaces.map((workspace) => (
         <div className="workspaceList" key={workspace.workspaceNo.workspaceNo}>
           <span>{workspace.workspaceNo.title}</span>
           <span>{workspace.workspaceNo.master.name}</span>
@@ -30,7 +31,12 @@ function WorkspaceList() {
             나가기
           </button>
         </div>
-      ))}
+      ))} */}
+      <WorkspaceTable
+        workspace={workspaces}
+        setWorkspace={setWorkspace}
+        user={user}
+      />
     </div>
   );
 }
