@@ -51,7 +51,6 @@ export function findUser(userName, setUserList) {
     .get(url)
     .then((res) => {
       {
-        // console.log(res.data);
         setUserList(res.data);
       }
     })

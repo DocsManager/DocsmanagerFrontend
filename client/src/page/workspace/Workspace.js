@@ -45,9 +45,14 @@ function Workspace() {
   };
 
   useEffect(() => {
-    setClient(new w3cwebsocket("ws://127.0.0.1:8000" + window.location.search));
     getWorkspace(workspaceNo, setWorkspace);
-  }, []);
+    if (workspace.workspaceNo) {
+      setClient(
+        new w3cwebsocket("ws://127.0.0.1:8000" + window.location.search)
+      );
+    }
+  }, [workspace.workspaceNo]);
+  console.log(workspace);
   if (client) {
     client.onopen = () => {
       client.send(
@@ -71,8 +76,10 @@ function Workspace() {
         // 유저 접속시
       } else if (dataFromServer.type === "open") {
         setMyId(dataFromServer.id);
+        console.log(dataFromServer);
         if (dataFromServer.user.length === 0) {
-          workspace.tempFile.fileNo &&
+          console.log(workspace);
+          workspace.tempFile &&
             getTempContent(workspace.tempFile.fileNo, setMessage);
         } else {
           dataFromServer.prevData && setMessage(dataFromServer.prevData);
