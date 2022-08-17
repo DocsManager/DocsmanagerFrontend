@@ -102,7 +102,7 @@ wsServer.on("request", function (request) {
           id: userID,
           room: room,
           type: typesDef.OPEN_USER,
-          user: user.get(room),
+          user: user.get(room) ? user.get(room) : [],
         },
     connection
   );

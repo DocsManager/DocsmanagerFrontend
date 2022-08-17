@@ -18,11 +18,25 @@ import Tooltip from "@mui/material/Tooltip";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { Link } from "react-router-dom";
-import { deleteUserWorkspace } from "../../api/workspaceUserApi";
-import AddWorkspace from "./AddWorkspace";
+import {
+  deleteAllWorkspaceUser,
+  deleteUserWorkspace,
+} from "../../api/workspaceUserApi";
+import { getUser } from "../../component/getUser/getUser";
+import { Button } from "@mui/material";
+import AddMember from "../main/AddMember";
+import EditIcon from "@material-ui/icons/Edit";
+import EditTitle from "./EditTitle";
 
-function createData(title, master, registerDate, member, workspaceNo) {
-  return { title, master, registerDate, member, workspaceNo };
+function createData(
+  title,
+  master,
+  registerDate,
+  member,
+  workspaceNo,
+  workspace
+) {
+  return { title, master, registerDate, member, workspaceNo, workspace };
 }
 
 function descendingComparator(a, b, orderBy) {
@@ -110,7 +124,7 @@ function EnhancedTableHead(props) {
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
+            checked={rowCount > 0 && numSelected === 5}
             onChange={onSelectAllClick}
             inputProps={{
               "aria-label": "select all desserts",
@@ -144,7 +158,7 @@ function EnhancedTableHead(props) {
 }
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected } = props;
+  const { numSelected, selected, setWorkspace, setSelected } = props;
 
   return (
     <Toolbar
@@ -172,7 +186,12 @@ const EnhancedTableToolbar = (props) => {
       )}
       {numSelected > 0 && (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              deleteAllWorkspaceUser(getUser().userNo, selected, setWorkspace);
+              setSelected([]);
+            }}
+          >
             <DeleteIcon />
           </IconButton>
         </Tooltip>
@@ -181,19 +200,19 @@ const EnhancedTableToolbar = (props) => {
   );
 };
 
-export default function WorkspaceTable({ workspace, user }) {
+export default function WorkspaceTable({ user, workspace, setWorkspace }) {
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [open, setOpen] = useState({ member: false, edit: false });
+  const [row, setRow] = useState({});
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-  console.log(workspace);
   const rows = [];
   if (workspace.length !== 0) {
     workspace.map((v) =>
@@ -203,7 +222,8 @@ export default function WorkspaceTable({ workspace, user }) {
           v.workspaceNo.master.name,
           v.workspaceNo.registerDate,
           v.member,
-          v.workspaceNo.workspaceNo
+          v.workspaceNo.workspaceNo,
+          v
         )
       )
     );
@@ -211,19 +231,21 @@ export default function WorkspaceTable({ workspace, user }) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows
+        .slice(page * 5, (page + 1) * 5)
+        .map((n) => n.workspaceNo);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, workspaceNo) => {
+    const selectedIndex = selected.indexOf(workspaceNo);
     let newSelected = [];
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, workspaceNo);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -242,21 +264,17 @@ export default function WorkspaceTable({ workspace, user }) {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          selected={selected}
+          setWorkspace={setWorkspace}
+          setSelected={setSelected}
+        />
         <TableContainer>
           <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -268,28 +286,26 @@ export default function WorkspaceTable({ workspace, user }) {
               rowCount={rows.length}
             />
             <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-              rows.slice().sort(getComparator(order, orderBy)) */}
               {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .slice(page * 5, page * 5 + 5)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.workspaceNo);
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  console.log(row);
                   return (
                     <TableRow
                       hover
-                      // onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.registerDate}
+                      key={row.workspaceNo}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
-                          onClick={(event) => handleClick(event, row.name)}
+                          onClick={(event) =>
+                            handleClick(event, row.workspaceNo)
+                          }
                           checked={isItemSelected}
                           inputProps={{
                             "aria-labelledby": labelId,
@@ -305,6 +321,14 @@ export default function WorkspaceTable({ workspace, user }) {
                         <Link to={`/main/document?room=${row.workspaceNo}`}>
                           {row.title}
                         </Link>
+                        <Button
+                          startIcon={<EditIcon />}
+                          onClick={() => {
+                            const open = { member: false, edit: true };
+                            setOpen(open);
+                            setRow(row);
+                          }}
+                        />
                       </TableCell>
                       <TableCell align="right">{row.master}</TableCell>
                       <TableCell align="right">
@@ -320,27 +344,32 @@ export default function WorkspaceTable({ workspace, user }) {
                         )}
                       </TableCell>
                       <TableCell align="right">
-                        <button>멤버추가</button>
-                        <button
+                        <Button
+                          onClick={() => {
+                            setRow(row);
+                            open.member = true;
+                            setOpen(open);
+                          }}
+                        >
+                          멤버추가
+                        </Button>
+
+                        <Button
+                          sx={{ color: "red" }}
                           onClick={() =>
-                            deleteUserWorkspace(user.userNo, row.workspaceNo)
+                            deleteUserWorkspace(
+                              user.userNo,
+                              row.workspaceNo,
+                              setWorkspace
+                            )
                           }
                         >
                           나가기
-                        </button>
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
                 })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -348,12 +377,23 @@ export default function WorkspaceTable({ workspace, user }) {
           rowsPerPageOptions={[10]}
           component="div"
           count={rows.length}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={5}
           page={page}
           onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      <AddMember
+        open={open}
+        setOpen={setOpen}
+        row={row}
+        setList={setWorkspace}
+      />
+      <EditTitle
+        open={open}
+        setOpen={setOpen}
+        row={row}
+        setList={setWorkspace}
+      />
     </Box>
   );
 }

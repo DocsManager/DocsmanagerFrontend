@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { TextField } from "@mui/material";
+import ShareUser from "../main/ShareUser";
+import { addWorkspace } from "../../api/workspaceApi";
+import { getUser } from "../../component/getUser/getUser";
 
 const style = {
   position: "absolute",
@@ -18,6 +21,7 @@ const style = {
 };
 
 export default function AddWorkspace({ open, setOpen }) {
+  const [searchList, setSearchList] = useState([]);
   const handleClose = () => setOpen(false);
 
   return (
@@ -36,11 +40,34 @@ export default function AddWorkspace({ open, setOpen }) {
           >
             워크스페이스
           </Typography>
-          <Typography align="center">
-            <TextField id="outlined-basic" label="Name" variant="outlined" />
-          </Typography>
-          <Button>생성</Button>
-          <Button onClick={handleClose}>취소</Button>
+          <TextField
+            id="workspaceTitle"
+            label="워크스페이스명"
+            variant="outlined"
+          />
+          <ShareUser
+            searchList={searchList}
+            setSearchList={setSearchList}
+            type={"workspace"}
+          />
+          <div>
+            <Button
+              onClick={() => {
+                const title = document.getElementById("workspaceTitle").value;
+                if (title) {
+                  const workspace = {
+                    title: title,
+                    master: getUser(),
+                    userList: searchList,
+                  };
+                  addWorkspace(workspace, setOpen);
+                }
+              }}
+            >
+              생성
+            </Button>
+            <Button onClick={handleClose}>취소</Button>
+          </div>
         </Box>
       </Modal>
     </div>

@@ -12,7 +12,6 @@ function WorkspaceList() {
   useEffect(() => {
     getUserWorkspace(user.userNo, setWorkspace);
   }, []);
-  console.log(workspaces);
 
   // console.log(JSON.parse(window.localStorage.getItem("event")));
   return (
@@ -33,7 +32,11 @@ function WorkspaceList() {
           </button>
         </div>
       ))} */}
-      <WorkspaceTable workspace={workspaces} user={user} />
+      <WorkspaceTable
+        workspace={workspaces}
+        setWorkspace={setWorkspace}
+        user={user}
+      />
     </div>
   );
 }

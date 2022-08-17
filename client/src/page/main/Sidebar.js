@@ -85,7 +85,7 @@ export default function Sidebar() {
         </List>
       </Box>
       {/* </Drawer> */}
-      {open && <AddWorkspace open={open} setOpen={setOpen} />}
+      <AddWorkspace open={open} setOpen={setOpen} />
     </Box>
   );
 }
