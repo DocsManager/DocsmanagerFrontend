@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import "./Header.css";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
@@ -6,10 +6,21 @@ import { Badge } from "@mui/material";
 import { Notifications } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getUser } from "../../component/getUser/getUser";
+import { getNoticeList, connect } from "../../api/noticeApi";
+import { NoticePopover } from "./NoticePopover";
 
-const Header = () => {
-  console.log(getUser());
+export default function Header() {
   const name = getUser().name;
+
+  const [noticeList, setNoticeList] = useState([]);
+  const [newNotice, setNewNotice] = useState([]);
+
+  useEffect(() => {
+    getNoticeList(setNoticeList);
+    connect();
+    // return () => disconnect();
+  }, [noticeList]);
+
   return (
     <div style={{ backGroundColor: "#8bc7ff" }}>
       <Navbar className="header-box">
@@ -33,21 +44,11 @@ const Header = () => {
             <span>{name}</span>님 환영합니다
           </p>
           <div className="header-alert">
-            <Badge
-              color="info"
-              badgeContent={0} //알림 개수
-              max={999}
-              style={{ fontSize: "10px" }}
-              showZero
-            >
-              <Notifications sx={{ color: "#3791F8", fontSize: "30px" }} />
-            </Badge>
+            <NoticePopover noticeList={noticeList} />
             <div className="header-profile" />
           </div>
         </div>
       </Navbar>
     </div>
   );
-};
-
-export default Header;
+}

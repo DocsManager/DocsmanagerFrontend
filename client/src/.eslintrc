@@ -1,5 +1,11 @@
 {
-  "extends": ["react-app", "airbnb"],
+  "extends": [
+    "react-app",
+    "airbnb",
+    "prettier",
+    "plugin:react/recommended",
+    "react-app/jest"
+  ],
   "rules": {
     "comma-dangle": ["error", "never"],
     "func-names": 0,
