@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setSessionUser } from "../component/getUser/getUser";
+import { getUser, setSessionUser } from "../component/getUser/getUser";
 
 const baseUrl = "/api/";
 export function signUp(newUser) {
@@ -57,4 +57,13 @@ export function findUser(userName, setUserList) {
     .catch(() => {
       console.log("실패");
     });
+}
+
+export function findMember(memberList, setMemberList, setSearchList) {
+  const url = baseUrl + "user/member";
+  axios.post(url, memberList).then((res) => {
+    let arr = res.data.filter((v) => v.userNo !== getUser().userNo);
+    setMemberList(arr);
+    setSearchList(arr);
+  });
 }

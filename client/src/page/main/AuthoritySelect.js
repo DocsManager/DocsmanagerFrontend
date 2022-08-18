@@ -5,9 +5,11 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-export default function AuthoritySelect({ authority, setAuthority }) {
+export default function AuthoritySelect({ searchList, index }) {
+  const [authority, setAuthority] = useState("");
   const handleChange = (event) => {
     setAuthority(event.target.value);
+    searchList[index].authority = event.target.value;
   };
 
   return (
