@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { writeFile } from "../../api/documentApi";
 import { allUser } from "../../api/userApi";
-import { getUser } from "../../component/getUser/getUser";
+import { getUser, setUser } from "../../component/getUser/getUser";
 import ConfirmModal from "./ConfirmModal";
 import "./Modal.css";
 import SucessModal from "./SucessModal";
@@ -62,8 +62,27 @@ const WriteModal = (props) => {
       },
     },
     content: text,
-    userList: [{ userNo: user.userNo, dept: { deptNo: user.dept.deptNo } }],
   };
+  //   const documentUser = [
+  //     {
+  //         userNo:
+  //         {
+  //             userNo: user.userNo,
+  //             dept:
+  //                 {
+  //                     deptNo:user.dept.deptNo
+  //                 }
+  //         },
+  //     documentNo:
+  //         {user:
+  //             {userNo:user.userNo
+  //             ,dept:
+  //                 {deptNo:user.dept.deptNo}
+  //             }
+  //         },
+  //     authority:"MASTER"
+  //     }
+  // ]
   const { check, setCheckHandler } = useContext(MyContext);
 
   return (
@@ -84,7 +103,6 @@ const WriteModal = (props) => {
                 searchList={searchList}
                 setSearchList={setSearchList}
                 type="document"
-              />
 
               <div>파일 설명</div>
               <input

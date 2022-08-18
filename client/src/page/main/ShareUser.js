@@ -1,3 +1,4 @@
+
 import {
   Button,
   TextField,
@@ -82,6 +83,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
             !checkDuplication(searchList, users)
           ) {
             return (
+
               <Typography key={users.userNo}>
                 <input
                   type="checkbox"
