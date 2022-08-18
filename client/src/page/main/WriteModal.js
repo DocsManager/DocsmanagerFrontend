@@ -44,8 +44,7 @@ const WriteModal = (props) => {
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [fileNull, setFileNull] = useState(false);
-  const [userInfo, setUserInfo] = useState([]);
-
+  const [searchList, setSearchList] = useState([]);
   // const [userList, setUserList] = useState([]);
   const { open, close, setWriteModal } = props;
 
@@ -64,9 +63,6 @@ const WriteModal = (props) => {
     },
     content: text,
   };
-  {
-    console.log(userInfo);
-  }
   //   const documentUser = [
   //     {
   //         userNo:
@@ -103,8 +99,10 @@ const WriteModal = (props) => {
                 id="fileUpload"
                 onChange={(e) => setFile(e.target.files[0])}
               />
-
-              <ShareUser userInfo={userInfo} setUserInfo={setUserInfo} />
+              <ShareUser
+                searchList={searchList}
+                setSearchList={setSearchList}
+                type="document"
 
               <div>파일 설명</div>
               <input

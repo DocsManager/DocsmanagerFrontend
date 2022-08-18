@@ -13,25 +13,8 @@ function WorkspaceList() {
     getUserWorkspace(user.userNo, setWorkspace);
   }, []);
 
-  // console.log(JSON.parse(window.localStorage.getItem("event")));
   return (
     <div>
-      {/* {workspaces.map((workspace) => (
-        <div className="workspaceList" key={workspace.workspaceNo.workspaceNo}>
-          <span>{workspace.workspaceNo.title}</span>
-          <span>{workspace.workspaceNo.master.name}</span>
-          <a href={`/main/document?room=${workspace.workspaceNo.workspaceNo}`}>
-            <button>입장</button>
-          </a>
-          <button
-            onClick={() =>
-              deleteUserWorkspace(1, workspace.workspaceNo.workspaceNo)
-            }
-          >
-            나가기
-          </button>
-        </div>
-      ))} */}
       <WorkspaceTable
         workspace={workspaces}
         setWorkspace={setWorkspace}

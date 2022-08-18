@@ -265,7 +265,7 @@ export default function WorkspaceTable({ user, workspace, setWorkspace }) {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-
+  console.log(rows);
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
@@ -337,9 +337,13 @@ export default function WorkspaceTable({ user, workspace, setWorkspace }) {
                       <TableCell align="right">
                         {row.member.map((member, index) =>
                           row.member.length - 1 != index ? (
-                            <Fragment key={index}>{`${member},`}</Fragment>
+                            <Fragment key={index}>{`${
+                              member.split(",")[1]
+                            },`}</Fragment>
                           ) : (
-                            <Fragment key={index}>{member}</Fragment>
+                            <Fragment key={index}>
+                              {member.split(",")[1]}
+                            </Fragment>
                           )
                         )}
                       </TableCell>

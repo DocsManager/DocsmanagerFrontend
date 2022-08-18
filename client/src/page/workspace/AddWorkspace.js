@@ -60,7 +60,8 @@ export default function AddWorkspace({ open, setOpen }) {
                     master: getUser(),
                     userList: searchList,
                   };
-                  addWorkspace(workspace, setOpen);
+                  console.log(searchList);
+                  // addWorkspace(workspace, setOpen);
                 }
               }}
             >

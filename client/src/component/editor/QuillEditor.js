@@ -4,6 +4,8 @@ import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize";
 import { updateWorkspace } from "../../api/workspaceApi";
 import { onHtmlPng } from "./pdfSave";
+import { Button } from "@mui/material";
+import { Save, SaveAlt, SaveAltOutlined, SaveAs } from "@mui/icons-material";
 Quill.register("modules/ImageResize", ImageResize);
 
 const modules = {
@@ -31,24 +33,21 @@ const QuillEditor = ({
   setMessage,
   workspace,
 }) => {
-  // const [workspace, setWorkspace] = useState({});
   const editor = useRef();
-  // const URLSearch = new URLSearchParams(window.location.search);
-  // const workspaceNo = URLSearch.get("room");
-  // console.log(workspace.tempFile && workspace.tempFile.fileNo);
-  // useEffect(() => {
-  //   getWorkspace(workspaceNo, setWorkspace);
-  // }, []);
   return (
     <div style={{ height: "650px" }}>
-      <button
+      <Button
+        startIcon={<SaveAs />}
         onClick={() => {
-          updateWorkspace(message, workspace.workspaceNo);
+          updateWorkspace(message, workspace);
         }}
       >
         임시 저장
-      </button>
-      <button onClick={() => onHtmlPng()}>저장</button>
+      </Button>
+      <Button startIcon={<Save />} onClick={() => onHtmlPng()}>
+        저장
+      </Button>
+
       <ReactQuill
         id="reactQuill"
         style={{ height: "75vh" }}
