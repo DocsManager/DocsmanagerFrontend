@@ -13,12 +13,16 @@ import TrashCan from "./page/main/TrashCan";
 import MyBox from "./page/main/MyBox";
 import ShareBox from "./page/main/ShareBox";
 import Important from "./page/main/Important";
+import Mypage from "./page/login/MyPage";
+import FindIdAndPw from "./page/login/FindIdAndPw";
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
+      <Route path="/mypage" element={<Mypage />} />
+      <Route path="/findidpw" element={<FindIdAndPw />} />
       <Route path="/main" element={<Main />}>
         <Route index element={<MyBox />} />
         <Route path="share" element={<ShareBox />} />

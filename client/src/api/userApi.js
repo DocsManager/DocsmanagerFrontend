@@ -8,10 +8,11 @@ export function signUp(newUser) {
     .post(url, newUser)
     .then(() => {
       console.log("성공");
+      window.location.href = "/";
     })
-    .catch(() => {
-      console.log("실패");
-    });
+    // .catch(() => {
+    //   console.log("실패"));
+    .catch((err) => alert(err));
 }
 
 export function login(user, setUser) {

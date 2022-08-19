@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../../api/userApi";
+
 import { getUser } from "../../component/getUser/getUser";
+
+import "./Login.css";
 
 function Login() {
   const [user, setUser] = useState({});
@@ -10,7 +13,8 @@ function Login() {
   }
 
   return (
-    <>
+    <div className="container">
+      <p>ㅎㅇㅎㅇ</p>
       <input id="userId" placeholder="ID를 입력해주세요." />
       <input
         type="password"
@@ -30,10 +34,11 @@ function Login() {
           로그인
         </button>
       </Link>
+
       <Link to="/signup">
-        <button>회원가입</button>
+        <button type="button">회원가입</button>
       </Link>
-    </>
+    </div>
   );
 }
 export default Login;
