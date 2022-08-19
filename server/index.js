@@ -102,7 +102,7 @@ wsServer.on("request", function (request) {
           id: userID,
           room: room,
           type: typesDef.OPEN_USER,
-          user: user.get(room),
+          user: user.get(room) ? user.get(room) : [],
         },
     connection
   );
@@ -161,6 +161,7 @@ wsServer.on("request", function (request) {
           if (user.get(room).length === 0) {
             rooms.delete(room);
             roomActivity.delete(room);
+            roomContent.delete(room);
             // 유저가 퇴장 후 방에 유저가 있으면 퇴장메시지 전송
           } else {
             userActivity = roomActivity.get(room);

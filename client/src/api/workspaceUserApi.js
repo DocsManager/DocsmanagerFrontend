@@ -7,12 +7,30 @@ export function getUserWorkspace(userNo, setWorkspace) {
   axios
     .get(url)
     .then((res) => {
-      console.log(res.data);
       setWorkspace(res.data);
     })
     .catch((err) => console.log(err));
 }
-export function deleteUserWorkspace(userNo, workspaceNo) {
-  const url = `${baseUrl}${userNo}/${workspaceNo}`;
-  axios.delete(url).catch((err) => console.log(err));
+export function deleteUserWorkspace(userNo, workspaceNo, setWorkspace) {
+  const url = baseUrl + `${userNo}/${workspaceNo}`;
+  axios
+    .delete(url)
+    .then((res) => setWorkspace(res.data))
+    .catch((err) => console.log(err));
+}
+
+export function deleteAllWorkspaceUser(userNo, workspaceNoList, setWorkspace) {
+  const url = baseUrl + `all/${userNo}`;
+  axios
+    .post(url, workspaceNoList)
+    .then((res) => setWorkspace(res.data))
+    .catch((err) => console.log(err));
+}
+
+export function addWorkspaceUser(workspaceNo, userList, setList) {
+  const url = baseUrl + workspaceNo;
+  axios
+    .post(url, userList)
+    .then((res) => setList(res.data))
+    .catch((err) => console.log(err));
 }

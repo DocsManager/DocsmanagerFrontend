@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { writeFile } from "../../api/documentApi";
 import { allUser } from "../../api/userApi";
-import { getUser } from "../../component/getUser/getUser";
+import { getUser, setUser } from "../../component/getUser/getUser";
 import ConfirmModal from "./ConfirmModal";
 import "./Modal.css";
 import SucessModal from "./SucessModal";
@@ -44,6 +44,7 @@ const WriteModal = (props) => {
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [fileNull, setFileNull] = useState(false);
+  const [searchList, setSearchList] = useState([]);
   // const [userList, setUserList] = useState([]);
   const { open, close, setWriteModal } = props;
 
@@ -52,18 +53,36 @@ const WriteModal = (props) => {
   //   allUser(setUserList);
   // }, []);
 
+  const user = getUser();
   const documentDTO = {
     user: {
-      userNo: getUser().userNo,
+      userNo: user.userNo,
       dept: {
-        deptNo: getUser().dept.deptNo,
+        deptNo: user.dept.deptNo,
       },
     },
     content: text,
-    userList: [
-      { userNo: getUser().userNo, dept: { deptNo: getUser().dept.deptNo } },
-    ],
   };
+  //   const documentUser = [
+  //     {
+  //         userNo:
+  //         {
+  //             userNo: user.userNo,
+  //             dept:
+  //                 {
+  //                     deptNo:user.dept.deptNo
+  //                 }
+  //         },
+  //     documentNo:
+  //         {user:
+  //             {userNo:user.userNo
+  //             ,dept:
+  //                 {deptNo:user.dept.deptNo}
+  //             }
+  //         },
+  //     authority:"MASTER"
+  //     }
+  // ]
   const { check, setCheckHandler } = useContext(MyContext);
 
   return (
@@ -80,13 +99,16 @@ const WriteModal = (props) => {
                 id="fileUpload"
                 onChange={(e) => setFile(e.target.files[0])}
               />
-              <ShareUser />
+              <ShareUser
+                searchList={searchList}
+                setSearchList={setSearchList}
+                type="document"
 
-              <div>파일 설명</div>
-              <input
-                type="text"
-                id="fileContent"
-                onChange={(e) => setText(e.target.value)}
+                // <div>파일 설명</div>
+                // <input
+                //   type="text"
+                //   id="fileContent"
+                //   onChange={(e) => setText(e.target.value)}
               />
             </main>
             <footer>

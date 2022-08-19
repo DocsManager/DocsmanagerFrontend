@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import { SidebarData } from "./SidebarData";
 import "./Sidebar.css";
 import { styled } from "@mui/material/styles";
+import AddWorkspace from "../workspace/AddWorkspace";
 
 const SidebarList = styled(ListItem)`
   /* padding: 20px; */
@@ -64,11 +65,14 @@ const ListIcon = styled(ListItemIcon)`
   color: #8bc7ff;
 `;
 export default function Sidebar() {
+  const [open, setOpen] = useState(false);
   return (
     <Box>
       <Box className="sidebar-nav">
         <div className="sidebar-nav-child">
-          <SidebarBtn variant="contained">워크스페이스 생성</SidebarBtn>
+          <SidebarBtn variant="contained" onClick={() => setOpen(true)}>
+            워크스페이스 생성
+          </SidebarBtn>
         </div>
 
         <List>
@@ -82,6 +86,7 @@ export default function Sidebar() {
           ))}
         </List>
       </Box>
+      <AddWorkspace open={open} setOpen={setOpen} />
     </Box>
   );
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { setUser } from "../component/getUser/getUser";
+import { getUser, setSessionUser } from "../component/getUser/getUser";
 
 const baseUrl = "/api/";
 export function signUp(newUser) {
@@ -14,7 +14,7 @@ export function signUp(newUser) {
     });
 }
 
-export function login(user) {
+export function login(user, setUser) {
   const url = baseUrl + "login";
   axios
     .post(url, user)
@@ -22,6 +22,7 @@ export function login(user) {
       console.log(res);
       if (res.data) {
         setUser(res.data);
+        setSessionUser(res.data);
       } else {
         alert("로그인 실패");
       }
@@ -42,4 +43,27 @@ export function allUser(setUserList) {
     .catch(() => {
       console.log("실패");
     });
+}
+
+export function findUser(userName, setUserList) {
+  const url = baseUrl + "user/name/" + userName;
+  axios
+    .get(url)
+    .then((res) => {
+      {
+        setUserList(res.data);
+      }
+    })
+    .catch(() => {
+      console.log("실패");
+    });
+}
+
+export function findMember(memberList, setMemberList, setSearchList) {
+  const url = baseUrl + "user/member";
+  axios.post(url, memberList).then((res) => {
+    let arr = res.data.filter((v) => v.userNo !== getUser().userNo);
+    setMemberList(arr);
+    setSearchList(arr);
+  });
 }
