@@ -8,7 +8,7 @@ export function signUp(newUser) {
     .post(url, newUser)
     .then(() => {
       console.log("성공");
-      window.location.href = "/";
+      window.location.href = "/successsignup";
     })
     // .catch(() => {
     //   console.log("실패"));
@@ -25,7 +25,7 @@ export function login(user, setUser) {
         setUser(res.data);
         setSessionUser(res.data);
       } else {
-        alert("로그인 실패");
+        alert("로그인 실패하였습니다.");
       }
     })
     .catch((err) => console.log(err));

@@ -1,10 +1,9 @@
+import { Box, Button, InputAdornment, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../../api/userApi";
-
-import { getUser } from "../../component/getUser/getUser";
-
 import "./Login.css";
+import { loginMenu } from "./loginMenu";
 
 function Login() {
   const [user, setUser] = useState({});
@@ -13,31 +12,79 @@ function Login() {
   }
 
   return (
-    <div className="container">
-      <p>ㅎㅇㅎㅇ</p>
-      <input id="userId" placeholder="ID를 입력해주세요." />
-      <input
-        type="password"
-        id="userPwd"
-        placeholder="비밀번호를 입력해주세요."
-      />
-      <Link to={"main"}>
-        <button
-          onClick={() => {
-            const userInfo = {
-              id: document.getElementById("userId").value,
-              password: document.getElementById("userPwd").value,
-            };
-            login(userInfo, setUser);
+    <div className="logincontainer">
+      <div className="fontcontainer">
+        <div>
+          <img src={`${process.env.PUBLIC_URL}/dmlogo.png`} className="logo" />
+          <div className="fonts">
+            <p className="font1">문서를 세분화된 폴더로 관리해보세요!</p>
+            <p className="font1">
+              워크스페이스를 생성해 <br /> 문서를 공동 편집 해보세요!
+            </p>
+          </div>
+        </div>
+      </div>
+      <div style={{ width: "50vw" }} className="login">
+        <img src={`${process.env.PUBLIC_URL}/logo.png`} />
+        <p className="font1">
+          <span className="D">D</span> <span className="M">M</span>에 오신것을
+          환영합니다.
+        </p>
+        <div style={{ width: "30vw", margin: "0 auto", fontSize: 500 }}>
+          <Box
+            sx={{
+              "& > :not(style)": { m: 5 },
+              display: "flex",
+              justifyContent: "center",
+              flexDirection: "column",
+            }}
+          >
+            {loginMenu.map((menu) => {
+              return (
+                <TextField
+                  id={menu.id}
+                  placeholder={menu.placeholder}
+                  type={menu.type}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        {menu.icon}
+                      </InputAdornment>
+                    ),
+                  }}
+                  variant="standard"
+                />
+              );
+            })}
+          </Box>
+        </div>
+
+        <Box
+          sx={{
+            "& > :not(style)": { m: 1 },
+            display: "flex",
+            justifyContent: "center",
           }}
         >
-          로그인
-        </button>
-      </Link>
+          <Button
+            onClick={() => {
+              const userInfo = {
+                id: document.getElementById("userId").value,
+                password: document.getElementById("userPwd").value,
+              };
+              login(userInfo, setUser);
+            }}
+            variant="contained"
+          >
+            로그인
+          </Button>
+          <Link to="/signup">
+            <Button type="button">회원가입</Button>
+          </Link>
 
-      <Link to="/signup">
-        <button type="button">회원가입</button>
-      </Link>
+          <Button>Id/pw찾기</Button>
+        </Box>
+      </div>
     </div>
   );
 }
