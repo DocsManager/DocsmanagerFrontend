@@ -1,4 +1,3 @@
-
 import {
   Button,
   TextField,
@@ -32,9 +31,7 @@ const headCells = [
 ];
 
 function ShareUser({ searchList, setSearchList, type }) {
-
   const [userList, setUserList] = useState([]);
-  const [authority, setAuthority] = useState("");
   const user = getUser();
   useEffect(() => {
     if (type !== "workspace") {
@@ -47,6 +44,7 @@ function ShareUser({ searchList, setSearchList, type }) {
     }
   }, []);
   const deleteHandler = (userNo) => {
+    console.log(searchList);
     setSearchList(searchList.filter((v) => v.userNo !== userNo));
   };
   return (
@@ -67,7 +65,6 @@ function ShareUser({ searchList, setSearchList, type }) {
         {userList.map((users) => {
           if (users.userNo !== user.userNo) {
             return (
-
               <Typography key={users.userNo}>
                 <input
                   type="checkbox"
@@ -106,30 +103,28 @@ function ShareUser({ searchList, setSearchList, type }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {searchList.map((search) => (
-            <TableRow
-              key={search.userNo}
-              sx={{ maxHeight: 70 }}
-              hover
-              role="checkbox"
-            >
-              <TableCell component="th">{search.dept.deptName}</TableCell>
-              <TableCell component="th">{search.name}</TableCell>
-              {type !== "workspace" ? (
+          {searchList &&
+            searchList.map((search, index) => (
+              <TableRow
+                key={search.userNo}
+                sx={{ maxHeight: 70 }}
+                hover
+                role="checkbox"
+              >
+                <TableCell component="th">{search.dept.deptName}</TableCell>
+                <TableCell component="th">{search.name}</TableCell>
+                {type !== "workspace" ? (
+                  <TableCell component="th">
+                    <AuthoritySelect searchList={searchList} index={index} />
+                  </TableCell>
+                ) : (
+                  <></>
+                )}
                 <TableCell component="th">
-                  <AuthoritySelect
-                    authority={authority}
-                    setAuthority={setAuthority}
-                  />
+                  <DeleteIcon onClick={() => deleteHandler(search.userNo)} />
                 </TableCell>
-              ) : (
-                <></>
-              )}
-              <TableCell component="th">
-                <DeleteIcon onClick={() => deleteHandler(search.userNo)} />
-              </TableCell>
-            </TableRow>
-          ))}
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </React.Fragment>

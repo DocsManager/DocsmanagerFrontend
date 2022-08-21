@@ -1,12 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { writeFile } from "../../api/documentApi";
-import { allUser } from "../../api/userApi";
 import { getUser, setUser } from "../../component/getUser/getUser";
 import ConfirmModal from "./ConfirmModal";
 import "./Modal.css";
 import SucessModal from "./SucessModal";
 import { MyContext } from "./DmTable";
-import { List } from "@mui/material";
 import ShareUser from "./ShareUser";
 
 const openWriteConfirm = (writeConfirm, setWriteConfirm) => {
@@ -36,6 +34,7 @@ const successWrite = (
   check ? setCheckHandler(false) : setCheckHandler(true);
   setFile("");
 };
+// const test1
 
 const WriteModal = (props) => {
   // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
@@ -46,47 +45,20 @@ const WriteModal = (props) => {
   const [fileNull, setFileNull] = useState(false);
   const [userInfo, setUserInfo] = useState([]);
 
-  // const [userList, setUserList] = useState([]);
-  const { open, close, setWriteModal } = props;
-
-  // useEffect(() => {
-  //   // getList(setList, props.documentUrl ? props.documentUrl : "");
-  //   allUser(setUserList);
-  // }, []);
+  const { open, close, setWriteModal, documentInfo } = props;
 
   const user = getUser();
   const documentDTO = {
-    user: {
-      userNo: user.userNo,
-      dept: {
-        deptNo: user.dept.deptNo,
-      },
-    },
+    user: user,
     content: text,
   };
-  {
-    console.log(userInfo);
-  }
-  //   const documentUser = [
-  //     {
-  //         userNo:
-  //         {
-  //             userNo: user.userNo,
-  //             dept:
-  //                 {
-  //                     deptNo:user.dept.deptNo
-  //                 }
-  //         },
-  //     documentNo:
-  //         {user:
-  //             {userNo:user.userNo
-  //             ,dept:
-  //                 {deptNo:user.dept.deptNo}
-  //             }
-  //         },
-  //     authority:"MASTER"
-  //     }
-  // ]
+
+  const documentUser = userInfo.map(
+    (search) => (search = { authority: search.authority, userNo: search })
+  );
+
+  documentUser.push({ userNo: user, authority: "MASTER" });
+
   const { check, setCheckHandler } = useContext(MyContext);
 
   return (
@@ -96,15 +68,21 @@ const WriteModal = (props) => {
         {open ? (
           <section>
             <header>문서 등록</header>
+            {console.log(documentInfo)}
             <main>
               <div>{props.children}</div>
               <input
                 type="file"
                 id="fileUpload"
+                // defaultValue={documentInfo.filePath}
                 onChange={(e) => setFile(e.target.files[0])}
               />
 
-              <ShareUser userInfo={userInfo} setUserInfo={setUserInfo} />
+              <ShareUser
+                searchList={userInfo}
+                setSearchList={setUserInfo}
+                type="document"
+              />
 
               <div>파일 설명</div>
               <input
@@ -117,6 +95,7 @@ const WriteModal = (props) => {
               <button className="close" onClick={close}>
                 닫기
               </button>
+
               <button
                 className="close"
                 onClick={() =>
@@ -138,7 +117,7 @@ const WriteModal = (props) => {
         // successModalOpen={successModalOpen}
         act={() => {
           {
-            writeFile(file, documentDTO);
+            writeFile(file, documentDTO, documentUser);
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
           }
         }}
