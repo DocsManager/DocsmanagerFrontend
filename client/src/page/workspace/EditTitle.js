@@ -18,7 +18,7 @@ function EditTitle({ open, setOpen, row, setList }) {
   return (
     <div>
       <Modal
-        open={open.edit}
+        open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -47,7 +47,7 @@ function EditTitle({ open, setOpen, row, setList }) {
                   { title: newTitle },
                   setList
                 );
-                setOpen({ member: false, edit: false });
+                setOpen(false);
               } else {
                 alert("값을 입력하세요");
               }
@@ -55,9 +55,7 @@ function EditTitle({ open, setOpen, row, setList }) {
           >
             수정
           </Button>
-          <Button onClick={() => setOpen({ member: false, edit: false })}>
-            취소
-          </Button>
+          <Button onClick={() => setOpen(false)}>취소</Button>
         </Box>
       </Modal>
     </div>

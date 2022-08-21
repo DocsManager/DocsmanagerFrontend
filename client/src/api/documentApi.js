@@ -117,10 +117,6 @@ export function writeFile(file, documentDTO, documentUser, fileName) {
     : fd.append("file", file);
   fd.append(
     "documentUser",
-    new Blob([JSON.stringify([])], { type: "application/json" })
-  );
-  fd.append(
-    "documentUser",
     new Blob([JSON.stringify(documentUser)], { type: "application/json" })
   );
   fd.append(
