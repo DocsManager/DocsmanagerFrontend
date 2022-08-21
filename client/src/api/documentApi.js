@@ -108,8 +108,9 @@ export function removeImportantFile(documentNo) {
 
 // 문서 작성
 
-export function writeFile(file, documentDTO, fileName) {
+export function writeFile(file, documentDTO, documentUser, fileName) {
   const url = "/api/document";
+
   const fd = new FormData();
   fileName
     ? fd.append("file", file, `${fileName}.pdf`)
@@ -119,10 +120,41 @@ export function writeFile(file, documentDTO, fileName) {
     new Blob([JSON.stringify([])], { type: "application/json" })
   );
   fd.append(
+    "documentUser",
+    new Blob([JSON.stringify(documentUser)], { type: "application/json" })
+  );
+  fd.append(
     "documentDTO",
     new Blob([JSON.stringify(documentDTO)], { type: "application/json" })
   );
 
+  axios
+    .post(url, fd, {
+      headers: {
+        "Content-Type": "multipart/form-data;",
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    });
+}
+
+// content 수정
+export function updateContent(documentNo, text) {
+  const url = baseUrl + "document/" + documentNo;
+  axios
+    .put(url, {
+      content: text,
+    })
+    .then((res) => console.log(res.data));
+}
+
+// File 수정
+export function updateFile(documentNo, file) {
+  const url = baseUrl + "document/" + documentNo;
+
+  const fd = new FormData();
+  fd.append("file", file);
   axios
     .post(url, fd, {
       headers: {
