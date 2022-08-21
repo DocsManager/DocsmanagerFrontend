@@ -1,13 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, createContext } from "react";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import "./Modal.css";
 import {
   deleteFile,
   restoreFile,
+  updateContent,
   updateRecycleBinFile,
 } from "../../api/documentApi";
 import { MyContext } from "./DmTable";
+import WriteModal from "./WriteModal";
+import UpdateContent from "./UpdateContent";
+import UpdateFile from "./UpdateFile";
 
 const openConfirmModal = (setConfirmModalOpen, confirmModalOpen) => {
   confirmModalOpen === true
@@ -52,6 +56,14 @@ const closeInfoModal = (infoModalOpen) => {
   infoModalOpen(false);
 };
 
+const updateOpenModal = (updateModalOpen, setUpdateModalOpen) => {
+  updateModalOpen ? setUpdateModalOpen(false) : setUpdateModalOpen(true);
+};
+
+const updateFileModal = (updateFileOpen, setUpdateFileOpen) => {
+  updateFileOpen ? setUpdateFileOpen(false) : setUpdateFileOpen(true);
+};
+
 const Modal = (props) => {
   const { open, document, infoModalOpen } = props;
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -59,6 +71,8 @@ const Modal = (props) => {
   const [permanentlyDeleteModalOpen, setPermanentlyDeleteModalOpen] = useState(
     false
   );
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [updateFileOpen, setUpdateFileOpen] = useState(false);
 
   const { check, setCheckHandler } = useContext(MyContext);
 
@@ -70,6 +84,7 @@ const Modal = (props) => {
         {open ? (
           <section>
             <header>
+              {console.log(document)}
               {document.originalName}
               {(() => {
                 switch (window.location.href.split("/main")[1]) {
@@ -93,8 +108,16 @@ const Modal = (props) => {
                         <a href={document.filePath}>
                           <button className="close">down</button>
                         </a>
-                        <button className="close" onClick={() => {}}>
-                          수정~~~~
+                        <button
+                          className="close"
+                          onClick={() => {
+                            updateOpenModal(
+                              updateModalOpen,
+                              setUpdateModalOpen
+                            );
+                          }}
+                        >
+                          내용 수정~~~~
                         </button>
                       </div>
                     );
@@ -118,6 +141,13 @@ const Modal = (props) => {
               >
                 닫기
               </button>
+              <button
+                onClick={() => {
+                  updateFileModal(updateFileOpen, setUpdateFileOpen);
+                }}
+              >
+                문서 수정
+              </button>
             </footer>
           </section>
         ) : null}
@@ -133,9 +163,6 @@ const Modal = (props) => {
                   close={() =>
                     openConfirmModal(setConfirmModalOpen, confirmModalOpen)
                   }
-                  // delclose={() =>
-                  //   openSuccessModal(setSuccessModalOpen, infoModalOpen)
-                  // }
                   successModalOpen={successModalOpen}
                   act={() =>
                     deleteFile(
@@ -235,6 +262,36 @@ const Modal = (props) => {
             );
         }
       })()}
+      {/* {
+        <WriteModal
+          open={updateModalOpen}
+          close={() => updateOpenModal(updateModalOpen, setUpdateModalOpen)}
+          setWriteModal={setUpdateModalOpen}
+          documentInfo={document}
+        >
+          <div>파일 선택</div>
+        </WriteModal>
+      } */}
+      {
+        <UpdateContent
+          open={updateModalOpen}
+          close={() => openConfirmModal(setUpdateModalOpen, updateModalOpen)}
+          successModalOpen={successModalOpen}
+          document={document}
+          setUpdateModalOpen={setUpdateModalOpen}
+          infoModalOpen={infoModalOpen}
+          check={check}
+          setCheckHandler={setCheckHandler}
+        />
+      }
+      {
+        <UpdateFile
+          open={updateFileOpen}
+          close={() => openConfirmModal(setUpdateFileOpen, updateFileOpen)}
+          successModalOpen={successModalOpen}
+          document={document}
+        />
+      }
     </div>
   );
 };

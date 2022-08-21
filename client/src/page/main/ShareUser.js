@@ -1,4 +1,3 @@
-
 import {
   Button,
   TextField,
@@ -32,9 +31,11 @@ const headCells = [
   },
 ];
 
+
 function ShareUser({ searchList, setSearchList, type, member }) {
   const [userList, setUserList] = useState([]);
   const [memberList, setMemberList] = useState([]);
+
   const user = getUser();
   useEffect(() => {
     if (type !== "workspace") {
@@ -60,6 +61,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
     return check;
   }
   const deleteHandler = (userNo) => {
+    console.log(searchList);
     setSearchList(searchList.filter((v) => v.userNo !== userNo));
   };
   return (
@@ -83,7 +85,6 @@ function ShareUser({ searchList, setSearchList, type, member }) {
             !checkDuplication(searchList, users)
           ) {
             return (
-
               <Typography key={users.userNo}>
                 <input
                   type="checkbox"
@@ -122,6 +123,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
           </TableRow>
         </TableHead>
         <TableBody>
+
           {searchList.map((search, index) => (
             <TableRow
               key={search.userNo}
