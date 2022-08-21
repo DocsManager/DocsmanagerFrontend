@@ -111,7 +111,9 @@ export function removeImportantFile(documentNo) {
 export function writeFile(file, documentDTO, fileName) {
   const url = "/api/document";
   const fd = new FormData();
-  fileName ? fd.append("file", file, fileName) : fd.append("file", file);
+  fileName
+    ? fd.append("file", file, `${fileName}.pdf`)
+    : fd.append("file", file);
   fd.append(
     "documentUser",
     new Blob([JSON.stringify([])], { type: "application/json" })

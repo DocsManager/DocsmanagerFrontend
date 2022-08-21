@@ -1,8 +1,8 @@
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { pdfSend } from "../../api/testApi";
+import { writeFile } from "../../api/documentApi";
 
-export const onHtmlPng = () => {
+export const onHtmlPng = (title, newDocument) => {
   const onCapture = () => {
     html2canvas(document.querySelector(".ql-editor")).then((canvas) => {
       const imageData = canvas.toDataURL("image/png");
@@ -11,7 +11,8 @@ export const onHtmlPng = () => {
 
       pdf.addImage(imageData, "JPEG", 0, 0);
       var blobPDF = new Blob([pdf.output("blob")], { type: "application/pdf" });
-      pdfSend(blobPDF);
+      // pdfSend(blobPDF);
+      writeFile(blobPDF, newDocument, title);
     });
   };
   onCapture();
