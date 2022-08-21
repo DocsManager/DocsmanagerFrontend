@@ -61,7 +61,7 @@ export default function AddWorkspace({ open, setOpen }) {
                     userList: searchList,
                   };
                   console.log(searchList);
-                  // addWorkspace(workspace, setOpen);
+                  addWorkspace(workspace, setOpen);
                 }
               }}
             >

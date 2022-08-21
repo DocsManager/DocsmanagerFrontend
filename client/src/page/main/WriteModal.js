@@ -53,15 +53,13 @@ const WriteModal = (props) => {
   //   allUser(setUserList);
   // }, []);
 
-
   const user = getUser();
   const documentDTO = {
     user: user,
     content: text,
   };
 
-
-  const documentUser = userInfo.map(
+  const documentUser = searchList.map(
     (search) => (search = { authority: search.authority, userNo: search })
   );
 
@@ -76,7 +74,7 @@ const WriteModal = (props) => {
         {open ? (
           <section>
             <header>문서 등록</header>
-            {console.log(documentInfo)}
+
             <main>
               <div>{props.children}</div>
               <input
@@ -90,7 +88,7 @@ const WriteModal = (props) => {
                 searchList={searchList}
                 setSearchList={setSearchList}
                 type="document"
-
+              />
 
               <div>파일 설명</div>
               <input
