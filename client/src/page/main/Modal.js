@@ -12,6 +12,7 @@ import { MyContext } from "./DmTable";
 import WriteModal from "./WriteModal";
 import UpdateContent from "./UpdateContent";
 import UpdateFile from "./UpdateFile";
+import ShareUser from "./ShareUser";
 
 const openConfirmModal = (setConfirmModalOpen, confirmModalOpen) => {
   confirmModalOpen === true
@@ -73,6 +74,7 @@ const Modal = (props) => {
   );
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [updateFileOpen, setUpdateFileOpen] = useState(false);
+  const [openShareAdd, setOpenShareAdd] = useState(false);
 
   const { check, setCheckHandler } = useContext(MyContext);
 
@@ -148,6 +150,7 @@ const Modal = (props) => {
               >
                 문서 수정
               </button>
+              <button onClick={() => setOpenShareAdd(true)}>공유자 추가</button>
             </footer>
           </section>
         ) : null}
@@ -262,16 +265,6 @@ const Modal = (props) => {
             );
         }
       })()}
-      {/* {
-        <WriteModal
-          open={updateModalOpen}
-          close={() => updateOpenModal(updateModalOpen, setUpdateModalOpen)}
-          setWriteModal={setUpdateModalOpen}
-          documentInfo={document}
-        >
-          <div>파일 선택</div>
-        </WriteModal>
-      } */}
       {
         <UpdateContent
           open={updateModalOpen}

@@ -74,6 +74,7 @@ const WriteModal = (props) => {
         {open ? (
           <section>
             <header>문서 등록</header>
+
             <main>
               <div>{props.children}</div>
               <input
@@ -88,6 +89,7 @@ const WriteModal = (props) => {
                 setSearchList={setSearchList}
                 type="document"
               />
+
               <div>파일 설명</div>
               <input
                 type="text"

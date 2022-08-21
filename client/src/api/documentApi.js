@@ -112,9 +112,11 @@ export function writeFile(file, documentDTO, documentUser, fileName) {
   const url = "/api/document";
 
   const fd = new FormData();
+
   fileName
     ? fd.append("file", file, `${fileName}.pdf`)
     : fd.append("file", file);
+
   fd.append(
     "documentUser",
     new Blob([JSON.stringify(documentUser)], { type: "application/json" })
@@ -160,4 +162,13 @@ export function updateFile(documentNo, file) {
     .then((res) => {
       console.log(res.data);
     });
+}
+
+// user 추가
+export function documentAddUser(userList) {
+  const url = baseUrl + "document/authority";
+
+  axios.post(url, userList).then((res) => {
+    console.log(res.data);
+  });
 }

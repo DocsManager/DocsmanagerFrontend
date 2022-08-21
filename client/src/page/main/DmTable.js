@@ -192,6 +192,7 @@ export default function DmTable(props) {
                       //   handleClick(event, li.documentNo.documentNo)
                       // }
                     >
+                      {console.log(li)}
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
