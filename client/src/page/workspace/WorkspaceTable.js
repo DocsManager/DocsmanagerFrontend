@@ -200,12 +200,15 @@ const EnhancedTableToolbar = (props) => {
   );
 };
 
-export default function WorkspaceTable({ user, workspace, setWorkspace }) {
+export default function WorkspaceTable(props) {
+  const { user, workspace, setWorkspace, check, setCheck } = props;
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
-  const [open, setOpen] = useState({ member: false, edit: false });
+  // const [open, setOpen] = useState({ member: false, edit: false });
+  const [editOpen, setEditOpen] = useState(false);
+  const [memberOpen, setMemberOpen] = useState(false);
   const [row, setRow] = useState({});
 
   const handleRequestSort = (event, property) => {
@@ -324,8 +327,8 @@ export default function WorkspaceTable({ user, workspace, setWorkspace }) {
                         <Button
                           startIcon={<EditIcon />}
                           onClick={() => {
-                            const open = { member: false, edit: true };
-                            setOpen(open);
+                            // const open = { member: false, edit: true };
+                            setEditOpen(true);
                             setRow(row);
                           }}
                         />
@@ -351,8 +354,7 @@ export default function WorkspaceTable({ user, workspace, setWorkspace }) {
                         <Button
                           onClick={() => {
                             setRow(row);
-                            open.member = true;
-                            setOpen(open);
+                            setMemberOpen(true);
                           }}
                         >
                           멤버추가
@@ -387,14 +389,17 @@ export default function WorkspaceTable({ user, workspace, setWorkspace }) {
         />
       </Paper>
       <AddMember
-        open={open}
-        setOpen={setOpen}
+        open={memberOpen}
+        setOpen={setMemberOpen}
         row={row}
-        setList={setWorkspace}
+        check={check}
+        setCheck={setCheck}
+        type={"workspace"}
+        // setList={setWorkspace}
       />
       <EditTitle
-        open={open}
-        setOpen={setOpen}
+        open={editOpen}
+        setOpen={setEditOpen}
         row={row}
         setList={setWorkspace}
       />
