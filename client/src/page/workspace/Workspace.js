@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { w3cwebsocket } from "websocket";
 import { cutByLen } from "../../component/byteLength/getByte";
-import QuillEditor from "../../component/editor/QuillEditor";
+import QuillEditor from "./QuillEditor";
 import { getUser } from "../../component/getUser/getUser";
 import Identicon from "react-identicons";
 import { UncontrolledTooltip } from "reactstrap";

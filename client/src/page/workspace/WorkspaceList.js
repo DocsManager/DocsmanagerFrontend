@@ -8,10 +8,11 @@ import WorkspaceTable from "./WorkspaceTable";
 
 function WorkspaceList() {
   const [workspaces, setWorkspace] = useState([]);
+  const [check, setCheck] = useState(false);
   const user = getUser();
   useEffect(() => {
     getUserWorkspace(user.userNo, setWorkspace);
-  }, []);
+  }, [check]);
 
   return (
     <div>
@@ -19,6 +20,8 @@ function WorkspaceList() {
         workspace={workspaces}
         setWorkspace={setWorkspace}
         user={user}
+        check={check}
+        setCheck={setCheck}
       />
     </div>
   );

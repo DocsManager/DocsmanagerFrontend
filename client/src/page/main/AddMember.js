@@ -15,12 +15,13 @@ const style = {
   p: 4,
 };
 
-export default function AddMember({ open, setOpen, row, setList }) {
+export default function AddMember(props) {
+  const { open, setOpen, row, check, setCheck, type } = props;
   const [searchList, setSearchList] = useState([]);
   return (
     <div>
       <Modal
-        open={open.member}
+        open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -29,19 +30,22 @@ export default function AddMember({ open, setOpen, row, setList }) {
             searchList={searchList}
             setSearchList={setSearchList}
             member={row.member}
-            type={"workspace"}
+            type={type}
           />
           <Button
             onClick={() => {
-              // addWorkspaceUser(row.workspaceNo, searchList, setList);
-              setOpen({ member: false, edit: false });
+              if (type === "workspace") {
+                addWorkspaceUser(row.workspaceNo, searchList, check, setCheck);
+              } else if (type === "document") {
+              }
+              setOpen(false);
             }}
           >
             추가
           </Button>
           <Button
             onClick={() => {
-              setOpen({ member: false, edit: false });
+              setOpen(false);
               setSearchList([]);
             }}
           >
