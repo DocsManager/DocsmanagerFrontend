@@ -33,7 +33,7 @@ export default function AddMember({ open, setOpen, row, setList }) {
           />
           <Button
             onClick={() => {
-              addWorkspaceUser(row.workspaceNo, searchList, setList);
+              // addWorkspaceUser(row.workspaceNo, searchList, setList);
               setOpen({ member: false, edit: false });
             }}
           >
@@ -42,6 +42,7 @@ export default function AddMember({ open, setOpen, row, setList }) {
           <Button
             onClick={() => {
               setOpen({ member: false, edit: false });
+              setSearchList([]);
             }}
           >
             취소

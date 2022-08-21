@@ -8,10 +8,11 @@ import {
   TableCell,
   TableRow,
   TableBody,
+  IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect, useRef, useState } from "react";
-import { findUser } from "../../api/userApi";
+import { findMember, findUser } from "../../api/userApi";
 import { getUser } from "../../component/getUser/getUser";
 import AuthoritySelect from "./AuthoritySelect";
 
@@ -30,8 +31,11 @@ const headCells = [
   },
 ];
 
-function ShareUser({ searchList, setSearchList, type }) {
+
+function ShareUser({ searchList, setSearchList, type, member }) {
   const [userList, setUserList] = useState([]);
+  const [memberList, setMemberList] = useState([]);
+
   const user = getUser();
   useEffect(() => {
     if (type !== "workspace") {
@@ -42,7 +46,20 @@ function ShareUser({ searchList, setSearchList, type }) {
         label: "권한",
       });
     }
+    if (member) {
+      const memberNoList = member.map((v) => v.split(",")[0]);
+      findMember(memberNoList, setMemberList, setSearchList);
+    }
   }, []);
+  function checkDuplication(arr, user) {
+    let check = false;
+    arr.map((element) => {
+      if (element.userNo === user.userNo) {
+        check = true;
+      }
+    });
+    return check;
+  }
   const deleteHandler = (userNo) => {
     console.log(searchList);
     setSearchList(searchList.filter((v) => v.userNo !== userNo));
@@ -63,7 +80,10 @@ function ShareUser({ searchList, setSearchList, type }) {
       <Typography component="h3">검색 결과</Typography>
       <Card variant="outlined" sx={{ minHeight: 275 }}>
         {userList.map((users) => {
-          if (users.userNo !== user.userNo) {
+          if (
+            users.userNo !== user.userNo &&
+            !checkDuplication(searchList, users)
+          ) {
             return (
               <Typography key={users.userNo}>
                 <input
@@ -103,28 +123,36 @@ function ShareUser({ searchList, setSearchList, type }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {searchList &&
-            searchList.map((search, index) => (
-              <TableRow
-                key={search.userNo}
-                sx={{ maxHeight: 70 }}
-                hover
-                role="checkbox"
-              >
-                <TableCell component="th">{search.dept.deptName}</TableCell>
-                <TableCell component="th">{search.name}</TableCell>
-                {type !== "workspace" ? (
-                  <TableCell component="th">
-                    <AuthoritySelect searchList={searchList} index={index} />
-                  </TableCell>
-                ) : (
-                  <></>
-                )}
+
+          {searchList.map((search, index) => (
+            <TableRow
+              key={search.userNo}
+              sx={{ maxHeight: 70 }}
+              hover
+              role="checkbox"
+            >
+              <TableCell component="th">{search.dept.deptName}</TableCell>
+              <TableCell component="th">{search.name}</TableCell>
+              {type !== "workspace" ? (
                 <TableCell component="th">
-                  <DeleteIcon onClick={() => deleteHandler(search.userNo)} />
+                  <AuthoritySelect searchList={searchList} index={index} />
                 </TableCell>
-              </TableRow>
-            ))}
+              ) : (
+                <></>
+              )}
+              <TableCell component="th">
+                {checkDuplication(memberList, search) ? (
+                  <IconButton disabled>
+                    <DeleteIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={() => deleteHandler(search.userNo)}>
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </React.Fragment>

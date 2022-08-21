@@ -43,15 +43,23 @@ const WriteModal = (props) => {
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [fileNull, setFileNull] = useState(false);
-  const [userInfo, setUserInfo] = useState([]);
 
-  const { open, close, setWriteModal, documentInfo } = props;
+  const [searchList, setSearchList] = useState([]);
+  // const [userList, setUserList] = useState([]);
+  const { open, close, setWriteModal } = props;
+
+  // useEffect(() => {
+  //   // getList(setList, props.documentUrl ? props.documentUrl : "");
+  //   allUser(setUserList);
+  // }, []);
+
 
   const user = getUser();
   const documentDTO = {
     user: user,
     content: text,
   };
+
 
   const documentUser = userInfo.map(
     (search) => (search = { authority: search.authority, userNo: search })
@@ -79,10 +87,10 @@ const WriteModal = (props) => {
               />
 
               <ShareUser
-                searchList={userInfo}
-                setSearchList={setUserInfo}
+                searchList={searchList}
+                setSearchList={setSearchList}
                 type="document"
-              />
+
 
               <div>파일 설명</div>
               <input

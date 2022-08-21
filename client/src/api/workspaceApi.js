@@ -3,20 +3,23 @@ import axios from "axios";
 const baseUrl = "/api/workspace";
 
 // 임시저장
-export function updateWorkspace(content, workspaceNo) {
-  const url = `${baseUrl}/temp/${workspaceNo}`;
+export function updateWorkspace(content, workspace) {
+  const url = `${baseUrl}/temp`;
   const fd = new FormData();
   var blob = new Blob([content], { type: "text/plain", endings: "native" });
-  fd.append("file", blob, `workspace${workspaceNo}.txt`);
+  fd.append("file", blob, `workspace${workspace.workspaceNo}.txt`);
+  fd.append(
+    "workspace",
+    new Blob([JSON.stringify(workspace)], { type: "application/json" })
+  );
   axios
     .put(url, fd, {
       headers: {
         "Content-Type": "multipart/form-data;",
       },
     })
+    .then(alert("임시 저장 완료"))
     .catch((err) => console.log(err));
-
-  // axios.put(url, workspace).catch((err) => console.log(err));
 }
 
 // 제목 변경
