@@ -1,11 +1,12 @@
 import ReactQuill, { Quill } from "react-quill";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize";
 import { updateWorkspace } from "../../api/workspaceApi";
-import { onHtmlPng } from "./pdfSave";
+import { onHtmlPng } from "../../component/editor/pdfSave";
 import { Button } from "@mui/material";
 import { Save, SaveAlt, SaveAltOutlined, SaveAs } from "@mui/icons-material";
+import SaveWorksapce from "../modal/SaveWorksapce";
 Quill.register("modules/ImageResize", ImageResize);
 
 const modules = {
@@ -33,6 +34,7 @@ const QuillEditor = ({
   setMessage,
   workspace,
 }) => {
+  const [open, setOpen] = useState(false);
   const editor = useRef();
   return (
     <div style={{ height: "650px" }}>
@@ -44,7 +46,7 @@ const QuillEditor = ({
       >
         임시 저장
       </Button>
-      <Button startIcon={<Save />} onClick={() => onHtmlPng()}>
+      <Button startIcon={<Save />} onClick={() => setOpen(true)}>
         저장
       </Button>
 
@@ -64,6 +66,7 @@ const QuillEditor = ({
         preserveWhitespace={true}
         value={message}
       />
+      <SaveWorksapce open={open} setOpen={setOpen} />
     </div>
   );
 };

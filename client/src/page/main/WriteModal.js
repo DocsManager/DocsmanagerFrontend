@@ -91,7 +91,7 @@ const WriteModal = (props) => {
                 setSearchList={setSearchList}
                 type="document"
 
-
+              />
               <div>파일 설명</div>
               <input
                 type="text"
