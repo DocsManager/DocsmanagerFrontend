@@ -192,7 +192,6 @@ export default function DmTable(props) {
                       //   handleClick(event, li.documentNo.documentNo)
                       // }
                     >
-                      {console.log(li)}
                       <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
@@ -227,13 +226,13 @@ export default function DmTable(props) {
                         id={labelId}
                         scope="row"
                         align="center"
-                        onClick={() =>
+                        onClick={() => {
                           openInfoModal(
                             setInfoModalOpen,
-                            li.documentNo.documentNo,
-                            setDocument
-                          )
-                        }
+                            li.documentNo.documentNo
+                          );
+                          setDocument(li);
+                        }}
                       >
                         {li.documentNo.originalName}
                       </TableCell>
@@ -255,10 +254,14 @@ export default function DmTable(props) {
                       })()}
 
                       <TableCell align="center">
-                        {li.documentNo.registerDate}
+                        {li.documentNo.registerDate
+                          .replace("T", " ")
+                          .slice(0, 16)}
                       </TableCell>
                       <TableCell align="center">
-                        {li.documentNo.modifyDate}
+                        {li.documentNo.modifyDate
+                          .replace("T", " ")
+                          .slice(0, 16)}
                       </TableCell>
                     </TableRow>
                   );

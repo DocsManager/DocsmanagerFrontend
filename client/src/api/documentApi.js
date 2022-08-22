@@ -56,11 +56,11 @@ export function deleteFile(
 }
 
 // 파일 정보 모달
-export function openInfoModal(setInfoModalOpen, documentNo, setDocument) {
+export function openInfoModal(setInfoModalOpen, documentNo) {
   setInfoModalOpen(true);
   const url = baseUrl + "document/" + documentNo;
   axios.get(url).then((res) => {
-    setDocument(res.data);
+    // setDocument(res.data);
   });
 }
 
@@ -165,10 +165,18 @@ export function updateFile(documentNo, file) {
 }
 
 // user 추가
-export function documentAddUser(userList) {
+export function documentAddUser(userList, row) {
   const url = baseUrl + "document/authority";
-
-  axios.post(url, userList).then((res) => {
+  const documentUser = userList.map(
+    (search) =>
+      (search = {
+        authority: search.authority,
+        userNo: search,
+        documentNo: row,
+      })
+  );
+  console.log(documentUser);
+  axios.post(url, documentUser).then((res) => {
     console.log(res.data);
   });
 }

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Modal } from "@mui/material";
 import ShareUser from "./ShareUser";
 import { addWorkspaceUser } from "../../api/workspaceUserApi";
+import { documentAddUser } from "../../api/documentApi";
 
 const style = {
   position: "absolute",
@@ -37,6 +38,7 @@ export default function AddMember(props) {
               if (type === "workspace") {
                 addWorkspaceUser(row.workspaceNo, searchList, check, setCheck);
               } else if (type === "document") {
+                documentAddUser(searchList, row);
               }
               setOpen(false);
             }}

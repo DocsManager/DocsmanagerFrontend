@@ -36,7 +36,11 @@ const UpdateContent = (props) => {
           <section>
             <header>내용 수정</header>
             <main>
-              <input type="text" onChange={(e) => setContent(e.target.value)} />
+              <input
+                type="text"
+                defaultValue={document.content}
+                onChange={(e) => setContent(e.target.value)}
+              />
             </main>
             <footer>
               <button className="close" onClick={close}>
