@@ -13,6 +13,7 @@ import WriteModal from "./WriteModal";
 import UpdateContent from "./UpdateContent";
 import UpdateFile from "./UpdateFile";
 import ShareUser from "./ShareUser";
+import AddMember from "./AddMember";
 
 const openConfirmModal = (setConfirmModalOpen, confirmModalOpen) => {
   confirmModalOpen === true
@@ -87,7 +88,7 @@ const Modal = (props) => {
           <section>
             <header>
               {console.log(document)}
-              {document.originalName}
+              {document.documentNo.originalName}
               {(() => {
                 switch (window.location.href.split("/main")[1]) {
                   case "/trashcan":
@@ -96,7 +97,7 @@ const Modal = (props) => {
                         className="close"
                         onClick={() =>
                           restoreFile(
-                            [document.documentNo],
+                            [document.documentNo.documentNo],
                             setSuccessModalOpen
                           )
                         }
@@ -107,20 +108,24 @@ const Modal = (props) => {
                   default:
                     return (
                       <div>
-                        <a href={document.filePath}>
+                        <a href={document.documentNo.filePath}>
                           <button className="close">down</button>
                         </a>
-                        <button
-                          className="close"
-                          onClick={() => {
-                            updateOpenModal(
-                              updateModalOpen,
-                              setUpdateModalOpen
-                            );
-                          }}
-                        >
-                          내용 수정~~~~
-                        </button>
+                        {document.authority !== "READ" ? (
+                          <button
+                            className="close"
+                            onClick={() => {
+                              updateOpenModal(
+                                updateModalOpen,
+                                setUpdateModalOpen
+                              );
+                            }}
+                          >
+                            내용 수정~~~~
+                          </button>
+                        ) : (
+                          <></>
+                        )}
                       </div>
                     );
                 }
@@ -135,7 +140,11 @@ const Modal = (props) => {
                 삭제
               </button>
             </header>
-            <main>{document.content}</main>
+            <main>
+              {document.documentNo.content
+                ? document.documentNo.content
+                : "문서 내용이 없습니다."}
+            </main>
             <footer>
               <button
                 className="close"
@@ -150,7 +159,13 @@ const Modal = (props) => {
               >
                 문서 수정
               </button>
-              <button onClick={() => setOpenShareAdd(true)}>공유자 추가</button>
+              {document.authority === "MASTER" ? (
+                <button onClick={() => setOpenShareAdd(true)}>
+                  공유자 추가
+                </button>
+              ) : (
+                <></>
+              )}
             </footer>
           </section>
         ) : null}
@@ -169,7 +184,7 @@ const Modal = (props) => {
                   successModalOpen={successModalOpen}
                   act={() =>
                     deleteFile(
-                      [document.documentNo],
+                      [document.documentNo.documentNo],
                       setConfirmModalOpen,
                       setPermanentlyDeleteModalOpen
                     )
@@ -194,7 +209,7 @@ const Modal = (props) => {
                   successModalOpen={successModalOpen}
                   act={() =>
                     updateRecycleBinFile(
-                      [document.documentNo],
+                      [document.documentNo.documentNo],
                       setConfirmModalOpen,
                       setSuccessModalOpen
                     )
@@ -270,7 +285,7 @@ const Modal = (props) => {
           open={updateModalOpen}
           close={() => openConfirmModal(setUpdateModalOpen, updateModalOpen)}
           successModalOpen={successModalOpen}
-          document={document}
+          document={document.documentNo}
           setUpdateModalOpen={setUpdateModalOpen}
           infoModalOpen={infoModalOpen}
           check={check}
@@ -282,7 +297,17 @@ const Modal = (props) => {
           open={updateFileOpen}
           close={() => openConfirmModal(setUpdateFileOpen, updateFileOpen)}
           successModalOpen={successModalOpen}
-          document={document}
+          document={document.documentNo}
+        />
+      }
+      {
+        <AddMember
+          open={openShareAdd}
+          setOpen={setOpenShareAdd}
+          row={document}
+          check={check}
+          setCheck={setCheckHandler}
+          type="document"
         />
       }
     </div>
