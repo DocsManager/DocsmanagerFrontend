@@ -38,3 +38,22 @@ export function verifyMail(params, setVerifyResult) {
     })
     .catch((err) => console.log(err));
 }
+
+export function findId(params) {
+  console.log(params.data);
+  axios
+    .get("http://localhost:8080/mail/finduser", { params })
+    .then((response) => {
+      console.log(response.data);
+      // .then(alert("회원님의 아이디는" + +"입니다"));
+    });
+}
+
+export function findPw(params) {
+  console.log(params.data);
+  axios
+    .get("http://localhost:8080/mail/findpassword", { params })
+    .then((response) => {
+      console.log(response.data);
+    });
+}

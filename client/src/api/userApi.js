@@ -68,3 +68,11 @@ export function findMember(memberList, setMemberList, setSearchList) {
     setSearchList(arr);
   });
 }
+
+export function logout() {
+  const url = baseUrl + "logout";
+  axios
+    .get(url)
+    .then(alert("로그아웃이 되었습니다."))
+    .then((window.location.href = "/"));
+}

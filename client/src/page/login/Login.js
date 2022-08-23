@@ -1,5 +1,5 @@
 import { Box, Button, InputAdornment, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { login } from "../../api/userApi";
 import "./Login.css";
@@ -25,7 +25,7 @@ function Login() {
         </div>
       </div>
       <div style={{ width: "50vw" }} className="login">
-        <img src={`${process.env.PUBLIC_URL}/logo.png`} />
+        <img src={`${process.env.PUBLIC_URL}/logo.png`} className="dmlogo" />
         <p className="font1">
           <span className="D">D</span> <span className="M">M</span>에 오신것을
           환영합니다.
@@ -82,7 +82,9 @@ function Login() {
             <Button type="button">회원가입</Button>
           </Link>
 
-          <Button>Id/pw찾기</Button>
+          <Link to="findidpw">
+            <Button>Id/pw찾기</Button>
+          </Link>
         </Box>
       </div>
     </div>

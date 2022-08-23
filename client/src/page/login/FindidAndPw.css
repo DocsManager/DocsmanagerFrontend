@@ -1,0 +1,14 @@
+.maincontainer {
+  /* height: 100vh; */
+}
+.buttoncontainer {
+  /* display: flex; */
+}
+
+.idpwdiv {
+  /* display: flex; */
+  justify-content: center;
+  border-radius: 10px;
+  /* border: solid;/ */
+  text-align: center;
+}

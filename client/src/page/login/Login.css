@@ -1,15 +1,10 @@
-.logincontainer {
-  display: flex;
-  align-items: center;
-  height: 100vh;
-}
-
 .fontcontainer {
   background-color: rgba(139, 199, 255, 1);
   width: 50%;
   height: 100vh;
   display: block;
 }
+
 .fontcontainer > div > img {
   margin: 0 auto;
   text-align: center;
@@ -18,7 +13,7 @@
 }
 .login > img {
   position: absolute;
-  right: 10;
+  right: 0;
   top: 0;
 }
 .fonts {
@@ -44,4 +39,11 @@
 .M {
   font-size: 40px;
   color: #000000;
+}
+
+.logincontainer {
+  display: flex;
+
+  align-items: center;
+  height: 100vh;
 }

@@ -1,39 +1,69 @@
 .ptag {
   color: #bf1650;
+  padding-left: 7px;
 }
 
 .signuptitle {
   font-size: 40px;
   text-align: center;
-  margin-top: 40px;
+  margin-top: 10px;
   margin-bottom: 40px;
 }
 
 .photocontainer {
   display: flex;
-  width: 30%;
-  height: 100vh;
+  flex-direction: column;
+  width: 20%;
+  height: 100%;
   background-color: rgba(139, 199, 255, 1);
 }
 
 .signupcontainer {
   display: flex;
   height: 100vh;
+  width: 100vw;
+  padding: 3%;
 }
 
 .signupform {
   display: flex;
+  width: 40%;
+  margin-left: 15%;
+  margin-top: 40px;
   flex-direction: column;
-  width: 50%;
-  height: 100vh;
-  line-height: 20px;
+  height: 90vh;
+  line-height: 13px;
+}
+
+/* 아래 div가 버튼 안으로 밀어넣음 밖으로 빼면 영훈이 좋아죽을듯 */
+.maildiv {
+  padding-right: 8px;
+}
+.confirmdiv {
+  padding-right: 8px;
 }
 
 .mailbtn {
   float: right;
-  width: 130px;
+  width: 123px;
 }
 
 .email {
   display: flex;
+}
+
+.westicon {
+  margin-top: 20px;
+  margin-left: 20px;
+  color: #000000;
+}
+
+.signuplogo {
+  display: block;
+  margin-bottom: auto;
+  margin-top: auto;
+}
+
+.signupbtn {
+  text-align: center;
 }
