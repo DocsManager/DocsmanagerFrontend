@@ -1,13 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, createContext } from "react";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import "./Modal.css";
 import {
   deleteFile,
   restoreFile,
+  updateContent,
   updateRecycleBinFile,
 } from "../../api/documentApi";
 import { MyContext } from "./DmTable";
+import WriteModal from "./WriteModal";
+import UpdateContent from "./UpdateContent";
+import UpdateFile from "./UpdateFile";
+import ShareUser from "./ShareUser";
+import AddMember from "./AddMember";
 
 const openConfirmModal = (setConfirmModalOpen, confirmModalOpen) => {
   confirmModalOpen === true
@@ -52,6 +58,14 @@ const closeInfoModal = (infoModalOpen) => {
   infoModalOpen(false);
 };
 
+const updateOpenModal = (updateModalOpen, setUpdateModalOpen) => {
+  updateModalOpen ? setUpdateModalOpen(false) : setUpdateModalOpen(true);
+};
+
+const updateFileModal = (updateFileOpen, setUpdateFileOpen) => {
+  updateFileOpen ? setUpdateFileOpen(false) : setUpdateFileOpen(true);
+};
+
 const Modal = (props) => {
   const { open, document, infoModalOpen } = props;
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
@@ -59,18 +73,21 @@ const Modal = (props) => {
   const [permanentlyDeleteModalOpen, setPermanentlyDeleteModalOpen] = useState(
     false
   );
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [updateFileOpen, setUpdateFileOpen] = useState(false);
+  const [openShareAdd, setOpenShareAdd] = useState(false);
 
   const { check, setCheckHandler } = useContext(MyContext);
 
   return (
     // 모달이 열릴때 openModal 클래스가 생성된다.
     <div>
-      <div>{props.name}</div>
-      <div className={open ? "openModal modal" : "modal"}>
+      <span>{props.name}</span>
+      <span className={open ? "openModal modal" : "modal"}>
         {open ? (
           <section>
             <header>
-              {document.originalName}
+              {document.documentNo.originalName}
               {(() => {
                 switch (window.location.href.split("/main")[1]) {
                   case "/trashcan":
@@ -79,27 +96,46 @@ const Modal = (props) => {
                         className="close"
                         onClick={() =>
                           restoreFile(
-                            [document.documentNo],
+                            [document.documentNo.documentNo],
                             setSuccessModalOpen
                           )
                         }
                       >
-                        복원~~~
+                        복원
                       </button>
                     );
                   default:
                     return (
-                      <div>
-                        <a href={document.filePath}>
-                          <button className="close">down</button>
+                      <span>
+                        <a href={document.documentNo.filePath}>
+                          <button className="close">저장</button>
                         </a>
-                        <button className="close" onClick={() => {}}>
-                          수정~~~~
-                        </button>
-                      </div>
+                        {document.authority !== "READ" ? (
+                          <button
+                            className="close"
+                            onClick={() => {
+                              updateOpenModal(
+                                updateModalOpen,
+                                setUpdateModalOpen
+                              );
+                            }}
+                          >
+                            수정
+                          </button>
+                        ) : (
+                          <></>
+                        )}
+                      </span>
                     );
                 }
               })()}
+              {document.authority === "MASTER" ? (
+                <button className="close" onClick={() => setOpenShareAdd(true)}>
+                  공유
+                </button>
+              ) : (
+                <></>
+              )}
 
               <button
                 className="close"
@@ -110,7 +146,11 @@ const Modal = (props) => {
                 삭제
               </button>
             </header>
-            <main>{document.content}</main>
+            <main>
+              {document.documentNo.content
+                ? document.documentNo.content
+                : "문서 내용이 없습니다."}
+            </main>
             <footer>
               <button
                 className="close"
@@ -118,10 +158,18 @@ const Modal = (props) => {
               >
                 닫기
               </button>
+              {/* <button
+                className="close"
+                onClick={() => {
+                  updateFileModal(updateFileOpen, setUpdateFileOpen);
+                }}
+              >
+                파일 변경
+              </button> */}
             </footer>
           </section>
         ) : null}
-      </div>
+      </span>
 
       <div>
         {(() => {
@@ -133,13 +181,10 @@ const Modal = (props) => {
                   close={() =>
                     openConfirmModal(setConfirmModalOpen, confirmModalOpen)
                   }
-                  // delclose={() =>
-                  //   openSuccessModal(setSuccessModalOpen, infoModalOpen)
-                  // }
                   successModalOpen={successModalOpen}
                   act={() =>
                     deleteFile(
-                      [document.documentNo],
+                      [document.documentNo.documentNo],
                       setConfirmModalOpen,
                       setPermanentlyDeleteModalOpen
                     )
@@ -164,7 +209,7 @@ const Modal = (props) => {
                   successModalOpen={successModalOpen}
                   act={() =>
                     updateRecycleBinFile(
-                      [document.documentNo],
+                      [document.documentNo.documentNo],
                       setConfirmModalOpen,
                       setSuccessModalOpen
                     )
@@ -235,6 +280,37 @@ const Modal = (props) => {
             );
         }
       })()}
+      {
+        <UpdateContent
+          open={updateModalOpen}
+          close={() => openConfirmModal(setUpdateModalOpen, updateModalOpen)}
+          successModalOpen={successModalOpen}
+          document={document.documentNo}
+          setUpdateModalOpen={setUpdateModalOpen}
+          infoModalOpen={infoModalOpen}
+          check={check}
+          setCheckHandler={setCheckHandler}
+        />
+      }
+      {
+        <UpdateFile
+          open={updateFileOpen}
+          close={() => openConfirmModal(setUpdateFileOpen, updateFileOpen)}
+          successModalOpen={successModalOpen}
+          document={document.documentNo}
+        />
+      }
+      {openShareAdd && (
+        <AddMember
+          open={openShareAdd}
+          setOpen={setOpenShareAdd}
+          row={document.documentNo}
+          number={document.documentNo.documentNo}
+          check={check}
+          setCheck={setCheckHandler}
+          type="document"
+        />
+      )}
     </div>
   );
 };

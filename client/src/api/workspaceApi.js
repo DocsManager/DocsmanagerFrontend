@@ -27,7 +27,9 @@ export function updateTitleWorkspace(workspaceNo, workspace, setList) {
   const url = baseUrl + `/${workspaceNo}`;
   axios
     .put(url, workspace)
-    .then((res) => setList(res.data))
+    .then((res) => {
+      setList(res.data);
+    })
     .catch((err) => console.log(err));
 }
 
@@ -36,7 +38,10 @@ export function deleteWorkspace() {}
 export function addWorkspace(workspace, setOpen) {
   axios
     .post(baseUrl, workspace)
-    .then((res) => setOpen(false))
+    .then((res) => {
+      console.log(res.data);
+      setOpen(false);
+    })
     .catch((err) => console.log(err));
 }
 

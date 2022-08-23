@@ -3,11 +3,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { TextField } from "@mui/material";
+import { TextField } from "@material-ui/core";
+import { IconButton } from "@mui/material";
+import { minHeight } from "@mui/system";
 import ShareUser from "../main/ShareUser";
-import { addWorkspace } from "../../api/workspaceApi";
+import { onHtmlPng } from "../../component/editor/pdfSave";
 import { getUser } from "../../component/getUser/getUser";
-import { worksapcepublish } from "../../api/noticeApi";
 
 const style = {
   position: "absolute",
@@ -21,12 +22,9 @@ const style = {
   p: 4,
 };
 
-export default function AddWorkspace({ open, setOpen }) {
+export default function SaveWorksapce({ open, setOpen }) {
   const [searchList, setSearchList] = useState([]);
-  const handleClose = () => {
-    setOpen(false);
-    setSearchList([]);
-  };
+  const user = getUser();
 
   return (
     <div>
@@ -42,37 +40,37 @@ export default function AddWorkspace({ open, setOpen }) {
             component="h2"
             align="center"
           >
-            워크스페이스
+            문서 등록
           </Typography>
+          <hr />
           <TextField
-            id="workspaceTitle"
-            label="워크스페이스명"
+            id="newDocumentTitle"
+            label="문서 이름"
             variant="outlined"
           />
           <ShareUser
             searchList={searchList}
             setSearchList={setSearchList}
-            type={"workspace"}
+            type={"document"}
+          />
+          <TextField
+            id="newDocumentContent"
+            label="파일 설명"
+            variant="outlined"
           />
           <div>
             <Button
               onClick={() => {
-                const title = document.getElementById("workspaceTitle").value;
-                if (title) {
-                  const workspace = {
-                    title: title,
-                    master: getUser(),
-                    userList: searchList,
-                  };
-                  worksapcepublish(searchList);
-                  addWorkspace(workspace, setOpen);
-                  setSearchList([]);
-                }
+                const title = document.getElementById("newDocumentTitle").value;
+                const content = document.getElementById("newDocumentContent")
+                  .value;
+                const newDocument = { user: user, content: content };
+                onHtmlPng(title, newDocument);
               }}
             >
-              생성
+              저장
             </Button>
-            <Button onClick={handleClose}>취소</Button>
+            <Button onClick={() => setOpen(false)}>취소</Button>
           </div>
         </Box>
       </Modal>

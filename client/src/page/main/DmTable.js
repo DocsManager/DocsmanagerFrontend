@@ -7,6 +7,7 @@ import { Table } from "@mui/material";
 import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
+import WriteModal from "./WriteModal";
 import {
   openInfoModal,
   getList,
@@ -33,7 +34,7 @@ function getComparator(order, orderBy) {
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
-  console.log(stabilizedThis);
+  // console.log(stabilizedThis);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0].documentNo, b[0].documentNo);
     if (order !== 0) {
@@ -59,7 +60,6 @@ export default function DmTable(props) {
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [document, setDocument] = useState("");
-
   const [check, setCheck] = useState(false);
 
   const setCheckHandler = (check) => setCheck(check);
@@ -80,22 +80,22 @@ export default function DmTable(props) {
       //체크 표시할 시, 모든 documentNo를 담음
       newSelected = list.map((n) => n.documentNo.documentNo);
       setSelected(newSelected);
-      console.log(newSelected);
+      // console.log(newSelected);
     } else {
       setSelected([]); //아닐 경우 selected에는 빈값
     }
   };
 
   //각 table row에 걸려있는 클릭 이벤트
-  const handleClick = (event, documentNo) => {
-    const selectedIndex = selected.indexOf(documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
-    console.log(documentNo);
+  const handleClick = (event, li) => {
+    const selectedIndex = selected.indexOf(li.documentNo.documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
+    console.log(li);
 
     // let newSelected = [];
 
     if (selectedIndex === -1) {
       //-1이면 찾는 문자열이 배열에 없다는 뜻
-      newSelected = newSelected.concat(selected, documentNo); //newSelected라는 빈 배열에 이미 선택된 값을 담은 selected 배열과 documentNo를 합쳐 담기
+      newSelected = newSelected.concat(selected, li.documentNo.documentNo); //newSelected라는 빈 배열에 이미 선택된 값을 담은 selected 배열과 documentNo를 합쳐 담기
       console.log(newSelected);
     } else if (selectedIndex === 0) {
       //이미 선택한 row 인덱스가 제일 처음부터 배열에 존재한다면? => 선택된 값이 담겨있는 selected 배열에서 다음 값(slice 함수 사용)을 합쳐 newSelected 배열에 담아야 함
@@ -199,9 +199,7 @@ export default function DmTable(props) {
                           inputProps={{
                             "aria-labelledby": labelId,
                           }}
-                          onClick={(event) =>
-                            handleClick(event, li.documentNo.documentNo)
-                          }
+                          onClick={(event) => handleClick(event, li)}
                         />
                       </TableCell>
                       <TableCell>
@@ -228,17 +226,17 @@ export default function DmTable(props) {
                         id={labelId}
                         scope="row"
                         align="center"
-                        onClick={() =>
+                        onClick={() => {
                           openInfoModal(
                             setInfoModalOpen,
-                            li.documentNo.documentNo,
-                            setDocument
-                          )
-                        }
+                            li.documentNo.documentNo
+                          );
+                          setDocument(li);
+                        }}
                       >
                         {li.documentNo.originalName}
                       </TableCell>
-                      {(() => {
+                      {/* {(() => {
                         switch (window.location.href.split("/main")[1]) {
                           case "":
                             return (
@@ -247,19 +245,23 @@ export default function DmTable(props) {
                               </TableCell>
                             );
                           default:
-                            return (
-                              <TableCell align="center">
-                                {li.userNo.name}
-                              </TableCell>
-                            );
+                            return ( */}
+                      <TableCell align="center">
+                        {li.documentNo.user.name}
+                      </TableCell>
+                      {/* );
                         }
-                      })()}
+                      })()} */}
 
                       <TableCell align="center">
-                        {li.documentNo.registerDate}
+                        {li.documentNo.registerDate
+                          .replace("T", " ")
+                          .slice(0, 16)}
                       </TableCell>
                       <TableCell align="center">
-                        {li.documentNo.modifyDate}
+                        {li.documentNo.modifyDate
+                          .replace("T", " ")
+                          .slice(0, 16)}
                       </TableCell>
                     </TableRow>
                   );
@@ -281,6 +283,7 @@ export default function DmTable(props) {
         <Modal
           open={infoModalOpen}
           document={document}
+          setDocument={setDocument}
           infoModalOpen={setInfoModalOpen}
         />
       </MyContext.Provider>

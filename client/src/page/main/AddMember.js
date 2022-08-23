@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Button, Modal } from "@mui/material";
 import ShareUser from "./ShareUser";
-import { addWorkspaceUser } from "../../api/workspaceUserApi";
+import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
+import { documentAddUser, documentMember } from "../../api/documentApi";
 
 const style = {
   position: "absolute",
@@ -15,12 +16,21 @@ const style = {
   p: 4,
 };
 
-export default function AddMember({ open, setOpen, row, setList }) {
+export default function AddMember(props) {
+  const { open, setOpen, row, number, check, setCheck, type } = props;
   const [searchList, setSearchList] = useState([]);
+  const [memberList, setMemberList] = useState([]);
+  useEffect(() => {
+    if (type === "workspace") {
+      workspaceMember(number, setMemberList);
+    } else if (type === "document") {
+      documentMember(number, setMemberList);
+    }
+  }, []);
   return (
     <div>
       <Modal
-        open={open.member}
+        open={open}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
@@ -28,20 +38,25 @@ export default function AddMember({ open, setOpen, row, setList }) {
           <ShareUser
             searchList={searchList}
             setSearchList={setSearchList}
-            member={row.member}
-            type={"workspace"}
+            member={memberList}
+            type={type}
           />
           <Button
             onClick={() => {
-              // addWorkspaceUser(row.workspaceNo, searchList, setList);
-              setOpen({ member: false, edit: false });
+              if (type === "workspace") {
+                addWorkspaceUser(row, searchList, check, setCheck);
+              } else if (type === "document") {
+                documentAddUser(searchList, row);
+              }
+              setOpen(false);
+              setSearchList([]);
             }}
           >
             추가
           </Button>
           <Button
             onClick={() => {
-              setOpen({ member: false, edit: false });
+              setOpen(false);
               setSearchList([]);
             }}
           >

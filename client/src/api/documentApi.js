@@ -56,11 +56,11 @@ export function deleteFile(
 }
 
 // 파일 정보 모달
-export function openInfoModal(setInfoModalOpen, documentNo, setDocument) {
+export function openInfoModal(setInfoModalOpen, documentNo) {
   setInfoModalOpen(true);
   const url = baseUrl + "document/" + documentNo;
   axios.get(url).then((res) => {
-    setDocument(res.data);
+    // setDocument(res.data);
   });
 }
 
@@ -108,13 +108,18 @@ export function removeImportantFile(documentNo) {
 
 // 문서 작성
 
-export function writeFile(file, documentDTO, fileName) {
+export function writeFile(file, documentDTO, documentUser, fileName) {
   const url = "/api/document";
+
   const fd = new FormData();
-  fileName ? fd.append("file", file, fileName) : fd.append("file", file);
+
+  fileName
+    ? fd.append("file", file, `${fileName}.pdf`)
+    : fd.append("file", file);
+  console.log(documentUser);
   fd.append(
     "documentUser",
-    new Blob([JSON.stringify([])], { type: "application/json" })
+    new Blob([JSON.stringify(documentUser)], { type: "application/json" })
   );
   fd.append(
     "documentDTO",
@@ -130,4 +135,66 @@ export function writeFile(file, documentDTO, fileName) {
     .then((res) => {
       console.log(res.data);
     });
+}
+
+// content 수정
+export function updateContent(documentNo, text) {
+  const url = baseUrl + "document/" + documentNo;
+  axios
+    .put(url, {
+      content: text,
+    })
+    .then((res) => console.log(res.data));
+}
+
+// File 수정
+export function updateFile(documentNo, file) {
+  const url = baseUrl + "document/" + documentNo;
+
+  const fd = new FormData();
+  fd.append("file", file);
+  axios
+    .post(url, fd, {
+      headers: {
+        "Content-Type": "multipart/form-data;",
+      },
+    })
+    .then((res) => {
+      console.log(res.data);
+    });
+}
+
+// user 추가
+export function documentAddUser(userList, row) {
+  const url = baseUrl + "document/authority";
+  const documentUser = userList.map(
+    (search) =>
+      (search = {
+        authority: search.authority,
+        userNo: search,
+        documentNo: row,
+      })
+  );
+  console.log(documentUser);
+  axios.post(url, documentUser).then((res) => {
+    console.log(res.data);
+  });
+}
+
+// 멤버 검색
+export function documentMember(documentNo, setMemberList) {
+  const url = `${baseUrl}document/member/${documentNo}`;
+  axios
+    .get(url)
+    .then((res) => {
+      const documentList = res.data.filter((v) => v.authority !== "MASTER");
+      const memberList = [];
+
+      documentList.map((v) => {
+        v.userNo.authority = v.authority;
+        memberList.push(v.userNo);
+      });
+      setMemberList(memberList);
+    })
+    .catch((err) => console.log(err));
 }

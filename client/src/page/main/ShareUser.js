@@ -1,4 +1,3 @@
-
 import {
   Button,
   TextField,
@@ -17,27 +16,30 @@ import { findMember, findUser } from "../../api/userApi";
 import { getUser } from "../../component/getUser/getUser";
 import AuthoritySelect from "./AuthoritySelect";
 
-const headCells = [
-  {
-    id: "department",
-    numeric: false,
-    disablePadding: true,
-    label: "부서",
-  },
-  {
-    id: "name",
-    numeric: false,
-    disablePadding: true,
-    label: "이름",
-  },
-];
-
 function ShareUser({ searchList, setSearchList, type, member }) {
   const [userList, setUserList] = useState([]);
-  const [memberList, setMemberList] = useState([]);
+  // const [memberList, setMemberList] = useState([]);
+  console.log(searchList);
+  if (!member) {
+    member = [];
+  }
+  const headCells = [
+    {
+      id: "department",
+      numeric: false,
+      disablePadding: true,
+      label: "부서",
+    },
+    {
+      id: "name",
+      numeric: false,
+      disablePadding: true,
+      label: "이름",
+    },
+  ];
   const user = getUser();
   useEffect(() => {
-    if (type !== "workspace") {
+    if (type === "document") {
       headCells.push({
         id: "authority",
         numeric: false,
@@ -45,11 +47,14 @@ function ShareUser({ searchList, setSearchList, type, member }) {
         label: "권한",
       });
     }
-    if (member) {
-      const memberNoList = member.map((v) => v.split(",")[0]);
-      findMember(memberNoList, setMemberList, setSearchList);
-    }
   }, []);
+  useEffect(() => {
+    if (member.length) {
+      setSearchList(member);
+    }
+  }, [member.length]);
+  console.log(searchList);
+  console.log(member);
   function checkDuplication(arr, user) {
     let check = false;
     arr.map((element) => {
@@ -60,6 +65,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
     return check;
   }
   const deleteHandler = (userNo) => {
+    console.log(searchList);
     setSearchList(searchList.filter((v) => v.userNo !== userNo));
   };
   return (
@@ -77,13 +83,12 @@ function ShareUser({ searchList, setSearchList, type, member }) {
 
       <Typography component="h3">검색 결과</Typography>
       <Card variant="outlined" sx={{ minHeight: 275 }}>
-        {userList.map((users) => {
+        {userList.map((users, index) => {
           if (
             users.userNo !== user.userNo &&
             !checkDuplication(searchList, users)
           ) {
             return (
-
               <Typography key={users.userNo}>
                 <input
                   type="checkbox"
@@ -129,17 +134,18 @@ function ShareUser({ searchList, setSearchList, type, member }) {
               hover
               role="checkbox"
             >
+              {console.log(search)}
               <TableCell component="th">{search.dept.deptName}</TableCell>
               <TableCell component="th">{search.name}</TableCell>
               {type !== "workspace" ? (
                 <TableCell component="th">
-                  <AuthoritySelect searchList={searchList} index={index} />
+                  <AuthoritySelect search={search} />
                 </TableCell>
               ) : (
                 <></>
               )}
               <TableCell component="th">
-                {checkDuplication(memberList, search) ? (
+                {checkDuplication(member, search) ? (
                   <IconButton disabled>
                     <DeleteIcon />
                   </IconButton>
