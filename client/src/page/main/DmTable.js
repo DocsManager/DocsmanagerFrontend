@@ -232,6 +232,7 @@ export default function DmTable(props) {
                             li.documentNo.documentNo
                           );
                           setDocument(li);
+                          console.log(li);
                         }}
                       >
                         {li.documentNo.originalName}
@@ -283,7 +284,6 @@ export default function DmTable(props) {
         <Modal
           open={infoModalOpen}
           document={document}
-          setDocument={setDocument}
           infoModalOpen={setInfoModalOpen}
         />
       </MyContext.Provider>
