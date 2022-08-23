@@ -8,6 +8,7 @@ import SucessModal from "./SucessModal";
 import { MyContext } from "./DmTable";
 import { List } from "@mui/material";
 import ShareUser from "./ShareUser";
+import { notipublish } from "../../api/noticeApi";
 
 const openWriteConfirm = (writeConfirm, setWriteConfirm) => {
   writeConfirm ? setWriteConfirm(false) : setWriteConfirm(true);
@@ -52,7 +53,6 @@ const WriteModal = (props) => {
   //   // getList(setList, props.documentUrl ? props.documentUrl : "");
   //   allUser(setUserList);
   // }, []);
-
   const user = getUser();
   const documentDTO = {
     user: {
@@ -103,12 +103,12 @@ const WriteModal = (props) => {
                 searchList={searchList}
                 setSearchList={setSearchList}
                 type="document"
-
-                // <div>파일 설명</div>
-                // <input
-                //   type="text"
-                //   id="fileContent"
-                //   onChange={(e) => setText(e.target.value)}
+              />
+              <div>파일 설명</div>
+              <input
+                type="text"
+                id="fileContent"
+                onChange={(e) => setText(e.target.value)}
               />
             </main>
             <footer>
@@ -138,6 +138,7 @@ const WriteModal = (props) => {
           {
             writeFile(file, documentDTO);
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
+            notipublish(searchList);
           }
         }}
       >

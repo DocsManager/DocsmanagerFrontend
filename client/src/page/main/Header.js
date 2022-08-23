@@ -1,25 +1,46 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import "./Header.css";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { Badge } from "@mui/material";
-import { Notifications } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getUser } from "../../component/getUser/getUser";
-import { getNoticeList, connect } from "../../api/noticeApi";
+import {
+  getNoticeList,
+  wsDisconnect,
+  wsDocsSubscribe,
+} from "../../api/noticeApi";
 import { NoticePopover } from "./NoticePopover";
+import { createContext } from "react";
+import { notify } from "../Toast";
+
+import "react-toastify/dist/ReactToastify.css";
+import "../Toast.css";
+
+export const NoticeContext = createContext({
+  isRead: "",
+  setIsReadHandler: (isRead) => {},
+});
 
 export default function Header() {
   const name = getUser().name;
-
   const [noticeList, setNoticeList] = useState([]);
-  const [newNotice, setNewNotice] = useState([]);
+  const [changeNotice, setChangeNotice] = useState(false);
+  const [isRead, setIsRead] = useState(false);
+  const [newNotice, setNewNotice] = useState();
+  const setIsReadHandler = (isRead) => setIsRead(isRead);
 
   useEffect(() => {
     getNoticeList(setNoticeList);
-    connect();
-    // return () => disconnect();
-  }, [noticeList]);
+    wsDocsSubscribe(setNewNotice, setNoticeList, noticeList);
+    // return () => wsDisconnect();
+  }, [isRead, changeNotice, newNotice]);
+
+  //Toast message 띄워주는 함수
+  const showNotice = (newNotice) => {
+    notify(newNotice);
+    //newNotice 초기화 해주자..
+    setNewNotice();
+  };
 
   return (
     <div style={{ backGroundColor: "#8bc7ff" }}>
@@ -43,8 +64,15 @@ export default function Header() {
           <p className="header-user-text">
             <span>{name}</span>님 환영합니다
           </p>
+          {newNotice && showNotice(newNotice.content)}
           <div className="header-alert">
-            <NoticePopover noticeList={noticeList} />
+            <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
+              <NoticePopover
+                noticeList={noticeList}
+                changeNotice={changeNotice}
+                setChangeNotice={setChangeNotice}
+              />
+            </NoticeContext.Provider>
             <div className="header-profile" />
           </div>
         </div>

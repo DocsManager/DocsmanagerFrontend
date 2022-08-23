@@ -70,7 +70,11 @@ export default function Sidebar() {
     <Box>
       <Box className="sidebar-nav">
         <div className="sidebar-nav-child">
-          <SidebarBtn variant="contained" onClick={() => setOpen(true)}>
+          <SidebarBtn
+            variant="contained"
+            onClick={() => setOpen(true)}
+            sx={{ outline: "none !important" }}
+          >
             워크스페이스 생성
           </SidebarBtn>
         </div>

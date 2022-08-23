@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
 import { Badge, Box, styled, Tabs } from "@mui/material";
 import { DeleteOutline, Notifications } from "@mui/icons-material";
 import { Popover } from "@mui/material";
 import { deleteNotice, updateNotice } from "../../api/noticeApi";
+import Toastify from "../Toast";
+import { NoticeContext } from "./Header";
 
 //notice.isRead가 1이 되면 글자색이 lightgray가 됨
 const noticeColor = {
@@ -12,8 +14,9 @@ const noticeColor = {
   1: "lightgray",
 };
 
-export function NoticePopover({ noticeList }) {
+export function NoticePopover({ noticeList, setChangeNotice }) {
   const [anchorEl, setAnchorEl] = useState(null);
+  const { isRead, setIsReadHandler } = useContext(NoticeContext);
 
   //읽은 알림은 전체 알림 개수에서 제외하는 것
   const unRead = noticeList.filter((notice) => notice.isRead !== 1);
@@ -53,8 +56,14 @@ export function NoticePopover({ noticeList }) {
         return unRead;
     }
   };
+
+  const updateModal = (isRead, setIsReadHandler) => {
+    isRead ? setIsReadHandler(false) : setIsReadHandler(true);
+  };
+
   return (
     <div>
+      <Toastify />
       <Badge
         variant="contained"
         color="info"
@@ -91,18 +100,18 @@ export function NoticePopover({ noticeList }) {
                   borderColor: "divider",
                 }}
               >
-                <Tabs
-                  onChange={handleChange}
-                  value={selectedTab}
-                  sx={{ margin: "0 auto", justifyContent: "center" }}
-                >
+                <Tabs onChange={handleChange} value={selectedTab}>
                   {/* label이라는 객체의 값만으로 map을 돌림 */}
-                  {Object.values(label).map((la, index) => {
+                  {Object.values(label).map((la) => {
                     return (
                       <Tab
                         label={la}
-                        sx={{ fontSize: "1rem", textAlign: "center" }}
-                        key={index}
+                        sx={{
+                          fontSize: "1rem",
+                          textAlign: "center",
+                          outline: "none!important",
+                        }}
+                        key={la.key}
                       />
                     );
                   })}
@@ -122,6 +131,8 @@ export function NoticePopover({ noticeList }) {
                             notice.receiver,
                             notice.content
                           );
+                          updateModal(isRead, setIsReadHandler);
+                          setChangeNotice(false);
                         }}
                       >
                         {notice.content}
