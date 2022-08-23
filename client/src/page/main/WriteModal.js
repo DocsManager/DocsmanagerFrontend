@@ -6,6 +6,7 @@ import "./Modal.css";
 import SucessModal from "./SucessModal";
 import { MyContext } from "./DmTable";
 import ShareUser from "./ShareUser";
+import { notipublish } from "../../api/noticeApi";
 
 const openWriteConfirm = (writeConfirm, setWriteConfirm) => {
   writeConfirm ? setWriteConfirm(false) : setWriteConfirm(true);
@@ -52,7 +53,6 @@ const WriteModal = (props) => {
   //   // getList(setList, props.documentUrl ? props.documentUrl : "");
   //   allUser(setUserList);
   // }, []);
-
   const user = getUser();
   const documentDTO = {
     user: user,
@@ -129,6 +129,7 @@ const WriteModal = (props) => {
             writeFile(file, documentDTO, documentUser);
             setSearchList([]);
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
+            notipublish(searchList);
           }
         }}
       >

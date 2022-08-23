@@ -7,6 +7,7 @@ import { TextField } from "@mui/material";
 import ShareUser from "../main/ShareUser";
 import { addWorkspace } from "../../api/workspaceApi";
 import { getUser } from "../../component/getUser/getUser";
+import { worksapcepublish } from "../../api/noticeApi";
 
 const style = {
   position: "absolute",
@@ -63,6 +64,7 @@ export default function AddWorkspace({ open, setOpen }) {
                     master: getUser(),
                     userList: searchList,
                   };
+                  worksapcepublish(searchList);
                   addWorkspace(workspace, setOpen);
                   setSearchList([]);
                 }
