@@ -82,8 +82,8 @@ const Modal = (props) => {
   return (
     // 모달이 열릴때 openModal 클래스가 생성된다.
     <div>
-      <div>{props.name}</div>
-      <div className={open ? "openModal modal" : "modal"}>
+      <span>{props.name}</span>
+      <span className={open ? "openModal modal" : "modal"}>
         {open ? (
           <section>
             <header>
@@ -102,14 +102,14 @@ const Modal = (props) => {
                           )
                         }
                       >
-                        복원~~~
+                        복원
                       </button>
                     );
                   default:
                     return (
-                      <div>
+                      <span>
                         <a href={document.documentNo.filePath}>
-                          <button className="close">down</button>
+                          <button className="close">저장</button>
                         </a>
                         {document.authority !== "READ" ? (
                           <button
@@ -121,15 +121,22 @@ const Modal = (props) => {
                               );
                             }}
                           >
-                            내용 수정~~~~
+                            수정
                           </button>
                         ) : (
                           <></>
                         )}
-                      </div>
+                      </span>
                     );
                 }
               })()}
+              {document.authority === "MASTER" ? (
+                <button className="close" onClick={() => setOpenShareAdd(true)}>
+                  공유
+                </button>
+              ) : (
+                <></>
+              )}
 
               <button
                 className="close"
@@ -152,24 +159,18 @@ const Modal = (props) => {
               >
                 닫기
               </button>
-              <button
+              {/* <button
+                className="close"
                 onClick={() => {
                   updateFileModal(updateFileOpen, setUpdateFileOpen);
                 }}
               >
-                문서 수정
-              </button>
-              {document.authority === "MASTER" ? (
-                <button onClick={() => setOpenShareAdd(true)}>
-                  공유자 추가
-                </button>
-              ) : (
-                <></>
-              )}
+                파일 변경
+              </button> */}
             </footer>
           </section>
         ) : null}
-      </div>
+      </span>
 
       <div>
         {(() => {
