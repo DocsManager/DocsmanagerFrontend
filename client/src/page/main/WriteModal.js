@@ -58,7 +58,6 @@ const WriteModal = (props) => {
     user: user,
     content: text,
   };
-
   const documentUser = searchList.map(
     (search) => (search = { authority: search.authority, userNo: search })
   );
@@ -74,7 +73,6 @@ const WriteModal = (props) => {
         {open ? (
           <section>
             <header>문서 등록</header>
-
             <main>
               <div>{props.children}</div>
               <input
@@ -89,7 +87,6 @@ const WriteModal = (props) => {
                 setSearchList={setSearchList}
                 type="document"
               />
-
               <div>파일 설명</div>
               <input
                 type="text"
@@ -98,17 +95,23 @@ const WriteModal = (props) => {
               />
             </main>
             <footer>
-              <button className="close" onClick={close}>
+              <button
+                className="close"
+                onClick={() => {
+                  setSearchList([]);
+                  close();
+                }}
+              >
                 닫기
               </button>
 
               <button
                 className="close"
-                onClick={() =>
+                onClick={() => {
                   file
                     ? openWriteConfirm(writeConfirm, setWriteConfirm)
-                    : openNoFileConfirm(fileNull, setFileNull)
-                }
+                    : openNoFileConfirm(fileNull, setFileNull);
+                }}
               >
                 저장
               </button>
@@ -124,6 +127,7 @@ const WriteModal = (props) => {
         act={() => {
           {
             writeFile(file, documentDTO, documentUser);
+            setSearchList([]);
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
           }
         }}

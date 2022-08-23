@@ -283,6 +283,7 @@ export default function DmTable(props) {
         <Modal
           open={infoModalOpen}
           document={document}
+          setDocument={setDocument}
           infoModalOpen={setInfoModalOpen}
         />
       </MyContext.Provider>

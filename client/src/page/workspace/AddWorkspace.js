@@ -22,7 +22,10 @@ const style = {
 
 export default function AddWorkspace({ open, setOpen }) {
   const [searchList, setSearchList] = useState([]);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setSearchList([]);
+  };
 
   return (
     <div>
@@ -60,8 +63,8 @@ export default function AddWorkspace({ open, setOpen }) {
                     master: getUser(),
                     userList: searchList,
                   };
-                  console.log(searchList);
                   addWorkspace(workspace, setOpen);
+                  setSearchList([]);
                 }
               }}
             >
