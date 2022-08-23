@@ -87,7 +87,6 @@ const Modal = (props) => {
         {open ? (
           <section>
             <header>
-              {console.log(document)}
               {document.documentNo.originalName}
               {(() => {
                 switch (window.location.href.split("/main")[1]) {
@@ -300,16 +299,17 @@ const Modal = (props) => {
           document={document.documentNo}
         />
       }
-      {
+      {openShareAdd && (
         <AddMember
           open={openShareAdd}
           setOpen={setOpenShareAdd}
-          row={document}
+          row={document.documentNo}
+          number={document.documentNo.documentNo}
           check={check}
           setCheck={setCheckHandler}
           type="document"
         />
-      }
+      )}
     </div>
   );
 };

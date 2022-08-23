@@ -116,7 +116,7 @@ export function writeFile(file, documentDTO, documentUser, fileName) {
   fileName
     ? fd.append("file", file, `${fileName}.pdf`)
     : fd.append("file", file);
-
+  console.log(documentUser);
   fd.append(
     "documentUser",
     new Blob([JSON.stringify(documentUser)], { type: "application/json" })
@@ -179,4 +179,22 @@ export function documentAddUser(userList, row) {
   axios.post(url, documentUser).then((res) => {
     console.log(res.data);
   });
+}
+
+// 멤버 검색
+export function documentMember(documentNo, setMemberList) {
+  const url = `${baseUrl}document/member/${documentNo}`;
+  axios
+    .get(url)
+    .then((res) => {
+      const documentList = res.data.filter((v) => v.authority !== "MASTER");
+      const memberList = [];
+
+      documentList.map((v) => {
+        v.userNo.authority = v.authority;
+        memberList.push(v.userNo);
+      });
+      setMemberList(memberList);
+    })
+    .catch((err) => console.log(err));
 }

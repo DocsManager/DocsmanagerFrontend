@@ -210,7 +210,7 @@ export default function WorkspaceTable(props) {
   const [editOpen, setEditOpen] = useState(false);
   const [memberOpen, setMemberOpen] = useState(false);
   const [row, setRow] = useState({});
-
+  console.log(row);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -388,15 +388,18 @@ export default function WorkspaceTable(props) {
           onPageChange={handleChangePage}
         />
       </Paper>
-      <AddMember
-        open={memberOpen}
-        setOpen={setMemberOpen}
-        row={row}
-        check={check}
-        setCheck={setCheck}
-        type={"workspace"}
-        // setList={setWorkspace}
-      />
+      {row.workspaceNo && (
+        <AddMember
+          open={memberOpen}
+          setOpen={setMemberOpen}
+          row={row}
+          check={check}
+          setCheck={setCheck}
+          type={"workspace"}
+          number={row.workspaceNo}
+          // setList={setWorkspace}
+        />
+      )}
       <EditTitle
         open={editOpen}
         setOpen={setEditOpen}
