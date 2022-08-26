@@ -38,7 +38,8 @@ export function updateNotice(
     .catch((err) => console.log(err));
 }
 
-const socketUrl = "ws://localhost:8080/ws-dm/websocket";
+const socketUrl = "ws://3.39.189.222:8080/ws-dm/websocket";
+
 // const client = new StompJs.Client();
 const client = new StompJs.Client({
   brokerURL: socketUrl,

@@ -7,7 +7,8 @@ export function sendMail(params, setConfirmVerifyCode) {
   //   const url = baseUrl + "send";
   console.log(params);
   axios
-    .get("http://localhost:8080/mail/send", { params })
+    .get("/api/mail/send", { params })
+
     // .get(url, { params })
     // .then(alert("메일이 전송중입니다. 잠시만 기다려주세요."))
     .then((response) => {
@@ -25,7 +26,7 @@ export function verifyMail(params, setVerifyResult) {
   //   const url = baseUrl + "verify";
   console.log(params);
   axios
-    .get("http://localhost:8080/mail/verify", { params })
+    .get("/api/mail/verify", { params })
     .then(alert("검증중입니다."))
     .then((response) => {
       if (response.data) {
@@ -41,19 +42,15 @@ export function verifyMail(params, setVerifyResult) {
 
 export function findId(params) {
   console.log(params.data);
-  axios
-    .get("http://localhost:8080/mail/finduser", { params })
-    .then((response) => {
-      console.log(response.data);
-      // .then(alert("회원님의 아이디는" + +"입니다"));
-    });
+  axios.get("/api/mail/finduser", { params }).then((response) => {
+    console.log(response.data);
+    // .then(alert("회원님의 아이디는" + +"입니다"));
+  });
 }
 
 export function findPw(params) {
   console.log(params.data);
-  axios
-    .get("http://localhost:8080/mail/findpassword", { params })
-    .then((response) => {
-      console.log(response.data);
-    });
+  axios.get("/api/mail/findpassword", { params }).then((response) => {
+    console.log(response.data);
+  });
 }
