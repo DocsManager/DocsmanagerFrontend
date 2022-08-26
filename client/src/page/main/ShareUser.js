@@ -124,6 +124,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
               </TableCell>
             ))}
             <TableCell />
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>

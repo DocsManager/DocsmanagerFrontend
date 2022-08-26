@@ -8,8 +8,25 @@ import { MyContext } from "./DmTable";
 import ShareUser from "./ShareUser";
 import { notipublish } from "../../api/noticeApi";
 
-const openWriteConfirm = (writeConfirm, setWriteConfirm) => {
-  writeConfirm ? setWriteConfirm(false) : setWriteConfirm(true);
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+import { height } from "@mui/system";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  // border: "2px solid #000",
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+  overflow: "auto",
 };
 
 const openNoFileConfirm = (fileNull, setFileNull) => {
@@ -35,10 +52,8 @@ const successWrite = (
   check ? setCheckHandler(false) : setCheckHandler(true);
   setFile("");
 };
-// const test1
 
 const WriteModal = (props) => {
-  // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
   const [text, setText] = useState("");
   const [file, setFile] = useState("");
   const [writeConfirm, setWriteConfirm] = useState(false);
@@ -46,13 +61,8 @@ const WriteModal = (props) => {
   const [fileNull, setFileNull] = useState(false);
 
   const [searchList, setSearchList] = useState([]);
-  // const [userList, setUserList] = useState([]);
-  const { open, close, setWriteModal } = props;
+  const { open, setWriteModal } = props;
 
-  // useEffect(() => {
-  //   // getList(setList, props.documentUrl ? props.documentUrl : "");
-  //   allUser(setUserList);
-  // }, []);
   const user = getUser();
   const documentDTO = {
     user: user,
@@ -67,69 +77,68 @@ const WriteModal = (props) => {
   const { check, setCheckHandler } = useContext(MyContext);
 
   return (
-    // 모달이 열릴때 openModal 클래스가 생성된다.
     <React.Fragment>
-      <div className={open ? "openModal modal" : "modal"}>
-        {open ? (
-          <section>
-            <header>문서 등록</header>
-            <main>
-              <div>{props.children}</div>
-              <input
-                type="file"
-                id="fileUpload"
-                // defaultValue={documentInfo.filePath}
-                onChange={(e) => setFile(e.target.files[0])}
-              />
+      <Modal
+        open={open}
+        onClose={() => setWriteModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{ ...style, width: 800, height: 700 }}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            문서 등록
+          </Typography>
 
-              <ShareUser
-                searchList={searchList}
-                setSearchList={setSearchList}
-                type="document"
-              />
-              <div>파일 설명</div>
-              <input
-                type="text"
-                id="fileContent"
-                onChange={(e) => setText(e.target.value)}
-              />
-            </main>
-            <footer>
-              <button
-                className="close"
-                onClick={() => {
-                  setSearchList([]);
-                  close();
-                }}
-              >
-                닫기
-              </button>
-
-              <button
-                className="close"
-                onClick={() => {
-                  file
-                    ? openWriteConfirm(writeConfirm, setWriteConfirm)
-                    : openNoFileConfirm(fileNull, setFileNull);
-                }}
-              >
-                저장
-              </button>
-            </footer>
-          </section>
-        ) : null}
-      </div>
+          <div>{props.children}</div>
+          <input
+            type="file"
+            id="fileUpload"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
+          <ShareUser
+            searchList={searchList}
+            setSearchList={setSearchList}
+            type="document"
+          />
+          <div>파일 설명</div>
+          <input
+            type="text"
+            id="fileContent"
+            onChange={(e) => setText(e.target.value)}
+          />
+          <Typography>
+            <Button
+              onClick={() => {
+                setSearchList([]);
+                setWriteModal(false);
+              }}
+            >
+              닫기
+            </Button>
+            <Button
+              onClick={() => {
+                file
+                  ? setWriteConfirm(true)
+                  : openNoFileConfirm(fileNull, setFileNull);
+              }}
+            >
+              저장
+            </Button>
+          </Typography>
+        </Box>
+      </Modal>
 
       <ConfirmModal
         open={writeConfirm}
-        close={() => openWriteConfirm(writeConfirm, setWriteConfirm)}
-        // successModalOpen={successModalOpen}
+        setOpen={setWriteConfirm}
         act={() => {
           {
             writeFile(file, documentDTO, documentUser);
             setSearchList([]);
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
             notipublish(searchList);
+            setWriteModal(false);
+            check ? setCheckHandler(false) : setCheckHandler(true);
           }
         }}
       >
@@ -137,6 +146,7 @@ const WriteModal = (props) => {
           <div>등록 하시겠습니까?</div>
         </main>
       </ConfirmModal>
+
       <SucessModal
         open={writeSuccessConfirm}
         close={() =>

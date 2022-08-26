@@ -1,20 +1,21 @@
 import React, { useState, useEffect, createContext } from "react";
-import { TableBody, TableCell, TableContainer } from "@mui/material";
+import {
+  TableBody,
+  TableCell,
+  TableContainer,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Box, TablePagination, TableRow } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
-import { Table } from "@mui/material";
+import { Table, Button } from "@mui/material";
 import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
-import WriteModal from "./WriteModal";
-import {
-  openInfoModal,
-  getList,
-  importantFile,
-  removeImportantFile,
-} from "../../api/documentApi";
-import Modal from "./Modal";
+import { getUser } from "../../component/getUser/getUser";
+import { getList, importantFile, searchDocument } from "../../api/documentApi";
+import DocumentModal from "./DocumentModal";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,7 +60,7 @@ export default function DmTable(props) {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
-  const [document, setDocument] = useState("");
+  const [documentInfo, setDocumentInfo] = useState("");
   const [check, setCheck] = useState(false);
 
   const setCheckHandler = (check) => setCheck(check);
@@ -78,7 +79,9 @@ export default function DmTable(props) {
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
       //체크 표시할 시, 모든 documentNo를 담음
-      newSelected = list.map((n) => n.documentNo.documentNo);
+      newSelected = list
+        .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+        .map((n) => n.documentNo.documentNo);
       setSelected(newSelected);
       // console.log(newSelected);
     } else {
@@ -108,7 +111,6 @@ export default function DmTable(props) {
         selected.slice(selectedIndex + 1)
       );
     }
-    // console.log(documentNo);
     setSelected(newSelected);
   };
 
@@ -133,14 +135,15 @@ export default function DmTable(props) {
     }
 
     li.important
-      ? removeImportantFile(li.documentNo.documentNo)
-      : importantFile(li.documentNo.documentNo);
+      ? importantFile(li.documentNo.documentNo, 0)
+      : importantFile(li.documentNo.documentNo, 1);
 
     setSelectStar(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    setSelected([]);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -154,6 +157,19 @@ export default function DmTable(props) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
+        {/* <Typography>
+          <input id="searchDocumentName" />
+          <Button
+            onClick={() => {
+              const searchName = document.getElementById("searchDocumentName")
+                .value;
+              searchName &&
+                searchDocument(getUser().userNo, searchName, setList);
+            }}
+          >
+            검색
+          </Button>
+        </Typography> */}
         <MyContext.Provider value={{ check, setCheckHandler }}>
           <DmTableToolbar
             numSelected={selected.length}
@@ -169,7 +185,7 @@ export default function DmTable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={list.length}
+              rowCount={10}
             />
 
             <TableBody>
@@ -188,9 +204,6 @@ export default function DmTable(props) {
                       tabIndex={-1} //탭 순서 임의로 컨트롤
                       key={li.documentNo.documentNo}
                       selected={isItemSelected}
-                      // onClick={(event) =>
-                      //   handleClick(event, li.documentNo.documentNo)
-                      // }
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
@@ -227,33 +240,16 @@ export default function DmTable(props) {
                         scope="row"
                         align="center"
                         onClick={() => {
-                          openInfoModal(
-                            setInfoModalOpen,
-                            li.documentNo.documentNo
-                          );
-                          setDocument(li);
+                          setInfoModalOpen(true);
+                          setDocumentInfo(li);
                           console.log(li);
                         }}
                       >
                         {li.documentNo.originalName}
                       </TableCell>
-                      {/* {(() => {
-                        switch (window.location.href.split("/main")[1]) {
-                          case "":
-                            return (
-                              <TableCell align="center">
-                                {li.documentNo.content}
-                              </TableCell>
-                            );
-                          default:
-                            return ( */}
                       <TableCell align="center">
                         {li.documentNo.user.name}
                       </TableCell>
-                      {/* );
-                        }
-                      })()} */}
-
                       <TableCell align="center">
                         {li.documentNo.registerDate
                           .replace("T", " ")
@@ -281,11 +277,13 @@ export default function DmTable(props) {
         />
       </Paper>
       <MyContext.Provider value={{ check, setCheckHandler }}>
-        <Modal
-          open={infoModalOpen}
-          document={document}
-          infoModalOpen={setInfoModalOpen}
-        />
+        {documentInfo && (
+          <DocumentModal
+            open={infoModalOpen}
+            document={documentInfo}
+            infoModalOpen={setInfoModalOpen}
+          />
+        )}
       </MyContext.Provider>
     </Box>
   );
