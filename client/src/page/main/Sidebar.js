@@ -11,11 +11,13 @@ import "./Sidebar.css";
 import { styled } from "@mui/material/styles";
 import AddWorkspace from "../workspace/AddWorkspace";
 
+const SidebarList = styled(ListItem)`
+  /* padding: 20px; */
+`;
 const SidebarSideLink = styled(ListItemButton)`
-  font-size: 1em;
-  height: 60px;
-  width: 18vw;
-  padding: 0 1.5625vw 0px 1.5625vw;
+  font-size: 1.5em;
+  padding: 20px;
+  /* width: 18vw; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -23,7 +25,6 @@ const SidebarSideLink = styled(ListItemButton)`
   font-weight: bolder;
   list-style: none;
   text-decoration: none;
-
   &:hover {
     background: #d9d9d9;
     border-left: 4px solid #3791f8;
@@ -34,6 +35,7 @@ const SidebarSideLink = styled(ListItemButton)`
 `;
 const SidebarText = styled(ListItemText)`
   font-weight: bold;
+  font-size: 1.2em;
   &:hover {
     font-weight: bold;
   }
@@ -41,14 +43,14 @@ const SidebarText = styled(ListItemText)`
 
 const SidebarBtn = styled(Button)`
   display: flex;
-  width: 15vw;
+  width: 18vw;
   height: 8vh;
   background: #3791f8;
   font-size: 1em;
   color: white;
   border: none;
   border-radius: 5px;
-  height: 5.1993067590987865vh;
+  height: 5.2vh;
   justify-content: center;
   align-items: center;
   margin: 0 auto;
@@ -68,23 +70,26 @@ export default function Sidebar() {
     <Box>
       <Box className="sidebar-nav">
         <div className="sidebar-nav-child">
-          <SidebarBtn variant="contained" onClick={() => setOpen(true)}>
+          <SidebarBtn
+            variant="contained"
+            onClick={() => setOpen(true)}
+            sx={{ outline: "none !important" }}
+          >
             워크스페이스 생성
           </SidebarBtn>
         </div>
 
         <List>
           {SidebarData.map((item, index) => (
-            <ListItem key={index} disablePadding>
-              <SidebarSideLink to={item.path}>
-                <ListIcon>{item.icon}</ListIcon>
-                <SidebarText primary={item.title} />
-              </SidebarSideLink>
-            </ListItem>
+            // <SidebarList key={index}>
+            <SidebarSideLink to={item.path} key={index}>
+              <ListIcon>{item.icon}</ListIcon>
+              <SidebarText primary={item.title} sx={{ fontSize: "1.5em" }} />
+            </SidebarSideLink>
+            // </SidebarList>
           ))}
         </List>
       </Box>
-      {/* </Drawer> */}
       <AddWorkspace open={open} setOpen={setOpen} />
     </Box>
   );

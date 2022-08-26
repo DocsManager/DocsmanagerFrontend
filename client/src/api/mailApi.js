@@ -8,6 +8,7 @@ export function sendMail(params, setConfirmVerifyCode) {
   console.log(params);
   axios
     .get("/api/mail/send", { params })
+
     // .get(url, { params })
     // .then(alert("메일이 전송중입니다. 잠시만 기다려주세요."))
     .then((response) => {

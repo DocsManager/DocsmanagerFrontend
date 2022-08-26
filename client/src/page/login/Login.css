@@ -1,0 +1,49 @@
+.fontcontainer {
+  background-color: rgba(139, 199, 255, 1);
+  width: 50%;
+  height: 100vh;
+  display: block;
+}
+
+.fontcontainer > div > img {
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+}
+.login > img {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.fonts {
+  margin: 0 auto;
+  color: #ffffff;
+  font-size: 25px;
+}
+.fonts p {
+  color: #ffffff;
+}
+.font1 {
+  color: #000000;
+  text-align: center;
+  /* font-weight: bold; */
+  margin: 0 auto;
+  line-height: 3;
+}
+
+.D {
+  font-size: 40px;
+  color: rgba(55, 145, 248, 1);
+}
+.M {
+  font-size: 40px;
+  color: #000000;
+}
+
+.logincontainer {
+  display: flex;
+
+  align-items: center;
+  height: 100vh;
+}

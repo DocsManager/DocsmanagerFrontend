@@ -34,7 +34,7 @@ function getComparator(order, orderBy) {
 
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
-  console.log(stabilizedThis);
+  // console.log(stabilizedThis);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0].documentNo, b[0].documentNo);
     if (order !== 0) {
@@ -80,7 +80,7 @@ export default function DmTable(props) {
       //체크 표시할 시, 모든 documentNo를 담음
       newSelected = list.map((n) => n.documentNo.documentNo);
       setSelected(newSelected);
-      console.log(newSelected);
+      // console.log(newSelected);
     } else {
       setSelected([]); //아닐 경우 selected에는 빈값
     }
@@ -232,11 +232,12 @@ export default function DmTable(props) {
                             li.documentNo.documentNo
                           );
                           setDocument(li);
+                          console.log(li);
                         }}
                       >
                         {li.documentNo.originalName}
                       </TableCell>
-                      {(() => {
+                      {/* {(() => {
                         switch (window.location.href.split("/main")[1]) {
                           case "":
                             return (
@@ -245,13 +246,13 @@ export default function DmTable(props) {
                               </TableCell>
                             );
                           default:
-                            return (
-                              <TableCell align="center">
-                                {li.documentNo.user.name}
-                              </TableCell>
-                            );
+                            return ( */}
+                      <TableCell align="center">
+                        {li.documentNo.user.name}
+                      </TableCell>
+                      {/* );
                         }
-                      })()}
+                      })()} */}
 
                       <TableCell align="center">
                         {li.documentNo.registerDate
@@ -283,7 +284,6 @@ export default function DmTable(props) {
         <Modal
           open={infoModalOpen}
           document={document}
-          setDocument={setDocument}
           infoModalOpen={setInfoModalOpen}
         />
       </MyContext.Provider>

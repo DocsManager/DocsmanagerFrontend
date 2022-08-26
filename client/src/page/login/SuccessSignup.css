@@ -1,0 +1,22 @@
+/* .pagecontainer {
+  background-color: rgba(139, 199, 255, 1);
+} */
+
+.successcontainer {
+  background-color: rgba(139, 199, 255, 1);
+  height: 100vh;
+  text-align: center;
+}
+
+.D {
+  font-size: 40px;
+  color: rgba(55, 145, 248, 1);
+}
+.M {
+  font-size: 40px;
+  color: black;
+}
+
+.successfont {
+  line-height: 3;
+}
