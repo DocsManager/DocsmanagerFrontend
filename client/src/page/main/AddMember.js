@@ -3,6 +3,7 @@ import { Box, Button, Modal } from "@mui/material";
 import ShareUser from "./ShareUser";
 import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
 import { documentAddUser, documentMember } from "../../api/documentApi";
+import SucessModal from "./SucessModal";
 
 const style = {
   position: "absolute",
@@ -14,12 +15,24 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  overflow: "auto",
 };
 
 export default function AddMember(props) {
-  const { open, setOpen, row, number, check, setCheck, type } = props;
+  const {
+    open,
+    setOpen,
+    setDocumentShareModal,
+    infoModalOpen,
+    row,
+    number,
+    check,
+    setCheck,
+    type,
+  } = props;
   const [searchList, setSearchList] = useState([]);
   const [memberList, setMemberList] = useState([]);
+
   useEffect(() => {
     if (type === "workspace") {
       workspaceMember(number, setMemberList);
@@ -34,7 +47,7 @@ export default function AddMember(props) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={{ ...style, width: 500, height: 600 }}>
           <ShareUser
             searchList={searchList}
             setSearchList={setSearchList}
@@ -46,18 +59,20 @@ export default function AddMember(props) {
               if (type === "workspace") {
                 addWorkspaceUser(row, searchList, check, setCheck);
               } else if (type === "document") {
+                setDocumentShareModal(true);
                 documentAddUser(searchList, row);
+                infoModalOpen(false);
               }
-              setOpen(false);
               setSearchList([]);
+              setOpen(false);
             }}
           >
             추가
           </Button>
           <Button
             onClick={() => {
-              setOpen(false);
               setSearchList([]);
+              setOpen(false);
             }}
           >
             취소
