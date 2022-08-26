@@ -1,13 +1,19 @@
+import { Box, Button, InputAdornment, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { login } from "../../api/userApi";
-import { getUser } from "../../component/getUser/getUser";
+import { allUser, login } from "../../api/userApi";
+import "./Login.css";
+import { loginMenu } from "./loginMenu";
 
 function Login() {
   const [user, setUser] = useState({});
+  const [userList, setUserList] = useState([]);
   if (user.userNo) {
     window.location.href = "main";
   }
+  useEffect(() => {
+    allUser(setUserList);
+  }, []);
 
   return (
     <>
