@@ -1,7 +1,13 @@
-import DocumentWriter from "./page/documentWriter/DocumentWriter";
+import React from "react";
+import Head from "./page/Head";
+// import TodoApp from "./page/main/TodoApp";
 
 function App() {
- return <DocumentWriter />;
+  return (
+    <>
+      <Head />
+    </>
+  );
 }
 
 export default App;

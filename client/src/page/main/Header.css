@@ -1,0 +1,42 @@
+.header-box {
+  width: 100%;
+  background-color: #8bc7ff;
+  list-style-type: none;
+}
+
+.header-logo {
+  background-repeat: no-repeat;
+  padding-left: 5%;
+  align-items: center;
+}
+.header-profile {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.header-user {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-right: 2.5vw;
+  font-size: 0.8em;
+}
+
+.header-user p {
+  margin-right: 1em;
+  margin-left: 0.5em;
+  margin-top: 1rem;
+  /* color: white; */
+}
+.header-user-text span {
+  color: white;
+}
+.header-user span {
+  font-size: 1.5em;
+  font-weight: bold;
+  /* color: #3791f8; */
+  color: black;
+}
+.header-alert span {
+  color: white;
+}
