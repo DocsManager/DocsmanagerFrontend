@@ -8,6 +8,7 @@ import {
   restoreFile,
   updateRecycleBinFile,
   writeFile,
+  masterDeleteFile,
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
@@ -102,7 +103,12 @@ const handleTrashcanBtn = (
   }
 };
 
-const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
+const DmTableToolbar = ({
+  numSelected,
+  newSelected,
+  setSelected,
+  documentInfo,
+}) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
@@ -153,7 +159,11 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
                 open={confirmDeleteModalOpen}
                 setOpen={setConfirmDeleteModalOpen}
                 act={() => {
-                  deleteFile(newSelected);
+                  console.log(documentInfo);
+                  console.log(newSelected);
+                  documentInfo.authority === "MASTER"
+                    ? masterDeleteFile(newSelected)
+                    : deleteFile(newSelected);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}
