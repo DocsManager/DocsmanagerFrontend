@@ -24,6 +24,12 @@ const headCells = [
     label: "작성자",
   },
   {
+    id: "fileSize",
+    numeric: true,
+    disablePadding: false,
+    label: "용량",
+  },
+  {
     id: "registerDate",
     numeric: true,
     disablePadding: false,

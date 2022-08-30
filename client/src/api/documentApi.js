@@ -41,6 +41,20 @@ export function deleteFile(newSelected) {
     .catch((err) => console.log(err));
 }
 
+// 마스터 영구 삭제
+export function masterDeleteFile(newSelected) {
+  const url = baseUrl + "documents/";
+  console.log(newSelected);
+  axios
+    .delete(url, {
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: newSelected,
+    })
+    .catch((err) => console.log(err));
+}
+
 // 파일 복원
 export function restoreFile(documentNo) {
   const url = baseUrl + "documents/" + getUser().userNo;
@@ -162,12 +176,24 @@ export function documentMember(documentNo, setMemberList) {
 }
 
 // 파일 검색
-export function searchDocument(userNo, originalName, setList) {
-  const url = `${baseUrl}document/${userNo}/${originalName}`;
+export function searchDocument(userNo, originalName, documentUrl, setList) {
+  const url = `${baseUrl}document/${documentUrl}/${userNo}/${originalName}`;
   axios
     .get(url)
     .then((res) => {
       setList(res.data);
+    })
+    .catch((err) => console.log(err));
+}
+
+// 내 문서 용량
+export function fileSize(userNo, setSize) {
+  const url = `${baseUrl}documents/size/${userNo}`;
+  axios
+    .get(url)
+    .then((res) => {
+      setSize(res.data);
+      console.log(res.data);
     })
     .catch((err) => console.log(err));
 }

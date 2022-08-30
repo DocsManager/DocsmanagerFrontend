@@ -12,7 +12,9 @@ export default function AuthoritySelect({ search }) {
     search.authority = event.target.value;
   };
   useEffect(() => {
-    search.authority && setAuthority(search.authority);
+    search.authority
+      ? setAuthority(search.authority)
+      : (search.authority = authority);
   }, []);
 
   return (

@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { Box, TablePagination, TableRow } from "@mui/material";
+import { Box, TablePagination, TableRow, LinearProgress } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import { Table, Button } from "@mui/material";
@@ -14,7 +14,12 @@ import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
 import { getUser } from "../../component/getUser/getUser";
-import { getList, importantFile, searchDocument } from "../../api/documentApi";
+import {
+  fileSize,
+  getList,
+  importantFile,
+  searchDocument,
+} from "../../api/documentApi";
 import DocumentModal from "./DocumentModal";
 
 function descendingComparator(a, b, orderBy) {
@@ -46,6 +51,21 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+function LinearProgressWithLabel(props) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+
 export const MyContext = createContext({
   check: "",
   setCheckHandler: (check) => {},
@@ -62,11 +82,13 @@ export default function DmTable(props) {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
   const [check, setCheck] = useState(false);
+  const [size, setSize] = useState(0);
 
   const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
     getList(setList, props.documentUrl ? props.documentUrl : "");
+    fileSize(getUser().userNo, setSize);
   }, [check]);
   let newSelected = [];
 
@@ -157,19 +179,31 @@ export default function DmTable(props) {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-        {/* <Typography>
-          <input id="searchDocumentName" />
-          <Button
-            onClick={() => {
-              const searchName = document.getElementById("searchDocumentName")
-                .value;
-              searchName &&
-                searchDocument(getUser().userNo, searchName, setList);
-            }}
-          >
-            검색
-          </Button>
-        </Typography> */}
+        <TextField id="searchDocumentName" label="파일 검색" />
+        <Button
+          onClick={() => {
+            const searchName = document.getElementById("searchDocumentName")
+              .value;
+            searchName &&
+              searchDocument(
+                getUser().userNo,
+                searchName,
+                props.documentUrl ? props.documentUrl : "",
+                setList
+              );
+            console.log(list);
+          }}
+        >
+          검색
+        </Button>
+        <Typography>
+          내 용량 : {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
+        </Typography>
+
+        <Box sx={{ width: "30%" }}>
+          <LinearProgressWithLabel value={(size / 10485760) * 100} />
+        </Box>
+
         <MyContext.Provider value={{ check, setCheckHandler }}>
           <DmTableToolbar
             numSelected={selected.length}
@@ -185,7 +219,7 @@ export default function DmTable(props) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={10}
+              rowCount={list.length}
             />
 
             <TableBody>
@@ -250,6 +284,16 @@ export default function DmTable(props) {
                       <TableCell align="center">
                         {li.documentNo.user.name}
                       </TableCell>
+
+                      {li.documentNo.fileSize < 1024 ? (
+                        <TableCell align="center">
+                          {li.documentNo.fileSize.toFixed(2)} KB
+                        </TableCell>
+                      ) : (
+                        <TableCell align="center">
+                          {(li.documentNo.fileSize / 1024).toFixed(2)} MB
+                        </TableCell>
+                      )}
                       <TableCell align="center">
                         {li.documentNo.registerDate
                           .replace("T", " ")

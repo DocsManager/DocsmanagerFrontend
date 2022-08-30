@@ -4,6 +4,7 @@ import SucessModal from "./SucessModal";
 import "./Modal.css";
 import {
   deleteFile,
+  masterDeleteFile,
   restoreFile,
   updateRecycleBinFile,
 } from "../../api/documentApi";
@@ -164,7 +165,9 @@ const DocumentModal = (props) => {
                 open={confirmModalOpen}
                 setOpen={setConfirmModalOpen}
                 act={() => {
-                  deleteFile([document.documentNo.documentNo]);
+                  document.authority === "MASTER"
+                    ? masterDeleteFile([document.documentNo.documentNo])
+                    : deleteFile([document.documentNo.documentNo]);
                   setConfirmModalOpen(false);
                   setDeleteSuccessModalOpen(true);
                   infoModalOpen(false);

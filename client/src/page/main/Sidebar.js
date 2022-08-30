@@ -10,6 +10,9 @@ import { SidebarData } from "./SidebarData";
 import "./Sidebar.css";
 import { styled } from "@mui/material/styles";
 import AddWorkspace from "../workspace/AddWorkspace";
+import { Typography } from "@mui/material";
+import { fileSize } from "../../api/documentApi";
+import { getUser } from "../../component/getUser/getUser";
 
 const SidebarList = styled(ListItem)`
   /* padding: 20px; */

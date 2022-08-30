@@ -138,7 +138,7 @@ const WriteModal = (props) => {
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
             notipublish(searchList);
             setWriteModal(false);
-            check ? setCheckHandler(false) : setCheckHandler(true);
+            // check ? setCheckHandler(false) : setCheckHandler(true);
           }
         }}
       >
