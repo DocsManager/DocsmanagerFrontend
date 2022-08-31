@@ -129,6 +129,7 @@ const DmTableToolbar = ({
   setSelected,
   documentUrl,
   setList,
+  setSearchData,
   // documentInfo,
 }) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
@@ -158,13 +159,15 @@ const DmTableToolbar = ({
           onClick={() => {
             const searchName = document.getElementById("searchDocumentName")
               .value;
-            searchName &&
+            if (searchName) {
               searchDocument(
                 getUser().userNo,
                 searchName,
                 documentUrl ? documentUrl : "",
                 setList
               );
+              setSearchData(searchName);
+            }
             // console.log(list);
           }}
         >
