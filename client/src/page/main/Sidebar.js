@@ -11,6 +11,8 @@ import { styled } from "@mui/material/styles";
 import AddWorkspace from "../workspace/AddWorkspace";
 import { makeStyles, Tooltip } from "@material-ui/core";
 import { IconButton, Typography } from "@mui/material";
+import { fileSize } from "../../api/documentApi";
+import { getUser } from "../../component/getUser/getUser";
 
 const sidebarLinkStyle = {
   fontSize: "1.3rem",

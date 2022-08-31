@@ -8,6 +8,7 @@ import {
   restoreFile,
   updateRecycleBinFile,
   writeFile,
+  masterDeleteFile,
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
@@ -73,41 +74,14 @@ const handleToolbarBtn = (writeModalOpen, setWriteModalOpen) => {
   }
 };
 
-const openDeleteModal = (confirmDeleteModalOpen, setConfirmDeleteModalOpen) => {
-  confirmDeleteModalOpen === true
-    ? setConfirmDeleteModalOpen(false)
-    : setConfirmDeleteModalOpen(true);
-};
-
-const closeSuccessModal = (
-  setSuccessDeleteModalOpen,
-  check,
-  setCheckHandler,
-  setSelected
-) => {
-  setSuccessDeleteModalOpen(false);
+const closeSuccessModal = (modalOpen, check, setCheckHandler, setSelected) => {
+  modalOpen(false);
   check ? setCheckHandler(false) : setCheckHandler(true);
   setSelected([]);
-};
-
-const closeRestoreSuccessModal = (
-  setSuccessRestoreModalOpen,
-  check,
-  setCheckHandler,
-  setSelected
-) => {
-  setSuccessRestoreModalOpen(false);
-  check ? setCheckHandler(false) : setCheckHandler(true);
-  setSelected([]);
-};
-
-const wirteOpen = (writeModalOpen, setWriteModalOpen) => {
-  writeModalOpen ? setWriteModalOpen(false) : setWriteModalOpen(true);
 };
 
 const handleTrashcanBtn = (
   newSelected,
-  confirmDeleteModalOpen,
   setConfirmDeleteModalOpen,
   setSuccessRestoreModalOpen
 ) => {
@@ -118,7 +92,8 @@ const handleTrashcanBtn = (
           variant="contained"
           endIcon={<Outbox />}
           onClick={() => {
-            restoreFile(newSelected, setSuccessRestoreModalOpen);
+            restoreFile(newSelected);
+            setSuccessRestoreModalOpen(true);
           }}
           style={{ marginRight: "10px" }}
         >
@@ -127,9 +102,7 @@ const handleTrashcanBtn = (
         <ToRecyclebin
           variant="contained"
           startIcon={<Delete />}
-          onClick={() => {
-            openDeleteModal(confirmDeleteModalOpen, setConfirmDeleteModalOpen);
-          }}
+          onClick={() => setConfirmDeleteModalOpen(true)}
         >
           영구 삭제
         </ToRecyclebin>
@@ -140,9 +113,7 @@ const handleTrashcanBtn = (
       <ToRecyclebin
         variant="contained"
         startIcon={<Delete />}
-        onClick={() => {
-          openDeleteModal(confirmDeleteModalOpen, setConfirmDeleteModalOpen);
-        }}
+        onClick={() => setConfirmDeleteModalOpen(true)}
       >
         휴지통으로
       </ToRecyclebin>
@@ -155,7 +126,6 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
   const [writeModalOpen, setWriteModalOpen] = useState(false);
-  // const [writeSuccessModalOpen, setWriteSuccessModalOpen] = useState(false);
 
   const { check, setCheckHandler } = useContext(MyContext);
 
@@ -196,7 +166,6 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
               </Typography>
               {handleTrashcanBtn(
                 newSelected,
-                confirmDeleteModalOpen,
                 setConfirmDeleteModalOpen,
                 setSuccessRestoreModalOpen
               )}
@@ -212,19 +181,13 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
             return (
               <ConfirmModal
                 open={confirmDeleteModalOpen}
-                close={() => {
-                  openDeleteModal(
-                    confirmDeleteModalOpen,
-                    setConfirmDeleteModalOpen
-                  );
+                setOpen={setConfirmDeleteModalOpen}
+                act={() => {
+                  console.log(newSelected);
+                  deleteFile(newSelected);
+                  setConfirmDeleteModalOpen(false);
+                  setSuccessDeleteModalOpen(true);
                 }}
-                act={() =>
-                  deleteFile(
-                    newSelected,
-                    setConfirmDeleteModalOpen,
-                    setSuccessDeleteModalOpen
-                  )
-                }
               >
                 <main>
                   <div>선택된 파일들을 영구 삭제 하시겠습니까?</div>
@@ -236,19 +199,12 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
             return (
               <ConfirmModal
                 open={confirmDeleteModalOpen}
-                close={() => {
-                  openDeleteModal(
-                    confirmDeleteModalOpen,
-                    setConfirmDeleteModalOpen
-                  );
+                setOpen={setConfirmDeleteModalOpen}
+                act={() => {
+                  updateRecycleBinFile(newSelected);
+                  setConfirmDeleteModalOpen(false);
+                  setSuccessDeleteModalOpen(true);
                 }}
-                act={() =>
-                  updateRecycleBinFile(
-                    newSelected,
-                    setConfirmDeleteModalOpen,
-                    setSuccessDeleteModalOpen
-                  )
-                }
               >
                 <main>
                   <div>삭제 하시겠습니까?</div>
@@ -258,62 +214,41 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
         }
       })()}
 
-      {
-        <SucessModal
-          open={successDeleteModalOpen}
-          close={() =>
-            closeSuccessModal(
-              setSuccessDeleteModalOpen,
-              check,
-              setCheckHandler,
-              setSelected
-            )
-          }
-        >
-          <main>
-            <div>삭제 완료</div>
-          </main>
-        </SucessModal>
-      }
-      {
-        <SucessModal
-          open={successRestoreModalOpen}
-          close={() =>
-            closeRestoreSuccessModal(
-              setSuccessRestoreModalOpen,
-              check,
-              setCheckHandler,
-              setSelected
-            )
-          }
-        >
-          <main>
-            <div>복원 완료</div>
-          </main>
-        </SucessModal>
-      }
-      {
-        <WriteModal
-          open={writeModalOpen}
-          close={() => wirteOpen(writeModalOpen, setWriteModalOpen)}
-          setWriteModal={setWriteModalOpen}
-        >
-          <div>파일 선택</div>
-        </WriteModal>
-      }
-      {/* {
-        <SucessModal
-          open={writeSuccessModalOpen}
-          close={() => {
-            setWriteModalOpen(false);
-            setWriteSuccessModalOpen(false);
-          }}
-        >
-          <main>
-            <div>저장 완료</div>
-          </main>
-        </SucessModal>
-      } */}
+      <SucessModal
+        open={successDeleteModalOpen}
+        close={() =>
+          closeSuccessModal(
+            setSuccessDeleteModalOpen,
+            check,
+            setCheckHandler,
+            setSelected
+          )
+        }
+      >
+        <main>
+          <div>삭제 완료</div>
+        </main>
+      </SucessModal>
+
+      <SucessModal
+        open={successRestoreModalOpen}
+        close={() =>
+          closeSuccessModal(
+            setSuccessRestoreModalOpen,
+            check,
+            setCheckHandler,
+            setSelected
+          )
+        }
+      >
+        <main>
+          <div>복원 완료</div>
+        </main>
+      </SucessModal>
+
+      <WriteModal open={writeModalOpen} setWriteModal={setWriteModalOpen}>
+        <div>파일 선택</div>
+      </WriteModal>
     </React.Fragment>
   );
 };
