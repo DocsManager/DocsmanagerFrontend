@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -10,7 +10,7 @@ import { SidebarData } from "./SidebarData";
 import "./Sidebar.css";
 import { styled } from "@mui/material/styles";
 import AddWorkspace from "../workspace/AddWorkspace";
-import { Typography } from "@mui/material";
+import { Typography, LinearProgress } from "@mui/material";
 import { fileSize } from "../../api/documentApi";
 import { getUser } from "../../component/getUser/getUser";
 
@@ -67,8 +67,29 @@ const SidebarBtn = styled(Button)`
 const ListIcon = styled(ListItemIcon)`
   color: #8bc7ff;
 `;
-export default function Sidebar() {
+
+function LinearProgressWithLabel(props) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.floor(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
+export default function Sidebar(check, setCheck) {
   const [open, setOpen] = useState(false);
+  const [size, setSize] = useState(0);
+
+  useEffect(() => {
+    fileSize(getUser().userNo, setSize);
+  }, [size]);
+
   return (
     <Box>
       <Box className="sidebar-nav">
@@ -89,10 +110,16 @@ export default function Sidebar() {
               <ListIcon>{item.icon}</ListIcon>
               <SidebarText primary={item.title} sx={{ fontSize: "1.5em" }} />
             </SidebarSideLink>
+
             // </SidebarList>
           ))}
         </List>
+        <Typography>
+          내 용량 : {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
+          <LinearProgressWithLabel value={(size / 10485760) * 100} />
+        </Typography>
       </Box>
+
       <AddWorkspace open={open} setOpen={setOpen} />
     </Box>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import { Delete, FolderSpecial, Outbox, Warning } from "@mui/icons-material";
-import { Button, Typography, styled } from "@mui/material";
+import { Button, Typography, styled, TextField } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import {
   deleteFile,
@@ -9,11 +9,13 @@ import {
   updateRecycleBinFile,
   writeFile,
   masterDeleteFile,
+  searchDocument,
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import { MyContext } from "./DmTable";
 import WriteModal from "./WriteModal";
+import { getUser } from "../../component/getUser/getUser";
 
 //문서 등록, 중요 문서 안내 버튼 styled 컴포넌트로
 const EnrollBtn = styled(Button)({
@@ -107,7 +109,9 @@ const DmTableToolbar = ({
   numSelected,
   newSelected,
   setSelected,
-  documentInfo,
+  documentUrl,
+  setList,
+  // documentInfo,
 }) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
@@ -131,6 +135,23 @@ const DmTableToolbar = ({
           }),
         }}
       >
+        <TextField id="searchDocumentName" label="파일 검색" />
+        <Button
+          onClick={() => {
+            const searchName = document.getElementById("searchDocumentName")
+              .value;
+            searchName &&
+              searchDocument(
+                getUser().userNo,
+                searchName,
+                documentUrl ? documentUrl : "",
+                setList
+              );
+            // console.log(list);
+          }}
+        >
+          검색
+        </Button>
         {numSelected > 0 ? (
           <Typography
             sx={{ flex: " 1 1 100%" }}
@@ -159,11 +180,11 @@ const DmTableToolbar = ({
                 open={confirmDeleteModalOpen}
                 setOpen={setConfirmDeleteModalOpen}
                 act={() => {
-                  console.log(documentInfo);
-                  console.log(newSelected);
-                  documentInfo.authority === "MASTER"
-                    ? masterDeleteFile(newSelected)
-                    : deleteFile(newSelected);
+                  // console.log(documentInfo);
+                  // console.log(newSelected);
+                  // documentInfo.authority === "MASTER"
+                  //   ? masterDeleteFile(newSelected)
+                  //   : deleteFile(newSelected);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}
