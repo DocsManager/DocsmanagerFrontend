@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { w3cwebsocket } from "websocket";
 import { cutByLen } from "../../component/byteLength/getByte";
-import QuillEditor from "./QuillEditor";
 import { getUser } from "../../component/getUser/getUser";
+import QuillEditor from "./QuillEditor";
 import Identicon from "react-identicons";
 import { UncontrolledTooltip } from "reactstrap";
 import "medium-editor/dist/css/medium-editor.css";
@@ -48,11 +48,12 @@ function Workspace() {
     getWorkspace(workspaceNo, setWorkspace);
     if (workspace.workspaceNo) {
       setClient(
-        new w3cwebsocket("ws://127.0.0.1:8000" + window.location.search)
+        new w3cwebsocket("ws://3.39.189.222:8000" + window.location.search)
       );
     }
   }, [workspace.workspaceNo]);
-  console.log(workspace);
+  console.log(client);
+  console.log(window.location.search);
   if (client) {
     client.onopen = () => {
       client.send(
