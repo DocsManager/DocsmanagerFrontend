@@ -43,42 +43,6 @@ const headCells = [
   },
 ];
 
-// const headCell2 = [
-//   {
-//     id: "originalName",
-//     numeric: false,
-//     disablePadding: true,
-//     label: "제목",
-//   },
-//   {
-//     id: "content",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "내용",
-//   },
-//   {
-//     id: "registerDate",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "등록일",
-//   },
-//   {
-//     id: "modifyDate",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "수정일",
-//   },
-// ];
-
-// const contentOrTitle = () => {
-//   switch (window.location.href.split("/main")[1]) {
-//     case "":
-//       return headCell2;
-//     default:
-//       return headCells;
-//   }
-// };
-
 function DmTableHead(props) {
   const {
     onSelectAllClick,

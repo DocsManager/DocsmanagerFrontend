@@ -18,9 +18,27 @@ import WriteModal from "./WriteModal";
 //문서 등록, 중요 문서 안내 버튼 styled 컴포넌트로
 const EnrollBtn = styled(Button)({
   backgroundColor: "#3791f8",
-  marginLeft: "10px",
-  outline: "none !important",
+  color: "white",
+  border: "none",
+  padding: "10px",
+  borderRadius: "5px",
+  cursor: "pointer",
+  fontSize: "1em",
 });
+
+const ToRecyclebin = styled(Button)({
+  backgroundColor: "#FF6262",
+  color: "white",
+  border: "none",
+  padding: "10px",
+  borderRadius: "5px",
+  cursor: "pointer",
+  fontSize: "1em",
+  "&:hover": {
+    backgroundColor: "#EF5757",
+  },
+});
+export { EnrollBtn, ToRecyclebin };
 
 const handleToolbarBtn = (writeModalOpen, setWriteModalOpen) => {
   switch (window.location.href.split("/main")[1]) {
@@ -81,24 +99,24 @@ const handleTrashcanBtn = (
         >
           내 문서함으로 이동
         </EnrollBtn>
-        <Button
-          variant="outlined"
+        <ToRecyclebin
+          variant="contained"
           startIcon={<Delete />}
           onClick={() => setConfirmDeleteModalOpen(true)}
         >
           영구 삭제
-        </Button>
+        </ToRecyclebin>
       </div>
     );
   } else {
     return (
-      <Button
-        variant="outlined"
+      <ToRecyclebin
+        variant="contained"
         startIcon={<Delete />}
         onClick={() => setConfirmDeleteModalOpen(true)}
       >
         휴지통으로
-      </Button>
+      </ToRecyclebin>
     );
   }
 };
@@ -133,8 +151,19 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
             variant="subtitle1"
             component="div"
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              {numSelected}개가 선택되었습니다
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <Typography>
+                <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+                  {numSelected}
+                </span>
+                개가 선택되었습니다
+              </Typography>
               {handleTrashcanBtn(
                 newSelected,
                 setConfirmDeleteModalOpen,
@@ -156,9 +185,6 @@ const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
                 act={() => {
                   console.log(newSelected);
                   deleteFile(newSelected);
-                  // documentInfo.authority === "MASTER"
-                  //   ? masterDeleteFile(newSelected)
-                  //   : deleteFile(newSelected);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}

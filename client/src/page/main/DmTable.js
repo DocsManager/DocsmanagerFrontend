@@ -5,6 +5,7 @@ import {
   TableContainer,
   TextField,
   Typography,
+  ThemeProvider,
 } from "@mui/material";
 import { Box, TablePagination, TableRow, LinearProgress } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -20,6 +21,8 @@ import {
   importantFile,
   searchDocument,
 } from "../../api/documentApi";
+import { NoneData } from "./NoneData";
+import { theme } from "../../Config";
 import DocumentModal from "./DocumentModal";
 
 function descendingComparator(a, b, orderBy) {
@@ -197,7 +200,14 @@ export default function DmTable(props) {
   };
   const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
 
+  const emptyRows =
+    page >= 0 ? Math.max(0, (1 + page) * rowsPerPage - list.length) : 0;
+
   return (
+    <React.Fragment>
+      {list.length == 0 ? (
+        <NoneData />
+      ) : (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
         <TextField id="searchDocumentName" label="파일 검색" />
@@ -244,15 +254,15 @@ export default function DmTable(props) {
               rowsPerPage={rowsPerPage}
               page={page}
             />
-
-            <TableBody>
-              {stableSort(list, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((li, index) => {
-                  const isItemSelected = isSelected(li.documentNo.documentNo);
-                  const isStarSelected = isStarClicked(li.documentNo);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
+                <TableBody>
+                  {stableSort(list, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((li, index) => {
+                      const isItemSelected = isSelected(
+                        li.documentNo.documentNo
+                      );
+                      const isStarSelected = isStarClicked(li.documentNo);
+                      const labelId = `enhanced-table-checkbox-${index}`;
                   return (
                     <TableRow
                       hover
@@ -331,6 +341,15 @@ export default function DmTable(props) {
                     </TableRow>
                   );
                 })}
+                  {emptyRows >= 0 && (
+                    <TableRow
+                      style={{
+                        height: 45 * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={6} />
+                    </TableRow>
+                  )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -354,5 +373,7 @@ export default function DmTable(props) {
         )}
       </MyContext.Provider>
     </Box>
+    )}
+    </React.Fragment>
   );
 }
