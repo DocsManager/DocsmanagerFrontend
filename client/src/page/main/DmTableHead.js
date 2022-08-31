@@ -12,6 +12,12 @@ import DmTableHeadCell from "./DmTableHeadCell";
 
 const headCells = [
   {
+    id: "fileCategory",
+    numeric: false,
+    disablePadding: true,
+    label: "유형",
+  },
+  {
     id: "originalName",
     numeric: false,
     disablePadding: true,

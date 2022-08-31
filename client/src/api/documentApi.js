@@ -91,7 +91,13 @@ export function importantFile(documentNo, important) {
 
 // 문서 작성
 
-export function writeFile(file, documentDTO, documentUser, fileName) {
+export function writeFile(
+  file,
+  documentDTO,
+  documentUser,
+  sizeCheck,
+  fileName
+) {
   const url = "/api/document";
 
   const fd = new FormData();
@@ -116,6 +122,7 @@ export function writeFile(file, documentDTO, documentUser, fileName) {
       },
     })
     .then((res) => {
+      sizeCheck(res.data);
       console.log(res.data);
     });
 }

@@ -58,8 +58,9 @@ const WriteModal = (props) => {
   const [file, setFile] = useState("");
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
+  const [sizeOver, setSizeOver] = useState(false);
   const [fileNull, setFileNull] = useState(false);
-
+  const [sizeCheck, setSizeCheck] = useState(false);
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
 
@@ -133,7 +134,7 @@ const WriteModal = (props) => {
         setOpen={setWriteConfirm}
         act={() => {
           {
-            writeFile(file, documentDTO, documentUser);
+            writeFile(file, documentDTO, documentUser, setSizeCheck);
             setSearchList([]);
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
             notipublish(searchList);
@@ -160,9 +161,15 @@ const WriteModal = (props) => {
           )
         }
       >
-        <main>
-          <div>작성 완료</div>
-        </main>
+        {sizeCheck ? (
+          <main>
+            <div>작성 완료</div>
+          </main>
+        ) : (
+          <main>
+            <div>용량 초과</div>
+          </main>
+        )}
       </SucessModal>
       {
         <SucessModal

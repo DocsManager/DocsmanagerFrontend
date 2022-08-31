@@ -23,6 +23,7 @@ import {
 } from "../../api/documentApi";
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
+import Sidebar from "./Sidebar";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -52,20 +53,20 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function LinearProgressWithLabel(props) {
-  return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "100%", mr: 1 }}>
-        <LinearProgress variant="determinate" {...props} />
-      </Box>
-      <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.round(
-          props.value
-        )}%`}</Typography>
-      </Box>
-    </Box>
-  );
-}
+// function LinearProgressWithLabel(props) {
+//   return (
+//     <Box sx={{ display: "flex", alignItems: "center" }}>
+//       <Box sx={{ width: "100%", mr: 1 }}>
+//         <LinearProgress variant="determinate" {...props} />
+//       </Box>
+//       <Box sx={{ minWidth: 35 }}>
+//         <Typography variant="body2" color="text.secondary">{`${Math.round(
+//           props.value
+//         )}%`}</Typography>
+//       </Box>
+//     </Box>
+//   );
+// }
 
 export const MyContext = createContext({
   check: "",
@@ -83,13 +84,13 @@ export default function DmTable(props) {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
   const [check, setCheck] = useState(false);
-  const [size, setSize] = useState(0);
+  // const [size, setSize] = useState(0);
 
   const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
     getList(setList, props.documentUrl ? props.documentUrl : "");
-    fileSize(getUser().userNo, setSize);
+    // fileSize(getUser().userNo, setSize);
   }, [check]);
   let newSelected = [];
 
@@ -146,7 +147,7 @@ export default function DmTable(props) {
     li.important
       ? importantFile(li.documentNo.documentNo, 0)
       : importantFile(li.documentNo.documentNo, 1);
-
+    check ? setCheck(false) : setCheck(true);
     setSelectStar(newSelected);
   };
 
@@ -181,36 +182,15 @@ export default function DmTable(props) {
       ) : (
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-            <TextField id="searchDocumentName" label="파일 검색" />
-            <Button
-              onClick={() => {
-                const searchName = document.getElementById("searchDocumentName")
-                  .value;
-                searchName &&
-                  searchDocument(
-                    getUser().userNo,
-                    searchName,
-                    props.documentUrl ? props.documentUrl : "",
-                    setList
-                  );
-                console.log(list);
-              }}
-            >
-              검색
-            </Button>
-            <Typography>
-              내 용량 : {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
-            </Typography>
 
-            <Box sx={{ width: "30%" }}>
-              <LinearProgressWithLabel value={(size / 10485760) * 100} />
-            </Box>
 
             <MyContext.Provider value={{ check, setCheckHandler }}>
               <DmTableToolbar
                 numSelected={selected.length}
                 newSelected={selected}
                 setSelected={setSelected}
+                documentUrl={props.documentUrl}
+                setList={setList}
               />
             </MyContext.Provider>
             <TableContainer>
@@ -275,6 +255,9 @@ export default function DmTable(props) {
                               />
                             )}
                           </TableCell>
+                          <TableCell>
+                            <img src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png" />{" "}
+                          </TableCell>
                           <TableCell
                             component="th"
                             id={labelId}
@@ -321,6 +304,7 @@ export default function DmTable(props) {
                       }}
                     >
                       <TableCell colSpan={6} />
+
                     </TableRow>
                   )}
                 </TableBody>

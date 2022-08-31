@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -10,7 +10,7 @@ import "./Sidebar.css";
 import { styled } from "@mui/material/styles";
 import AddWorkspace from "../workspace/AddWorkspace";
 import { makeStyles, Tooltip } from "@material-ui/core";
-import { IconButton, Typography } from "@mui/material";
+import { IconButton, Typography, LinearProgress } from "@mui/material";
 import { fileSize } from "../../api/documentApi";
 import { getUser } from "../../component/getUser/getUser";
 
@@ -80,6 +80,20 @@ const SidebarBtn = styled(Button)`
   }
 `;
 
+function LinearProgressWithLabel(props) {
+  return (
+    <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box sx={{ width: "100%", mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.floor(
+          props.value
+        )}%`}</Typography>
+      </Box>
+    </Box>
+  );
+}
 //tooltip 스타일
 const useStyles = makeStyles({
   tooltip: {
@@ -91,11 +105,15 @@ const useStyles = makeStyles({
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
+  const [size, setSize] = useState(0);
   const classes = useStyles();
   const [click, setClick] = useState(false);
   const clickHandler = () => {
     setClick(!click);
   };
+  useEffect(() => {
+    fileSize(getUser().userNo, setSize);
+  }, [size]);
   return (
     <Box>
       <Box className="sidebar-nav">
@@ -131,7 +149,12 @@ export default function Sidebar() {
             </SidebarSideLink>
           ))}
         </List>
+        <Typography>
+          내 용량 : {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
+          <LinearProgressWithLabel value={(size / 10485760) * 100} />
+        </Typography>
       </Box>
+
       <AddWorkspace open={open} setOpen={setOpen} />
     </Box>
   );
