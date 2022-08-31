@@ -100,10 +100,13 @@ export default function DmTable(props) {
   };
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
+      console.log("--------------");
       //체크 표시할 시, 모든 documentNo를 담음
-      newSelected = list
-        .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-        .map((n) => n.documentNo.documentNo);
+      newSelected = list.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+      // .map((n) => {
+      //   console.log(n);
+      //   return n.documentNo.documentNo;
+      // });
       setSelected(newSelected);
       // console.log(newSelected);
     } else {
@@ -113,27 +116,37 @@ export default function DmTable(props) {
 
   //각 table row에 걸려있는 클릭 이벤트
   const handleClick = (event, li) => {
-    const selectedIndex = selected.indexOf(li.documentNo.documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
-    console.log(li);
-
-    // let newSelected = [];
-
-    if (selectedIndex === -1) {
-      //-1이면 찾는 문자열이 배열에 없다는 뜻
-      newSelected = newSelected.concat(selected, li.documentNo.documentNo); //newSelected라는 빈 배열에 이미 선택된 값을 담은 selected 배열과 documentNo를 합쳐 담기
-      console.log(newSelected);
-    } else if (selectedIndex === 0) {
-      //이미 선택한 row 인덱스가 제일 처음부터 배열에 존재한다면? => 선택된 값이 담겨있는 selected 배열에서 다음 값(slice 함수 사용)을 합쳐 newSelected 배열에 담아야 함
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+    if (event.target.checked) {
+      setSelected(selected.length === 0 ? [li] : [...selected, li]);
+    } else {
+      setSelected(
+        selected.filter(
+          (v) => v.documentNo.documentNo !== li.documentNo.documentNo
+        )
       );
     }
-    setSelected(newSelected);
+
+    // const selectedIndex = selected.indexOf(li.documentNo.documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
+    // console.log(li);
+
+    // // let newSelected = [];
+
+    // if (selectedIndex === -1) {
+    //   //-1이면 찾는 문자열이 배열에 없다는 뜻
+    //   newSelected = newSelected.concat(selected, li.documentNo.documentNo); //newSelected라는 빈 배열에 이미 선택된 값을 담은 selected 배열과 documentNo를 합쳐 담기
+    //   console.log(newSelected);
+    // } else if (selectedIndex === 0) {
+    //   //이미 선택한 row 인덱스가 제일 처음부터 배열에 존재한다면? => 선택된 값이 담겨있는 selected 배열에서 다음 값(slice 함수 사용)을 합쳐 newSelected 배열에 담아야 함
+    //   newSelected = newSelected.concat(selected.slice(1));
+    // } else if (selectedIndex === selected.length - 1) {
+    //   newSelected = newSelected.concat(selected.slice(0, -1));
+    // } else if (selectedIndex > 0) {
+    //   newSelected = newSelected.concat(
+    //     selected.slice(0, selectedIndex),
+    //     selected.slice(selectedIndex + 1)
+    //   );
+    // }
+    // setSelected(newSelected);
   };
 
   //행마다 별 클릭하는 이벤트
@@ -173,7 +186,15 @@ export default function DmTable(props) {
     setPage(0);
   };
 
-  const isSelected = (documentNo) => selected.indexOf(documentNo) !== -1;
+  const isSelected = (documentNo) => {
+    let check = false;
+    selected.map((select) => {
+      if (select.documentNo.documentNo === documentNo) {
+        check = true;
+      }
+    });
+    return check;
+  };
   const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
 
   return (
@@ -220,6 +241,8 @@ export default function DmTable(props) {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={list.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
             />
 
             <TableBody>
@@ -246,7 +269,8 @@ export default function DmTable(props) {
                           inputProps={{
                             "aria-labelledby": labelId,
                           }}
-                          onClick={(event) => handleClick(event, li)}
+                          // onClick={(event) => handleClick(event, li)}
+                          onChange={(event) => handleClick(event, li)}
                         />
                       </TableCell>
                       <TableCell>

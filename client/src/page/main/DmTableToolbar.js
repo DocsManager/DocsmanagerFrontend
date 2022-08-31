@@ -103,12 +103,7 @@ const handleTrashcanBtn = (
   }
 };
 
-const DmTableToolbar = ({
-  numSelected,
-  newSelected,
-  setSelected,
-  documentInfo,
-}) => {
+const DmTableToolbar = ({ numSelected, newSelected, setSelected }) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
@@ -159,11 +154,11 @@ const DmTableToolbar = ({
                 open={confirmDeleteModalOpen}
                 setOpen={setConfirmDeleteModalOpen}
                 act={() => {
-                  console.log(documentInfo);
                   console.log(newSelected);
-                  documentInfo.authority === "MASTER"
-                    ? masterDeleteFile(newSelected)
-                    : deleteFile(newSelected);
+                  deleteFile(newSelected);
+                  // documentInfo.authority === "MASTER"
+                  //   ? masterDeleteFile(newSelected)
+                  //   : deleteFile(newSelected);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}
