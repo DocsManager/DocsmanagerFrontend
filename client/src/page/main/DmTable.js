@@ -84,6 +84,7 @@ export default function DmTable(props) {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
   const [check, setCheck] = useState(false);
+  const [searchData, setSearchData] = useState("");
   // const [size, setSize] = useState(0);
 
   const setCheckHandler = (check) => setCheck(check);
@@ -177,13 +178,13 @@ export default function DmTable(props) {
 
   return (
     <React.Fragment>
-      {list.length == 0 ? (
+      {list.length === 0 && !searchData ? (
         <NoneData />
+      ) : searchData ? (
+        <div />
       ) : (
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-
-
             <MyContext.Provider value={{ check, setCheckHandler }}>
               <DmTableToolbar
                 numSelected={selected.length}
@@ -191,6 +192,7 @@ export default function DmTable(props) {
                 setSelected={setSelected}
                 documentUrl={props.documentUrl}
                 setList={setList}
+                setSearchData={setSearchData}
               />
             </MyContext.Provider>
             <TableContainer>
@@ -304,7 +306,6 @@ export default function DmTable(props) {
                       }}
                     >
                       <TableCell colSpan={6} />
-
                     </TableRow>
                   )}
                 </TableBody>
