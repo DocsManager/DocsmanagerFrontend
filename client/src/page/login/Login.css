@@ -1,5 +1,6 @@
 .fontcontainer {
-  background-color: rgba(139, 199, 255, 1);
+  /* background-color: rgba(139, 199, 255, 1); */
+  background-color: #3791f8;
   width: 50%;
   height: 100vh;
   display: block;
@@ -19,6 +20,7 @@
 .fonts {
   margin: 0 auto;
   color: #ffffff;
+  /* color: #000000; */
   font-size: 25px;
 }
 .fonts p {

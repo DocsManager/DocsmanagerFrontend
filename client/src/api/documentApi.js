@@ -21,8 +21,12 @@ export function getList(setList, documentUrl) {
 export function updateRecycleBinFile(documentNo) {
   const url = baseUrl + "documents/" + getUser().userNo;
   let arr = [];
+  console.log(documentNo);
   documentNo.map((v) =>
-    arr.push({ documentNo: { documentNo: v }, recycleBin: 1 })
+    arr.push({
+      documentNo: { documentNo: v.documentNo.documentNo },
+      recycleBin: 1,
+    })
   );
   axios.put(url, arr).catch((err) => console.log(err));
 }
@@ -60,7 +64,10 @@ export function restoreFile(documentNo) {
   const url = baseUrl + "documents/" + getUser().userNo;
   let arr = [];
   documentNo.map((v) =>
-    arr.push({ documentNo: { documentNo: v }, recycleBin: 0 })
+    arr.push({
+      documentNo: { documentNo: v.documentNo.documentNo },
+      recycleBin: 0,
+    })
   );
   console.log(documentNo);
   axios.put(url, arr);

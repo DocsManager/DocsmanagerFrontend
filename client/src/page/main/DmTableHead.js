@@ -49,42 +49,6 @@ const headCells = [
   },
 ];
 
-// const headCell2 = [
-//   {
-//     id: "originalName",
-//     numeric: false,
-//     disablePadding: true,
-//     label: "제목",
-//   },
-//   {
-//     id: "content",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "내용",
-//   },
-//   {
-//     id: "registerDate",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "등록일",
-//   },
-//   {
-//     id: "modifyDate",
-//     numeric: true,
-//     disablePadding: false,
-//     label: "수정일",
-//   },
-// ];
-
-// const contentOrTitle = () => {
-//   switch (window.location.href.split("/main")[1]) {
-//     case "":
-//       return headCell2;
-//     default:
-//       return headCells;
-//   }
-// };
-
 function DmTableHead(props) {
   const {
     onSelectAllClick,
@@ -93,6 +57,8 @@ function DmTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    rowsPerPage,
+    page,
   } = props;
   const createSortHandler = (property) => (event) => {
     // console.log(event);
@@ -114,7 +80,12 @@ function DmTableHead(props) {
             color="primary"
             // indeterminate={numSelected > 0 && numSelected < rowCount}
             //선택된 행의 개수가 0보다 크지만 전체 리스트의 총 길이보다는 작은 상태
-            checked={rowCount > 0 && numSelected === rowCount}
+            checked={
+              (rowCount > 0 &&
+                numSelected !== 0 &&
+                numSelected === rowCount % (rowsPerPage * (page + 1))) ||
+              numSelected === rowsPerPage
+            }
             //리스트의 총 길이가 0보다 크고 선택된 행의 개수가 리스트 총 길이와 같으면 전체 체크
             onChange={onSelectAllClick}
             inputProps={{
