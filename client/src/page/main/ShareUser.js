@@ -115,29 +115,31 @@ function ShareUser({ searchList, setSearchList, type, member }) {
             <Search sx={{ fontSize: "1.2em" }} />
           </IconButton>
         </Box>
-      <Typography component="h3" mt={1}>검색 결과</Typography>
-      <Card variant="outlined" sx={{ minHeight: 275 }}>
-        {userList.map((users, index) => {
-          if (
-            users.userNo !== user.userNo &&
-            !checkDuplication(searchList, users)
-          ) {
-            return (
-              <Typography key={users.userNo} sx={{ display: "flex" }}>
-                <Checkbox
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSearchList(
-                        searchList.length === 0
-                          ? [users]
-                          : [...searchList, users]
-                      );
-                    } else {
-                      deleteHandler(users.userNo);
-                    }
-                  }}
-                />
-                <Box
+        <Typography component="h3" mt={1}>
+          검색 결과
+        </Typography>
+        <Card variant="outlined" sx={{ minHeight: 275 }}>
+          {userList.map((users, index) => {
+            if (
+              users.userNo !== user.userNo &&
+              !checkDuplication(searchList, users)
+            ) {
+              return (
+                <Typography key={users.userNo} sx={{ display: "flex" }}>
+                  <Checkbox
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSearchList(
+                          searchList.length === 0
+                            ? [users]
+                            : [...searchList, users]
+                        );
+                      } else {
+                        deleteHandler(users.userNo);
+                      }
+                    }}
+                  />
+                  <Box
                     sx={{
                       display: "flex",
                       justifyContent: "space-around",
@@ -148,22 +150,24 @@ function ShareUser({ searchList, setSearchList, type, member }) {
                     <span>{users.dept.deptName + "팀"}</span>
                     <span>{users.name}</span>
                   </Box>
-              </Typography>
-            );
-          }
-        })}
-      </Card>
-      <Typography component="h3" mt={1}>사원 목록</Typography>
-      <Table aria-labelledby="tableTitle">
-        <TableHead>
-          <TableRow>
-            {headCells.map((headCell) => (
-              <TableCell
-                sx={{ fontSize: "1em" }}
-                key={headCell.id}
-                align={headCell.numeric ? "right" : "left"}
-              >
-                {headCell.label}
+                </Typography>
+              );
+            }
+          })}
+        </Card>
+        <Typography component="h3" mt={1}>
+          사원 목록
+        </Typography>
+        <Table aria-labelledby="tableTitle">
+          <TableHead>
+            <TableRow>
+              {headCells.map((headCell) => (
+                <TableCell
+                  sx={{ fontSize: "1em" }}
+                  key={headCell.id}
+                  align={headCell.numeric ? "right" : "left"}
+                >
+                  {headCell.label}
                 </TableCell>
               ))}
               <TableCell />
