@@ -1,5 +1,10 @@
 import React, { useState, useEffect, createContext } from "react";
-import { TableBody, TableCell, TableContainer } from "@mui/material";
+import {
+  TableBody,
+  TableCell,
+  TableContainer,
+  ThemeProvider,
+} from "@mui/material";
 import { Box, TablePagination, TableRow } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
@@ -15,6 +20,8 @@ import {
   removeImportantFile,
 } from "../../api/documentApi";
 import Modal from "./Modal";
+import { NoneData } from "./NoneData";
+import { theme } from "../../Config";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -151,93 +158,105 @@ export default function DmTable(props) {
   const isSelected = (documentNo) => selected.indexOf(documentNo) !== -1;
   const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
 
+  const emptyRows =
+    page >= 0 ? Math.max(0, (1 + page) * rowsPerPage - list.length) : 0;
+
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-        <MyContext.Provider value={{ check, setCheckHandler }}>
-          <DmTableToolbar
-            numSelected={selected.length}
-            newSelected={selected}
-            setSelected={setSelected}
-          />
-        </MyContext.Provider>
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <DmTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={list.length}
-            />
+    // <ThemeProvider theme={theme}>
+    <React.Fragment>
+      {list.length == 0 ? (
+        <NoneData />
+      ) : (
+        <Box sx={{ width: "100%" }}>
+          <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
+            <MyContext.Provider value={{ check, setCheckHandler }}>
+              <DmTableToolbar
+                numSelected={selected.length}
+                newSelected={selected}
+                setSelected={setSelected}
+              />
+            </MyContext.Provider>
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                <DmTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={list.length}
+                />
 
-            <TableBody>
-              {stableSort(list, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((li, index) => {
-                  const isItemSelected = isSelected(li.documentNo.documentNo);
-                  const isStarSelected = isStarClicked(li.documentNo);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                <TableBody>
+                  {stableSort(list, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((li, index) => {
+                      const isItemSelected = isSelected(
+                        li.documentNo.documentNo
+                      );
+                      const isStarSelected = isStarClicked(li.documentNo);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1} //탭 순서 임의로 컨트롤
-                      key={li.documentNo.documentNo}
-                      selected={isItemSelected}
-                      // onClick={(event) =>
-                      //   handleClick(event, li.documentNo.documentNo)
-                      // }
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                          onClick={(event) => handleClick(event, li)}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        {li.important ? (
-                          <Checkbox
-                            icon={<StarOutlined sx={{ color: "#F4E029" }} />}
-                            checked={isStarSelected}
-                            checkedIcon={<StarBorderOutlined />}
-                            onClick={(event) => handleStarClick(event, li)}
-                          />
-                        ) : (
-                          <Checkbox
-                            icon={<StarBorderOutlined />}
-                            checked={isStarSelected}
-                            checkedIcon={
-                              <StarOutlined sx={{ color: "#F4E029" }} />
-                            }
-                            onClick={(event) => handleStarClick(event, li)}
-                          />
-                        )}
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        align="center"
-                        onClick={() => {
-                          openInfoModal(
-                            setInfoModalOpen,
-                            li.documentNo.documentNo
-                          );
-                          setDocument(li);
-                          console.log(li);
-                        }}
-                      >
-                        {li.documentNo.originalName}
-                      </TableCell>
-                      {/* {(() => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1} //탭 순서 임의로 컨트롤
+                          key={li.documentNo.documentNo}
+                          selected={isItemSelected}
+                          // onClick={(event) =>
+                          //   handleClick(event, li.documentNo.documentNo)
+                          // }
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                "aria-labelledby": labelId,
+                              }}
+                              onClick={(event) => handleClick(event, li)}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            {li.important ? (
+                              <Checkbox
+                                icon={
+                                  <StarOutlined sx={{ color: "#F4E029" }} />
+                                }
+                                checked={isStarSelected}
+                                checkedIcon={<StarBorderOutlined />}
+                                onClick={(event) => handleStarClick(event, li)}
+                              />
+                            ) : (
+                              <Checkbox
+                                icon={<StarBorderOutlined />}
+                                checked={isStarSelected}
+                                checkedIcon={
+                                  <StarOutlined sx={{ color: "#F4E029" }} />
+                                }
+                                onClick={(event) => handleStarClick(event, li)}
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            align="center"
+                            onClick={() => {
+                              openInfoModal(
+                                setInfoModalOpen,
+                                li.documentNo.documentNo
+                              );
+                              setDocument(li);
+                              console.log(li);
+                            }}
+                          >
+                            {li.documentNo.originalName}
+                          </TableCell>
+                          {/* {(() => {
                         switch (window.location.href.split("/main")[1]) {
                           case "":
                             return (
@@ -247,46 +266,59 @@ export default function DmTable(props) {
                             );
                           default:
                             return ( */}
-                      <TableCell align="center">
-                        {li.documentNo.user.name}
-                      </TableCell>
-                      {/* );
+                          <TableCell align="center">
+                            {li.documentNo.user.name}
+                          </TableCell>
+                          {/* );
                         }
                       })()} */}
 
-                      <TableCell align="center">
-                        {li.documentNo.registerDate
-                          .replace("T", " ")
-                          .slice(0, 16)}
-                      </TableCell>
-                      <TableCell align="center">
-                        {li.documentNo.modifyDate
-                          .replace("T", " ")
-                          .slice(0, 16)}
-                      </TableCell>
+                          <TableCell align="center">
+                            {li.documentNo.registerDate
+                              .replace("T", " ")
+                              .slice(0, 16)}
+                          </TableCell>
+                          <TableCell align="center">
+                            {li.documentNo.modifyDate
+                              .replace("T", " ")
+                              .slice(0, 16)}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+
+                  {emptyRows >= 0 && (
+                    <TableRow
+                      style={{
+                        height: 45 * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={6} />
                     </TableRow>
-                  );
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[10]}
-          component="div"
-          count={list.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Paper>
-      <MyContext.Provider value={{ check, setCheckHandler }}>
-        <Modal
-          open={infoModalOpen}
-          document={document}
-          infoModalOpen={setInfoModalOpen}
-        />
-      </MyContext.Provider>
-    </Box>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10]}
+              component="div"
+              count={list.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+          <MyContext.Provider value={{ check, setCheckHandler }}>
+            <Modal
+              open={infoModalOpen}
+              document={document}
+              infoModalOpen={setInfoModalOpen}
+            />
+          </MyContext.Provider>
+        </Box>
+      )}
+    </React.Fragment>
+    // </ThemeProvider>
   );
 }

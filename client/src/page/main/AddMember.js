@@ -3,6 +3,7 @@ import { Box, Button, Modal } from "@mui/material";
 import ShareUser from "./ShareUser";
 import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
 import { documentAddUser, documentMember } from "../../api/documentApi";
+import { workspaceMemberAddPublish } from "../../api/noticeApi";
 
 const style = {
   position: "absolute",
@@ -27,6 +28,7 @@ export default function AddMember(props) {
       documentMember(number, setMemberList);
     }
   }, []);
+  console.log(row);
   return (
     <div>
       <Modal
@@ -49,6 +51,7 @@ export default function AddMember(props) {
                 documentAddUser(searchList, row);
               }
               setOpen(false);
+              workspaceMemberAddPublish(searchList);
               setSearchList([]);
             }}
           >

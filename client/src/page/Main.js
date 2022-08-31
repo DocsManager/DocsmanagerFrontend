@@ -1,17 +1,27 @@
+import { Box, ThemeProvider } from "@mui/material";
 import React from "react";
 import { Link, Outlet } from "react-router-dom";
+import { theme } from "../Config";
 import Header from "./main/Header";
 import Sidebar from "./main/Sidebar";
 
 function Main() {
   return (
-    <div>
-      <Header />
-      <div style={{ display: "grid", gridTemplateColumns: "0.5fr 2fr" }}>
-        <Sidebar />
-        <Outlet />
-      </div>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Box>
+        <Header />
+        <Box
+          style={{
+            display: "grid",
+            gridTemplateColumns: "0.4fr 2fr",
+            width: "100%",
+          }}
+        >
+          <Sidebar />
+          <Outlet />
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 }
 
