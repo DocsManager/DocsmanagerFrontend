@@ -72,6 +72,28 @@ function DmTableHead(props) {
 
   // const arr = [headCell2, headCells];
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
+  // 페이징 처리 수정 09.02
+  const totalPageCount = Math.ceil(rowCount / rowsPerPage);
+  // console.log(
+  //   "wrong:" + (rowCount % ((page + 1) * rowsPerPage)),
+  //   "true:" + ((rowCount % ((page + 1) * rowsPerPage)) % 10)
+  // );
+  const checkAll = (rowCount, page, rowsPerPage, numSelected) => {
+    if (numSelected === rowsPerPage) {
+      return true;
+    }
+    if (
+      page + 1 === totalPageCount &&
+      numSelected < rowsPerPage &&
+      numSelected === (rowCount % ((page + 1) * rowsPerPage)) % 10 &&
+      numSelected !== 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <TableHead>
       <TableRow>
@@ -81,10 +103,8 @@ function DmTableHead(props) {
             // indeterminate={numSelected > 0 && numSelected < rowCount}
             //선택된 행의 개수가 0보다 크지만 전체 리스트의 총 길이보다는 작은 상태
             checked={
-              (rowCount > 0 &&
-                numSelected !== 0 &&
-                numSelected === rowCount % (rowsPerPage * (page + 1))) ||
-              numSelected === rowsPerPage
+              //페이징 처리 수정 09.02
+              checkAll(rowCount, page, rowsPerPage, numSelected)
             }
             //리스트의 총 길이가 0보다 크고 선택된 행의 개수가 리스트 총 길이와 같으면 전체 체크
             onChange={onSelectAllClick}

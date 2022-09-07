@@ -13,6 +13,7 @@ import { makeStyles, Tooltip } from "@material-ui/core";
 import { IconButton, Typography, LinearProgress } from "@mui/material";
 import { fileSize } from "../../api/documentApi";
 import { getUser } from "../../component/getUser/getUser";
+import CloudOutlinedIcon from "@mui/icons-material/CloudOutlined";
 
 const sidebarLinkStyle = {
   fontSize: "1.3rem",
@@ -28,7 +29,6 @@ const SidebarSideLink = styled(ListItemButton)`
   font-size: 30px;
   padding: 5px 10px 5px 10px;
   margin: 10px 10px 10px 0;
-  width: 18vw;
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -60,7 +60,7 @@ const style = {
 const SidebarBtn = styled(Button)`
   display: flex;
   max-width: 420px;
-  min-width: 350px;
+  min-width: 330px; //바뀜
   height: 58px;
   background: white;
   font-size: 1.3em;
@@ -87,9 +87,7 @@ function LinearProgressWithLabel(props) {
         <LinearProgress variant="determinate" {...props} />
       </Box>
       <Box sx={{ minWidth: 35 }}>
-        <Typography variant="body2" color="text.secondary">{`${Math.floor(
-          props.value
-        )}%`}</Typography>
+        <Typography variant="body2">{`${Math.floor(props.value)}%`}</Typography>
       </Box>
     </Box>
   );
@@ -103,6 +101,12 @@ const useStyles = makeStyles({
   },
 });
 
+//드라이브 용량 표시 css 컴포넌트
+const Storage = styled(Box)({
+  color: "white",
+  padding: "20px",
+  fontSize: "1.2rem",
+});
 export default function Sidebar() {
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState(0);
@@ -129,6 +133,7 @@ export default function Sidebar() {
               <Tooltip
                 title={item.tooltip}
                 classes={{ tooltip: classes.tooltip }}
+                placement="bottom-end" //툴팁 위치 변경됨 08.31
               >
                 <Box
                   sx={{
@@ -149,10 +154,15 @@ export default function Sidebar() {
             </SidebarSideLink>
           ))}
         </List>
-        <Typography>
-          내 용량 : {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
+        {/* 08.31 드라이브 용량 표시 변경 코드 */}
+        <Storage>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <CloudOutlinedIcon sx={{ fontSize: "40px", marginRight: "15px" }} />
+            내 잔여 용량
+          </Box>
           <LinearProgressWithLabel value={(size / 10485760) * 100} />
-        </Typography>
+          {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
+        </Storage>
       </Box>
 
       <AddWorkspace open={open} setOpen={setOpen} />

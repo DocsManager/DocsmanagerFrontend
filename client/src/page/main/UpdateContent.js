@@ -5,6 +5,8 @@ import SucessModal from "./SucessModal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import { InputBox } from "./WriteModal";
+import { Typography } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -42,11 +44,16 @@ const UpdateContent = (props) => {
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Box sx={{ ...style, width: 300 }}>
+        {/* 내용 수정 모달 css 변경 */}
+        <Box sx={{ ...style, width: 400 }}>
           <div id="child-modal-description">
             <main>
-              <div>내용 수정</div>
-              <input
+              <Typography component="h3" mt={1} mb={2} align="center">
+                내용 수정
+              </Typography>
+              <InputBox
+                mt={1}
+                sx={{ width: "340px" }}
                 type="text"
                 defaultValue={document.content}
                 onChange={(e) => setContent(e.target.value)}

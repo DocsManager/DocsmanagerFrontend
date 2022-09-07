@@ -61,11 +61,17 @@ const DocumentModal = (props) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
+        {/* <Box sx={{ ...style, minWidth: "700px", maxWidth: "800px" }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {console.log(document)}
+              {document.documentNo.originalName}
+            </Typography>
+            <Box> */}
         <Box sx={{ ...style, width: 500 }}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {console.log(document)}
             {document.documentNo.originalName}
-
             {(() => {
               switch (window.location.href.split("/main")[1]) {
                 case "/trashcan":
@@ -123,6 +129,8 @@ const DocumentModal = (props) => {
             <Button onClick={() => setConfirmModalOpen(true)}>
               <DeleteIcon />
             </Button>
+            {/* </Box>
+          </Box> */}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {document.documentNo.content

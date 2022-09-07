@@ -1,13 +1,11 @@
 .sidebar-nav {
   background: #3791f8;
   height: 100vh;
-  width: "20vw";
   position: sticky;
   top: 0px;
   border-radius: 0px 20px 0px 0px;
 }
 .sidebar-nav-child {
-  width: 300px;
   margin: 0 auto;
   text-decoration: none;
   padding: 20px;
