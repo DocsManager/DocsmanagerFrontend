@@ -31,7 +31,7 @@ script:
   - cd client
   - node -v
   - npm install
-  - npm run build
+  - CI=false npm run build
 
 before_deploy:
   - mkdir -p before-deploy-frontend # zip에 포함시킬 파일들을 담을 디렉토리 생성
