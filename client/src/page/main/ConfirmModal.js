@@ -1,31 +1,44 @@
 import React from "react";
 import "./Modal.css";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
 
 const ConfirmModal = (props) => {
   // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
 
-  const { open, close, header, act } = props;
+  const { open, setOpen, act } = props;
 
   return (
-    // 모달이 열릴때 openModal 클래스가 생성된다.
-    <div>
-      <div className={open ? "openModal modal" : "modal"}>
-        {open ? (
-          <section>
-            <header>{header}</header>
-            <main>{props.children}</main>
-            <footer>
-              <button className="close" onClick={close}>
-                취소
-              </button>
-              <button className="close" onClick={act}>
-                확인
-              </button>
-            </footer>
-          </section>
-        ) : null}
-      </div>
-    </div>
+    <React.Fragment>
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="child-modal-title"
+        aria-describedby="child-modal-description"
+      >
+        <Box sx={{ ...style, width: 350 }}>
+          <Typography id="child-modal-description">{props.children}</Typography>
+          <Button onClick={() => setOpen(false)}>취소</Button>
+          <Button onClick={act}>확인</Button>
+        </Box>
+      </Modal>
+    </React.Fragment>
   );
 };
 

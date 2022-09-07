@@ -6,7 +6,7 @@ const baseUrl = "/mail/";
 export function sendMail(params, setConfirmVerifyCode) {
   const url = baseUrl + "send";
   axios
-    .get("http://localhost:8080/mail/send", { params })
+    .get("/api/mail/send", { params })
     .then((response) => {
       if (response.data) {
         setConfirmVerifyCode(response.data);
@@ -20,7 +20,7 @@ export function sendMail(params, setConfirmVerifyCode) {
 
 export function verifyMail(params, setVerifyResult) {
   axios
-    .get("http://localhost:8080/mail/verify", { params })
+    .get("/api/mail/verify", { params })
     .then(alert("검증중입니다."))
     .then((response) => {
       if (response.data) {
@@ -37,7 +37,7 @@ export function verifyMail(params, setVerifyResult) {
 export function findId(params) {
   const url = baseUrl + "finduser";
   axios
-    .get("http://localhost:8080/mail/finduser", { params })
+    .get("api/mail/finduser", { params })
     .then((response) => {
       const result = response.data[0];
       if (params.name && result.name == params.name) {
@@ -51,7 +51,7 @@ export function findId(params) {
 
 export function findPw(params) {
   axios
-    .get("http://localhost:8080/mail/findpassword", { params })
+    .get("api/mail/findpassword", { params })
     .then((response) => {
       if (response.data.check) {
         alert("해당 이메일 주소로 임시 비밀번호가 발송되었습니다.");

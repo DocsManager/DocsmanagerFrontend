@@ -13,11 +13,13 @@ export function getNoticeList(setNoticeList) {
   });
 }
 
+//개별 알림 읽음 처리
 export function updateNotice(
   noticeNo,
   noticeSender,
   noticeReceiver,
-  noticeContent
+  noticeContent,
+  noticeSendDate
 ) {
   const url = baseUrl + `notice/${noticeNo}`;
   axios
@@ -26,10 +28,11 @@ export function updateNotice(
 
       {
         noticeNo: noticeNo,
-        sender: noticeSender.name,
-        receiver: noticeReceiver.name,
+        sender: noticeSender,
+        receiver: noticeReceiver,
         content: noticeContent,
         isRead: 1,
+        sendDate: noticeSendDate,
       }
     )
     .then((res) => {
@@ -38,7 +41,28 @@ export function updateNotice(
     .catch((err) => console.log(err));
 }
 
-const socketUrl = "ws://localhost:8080/ws-dm/websocket";
+//전체 알림 읽음 처리
+export function updateAllNotce(noticeList, setNoticeList) {
+  const url = baseUrl + `notice/receiver/${getUser().userNo}/all`;
+  let arr = [];
+  const unRead = noticeList.filter((notice) => notice.isRead != 1);
+  const read = noticeList.filter((notice) => notice.isRead == 1);
+  unRead.map((notice) => {
+    arr.push({
+      noticeNo: notice.noticeNo,
+      sender: notice.sender,
+      receiver: notice.receiver,
+      content: notice.content,
+      isRead: 1,
+      sendDate: notice.sendDate,
+    });
+  });
+  console.log(arr);
+  axios.put(url, arr).catch((err) => console.log(err));
+}
+
+const socketUrl = "ws://3.39.189.222:8080/ws-dm/websocket";
+
 // const client = new StompJs.Client();
 const client = new StompJs.Client({
   brokerURL: socketUrl,
@@ -74,7 +98,19 @@ export const wsDocsSubscribe = (setNewNotice, setNoticeList, noticeList) => {
           : [...noticeList, dataFromServer]
       );
     });
+
+    client.subscribe(`/queue/workspace/member/${getUser().id}`, ({ body }) => {
+      const dataFromServer = JSON.parse(body);
+      console.log(dataFromServer);
+      setNewNotice(dataFromServer);
+      setNoticeList(
+        noticeList.length === 0
+          ? [dataFromServer]
+          : [...noticeList, dataFromServer]
+      );
+    });
   };
+
   client.onStompError = (frame) => {
     console.error(frame);
   };
@@ -110,7 +146,6 @@ export const worksapcepublish = (searchList) => {
 
   searchList.map((element) => {
     return client.publish({
-      // destination: `/send/workspace/${element.id}`,
       destination: `/send/workspace`,
       body: JSON.stringify({
         sender: getUser(),
@@ -125,7 +160,32 @@ export const worksapcepublish = (searchList) => {
   console.log(getUser());
 };
 
+export const workspaceMemberAddPublish = (searchList) => {
+  if (!client.connected) {
+    return;
+  }
+
+  searchList.map((element) => {
+    return client.publish({
+      destination: `/send/workspace/add`,
+      body: JSON.stringify({
+        sender: getUser(),
+        receiver: element,
+        content: `${getUser().name}님이 워크스페이스에 초대했습니다`,
+        isRead: 0,
+      }),
+      skipContentLengthHeader: true,
+    });
+  });
+};
+
 export const deleteNotice = (noticeNo) => {
   const url = baseUrl + `notice/${noticeNo}`;
   axios.delete(url).then((res) => console.log(res.data));
+};
+
+//전체 알림 삭제
+export const deleteAllNotice = (setNoticeList) => {
+  const url = baseUrl + `notice/receiver/${getUser().userNo}/all`;
+  axios.delete(url).then((res) => setNoticeList([]));
 };

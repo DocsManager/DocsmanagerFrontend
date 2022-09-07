@@ -1,7 +1,7 @@
 import { Box, Button, InputAdornment, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { login } from "../../api/userApi";
+import { allUser, login } from "../../api/userApi";
 import "./Login.css";
 import { loginMenu } from "./loginMenu";
 
@@ -17,11 +17,15 @@ function Login() {
   };
 
   const [user, setUser] = useState({});
+  const [userList, setUserList] = useState([]);
   if (user.userNo) {
     console.log(user);
     alert(user.name + "님 환영합니다");
     window.location.href = "main";
   }
+  useEffect(() => {
+    allUser(setUserList);
+  }, []);
 
   return (
     <div className="logincontainer">
