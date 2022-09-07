@@ -28,7 +28,8 @@ cache:
     - "$HOME/.m2"
 
 script: 
-  - npm install
+  - cd client
+#   - npm install
   - npm run build
 
 before_deploy:
