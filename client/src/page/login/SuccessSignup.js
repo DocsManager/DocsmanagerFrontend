@@ -7,7 +7,11 @@ function SuccesSignup() {
   return (
     <div className="pagecontainer">
       <div className="successcontainer">
-        <img src={`${process.env.PUBLIC_URL}/dmlogo.png`} className="logo" />
+        <img
+          src={`${process.env.PUBLIC_URL}/successsignup.png`}
+          className="logo"
+          alt="signuplogo"
+        />
         <p> 회원가입을 축하드립니다</p>
         <p className="successfont">
           다양한 서비스를 <span className="D">D</span>{" "}
