@@ -8,7 +8,7 @@ import {
   restoreFile,
   updateRecycleBinFile,
 } from "../../api/documentApi";
-import { MyContext } from "./DmTable";
+import { MyContext } from "../Main";
 import UpdateContent from "./UpdateContent";
 import AddMember from "./AddMember";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -61,18 +61,24 @@ const DocumentModal = (props) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
+        {/* <Box sx={{ ...style, minWidth: "700px", maxWidth: "800px" }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              {console.log(document)}
+              {document.documentNo.originalName}
+            </Typography>
+            <Box> */}
         <Box sx={{ ...style, width: 500 }}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {console.log(document)}
             {document.documentNo.originalName}
-
             {(() => {
               switch (window.location.href.split("/main")[1]) {
                 case "/trashcan":
                   return (
                     <Button
                       onClick={() => {
-                        restoreFile([document.documentNo.documentNo]);
+                        restoreFile([document]);
                         setSuccessModalOpen(true);
                         infoModalOpen(false);
                       }}
@@ -123,6 +129,8 @@ const DocumentModal = (props) => {
             <Button onClick={() => setConfirmModalOpen(true)}>
               <DeleteIcon />
             </Button>
+            {/* </Box>
+          </Box> */}
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {document.documentNo.content
@@ -139,8 +147,6 @@ const DocumentModal = (props) => {
         successModalOpen={successModalOpen}
         document={document.documentNo}
         infoModalOpen={infoModalOpen}
-        check={check}
-        setCheckHandler={setCheckHandler}
       />
 
       {openShareAdd && (
@@ -185,7 +191,7 @@ const DocumentModal = (props) => {
                 open={confirmModalOpen}
                 setOpen={setConfirmModalOpen}
                 act={() => {
-                  updateRecycleBinFile([document.documentNo.documentNo]);
+                  updateRecycleBinFile([document]);
                   setConfirmModalOpen(false);
                   setSuccessModalOpen(true);
                   infoModalOpen(false);

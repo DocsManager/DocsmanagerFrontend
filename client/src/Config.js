@@ -20,6 +20,15 @@ export const theme = createTheme({
           ":hover": {
             backgroundColor: "white",
             fontWeight: "bold",
+            textDecoration: "none",
+          },
+        },
+        contained: {
+          backgroundColor: "#3791f8",
+          ":hover": {
+            backgroundColor: "#3791f8",
+            fontWeight: "bold",
+            textDecoration: "none !important",
           },
         },
       },
@@ -30,6 +39,7 @@ export const theme = createTheme({
           outline: "none",
           color: "#3791f8",
         },
+
         sizeLarge: {
           ":focus": {
             outline: "none",
@@ -83,6 +93,40 @@ export const theme = createTheme({
         input: {
           paddingLeft: "10px",
           WebkitBoxShadow: "0 0 0 1000px white inset",
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        body2: {
+          fontSize: "1.1rem",
+          color: "white",
+        },
+      },
+    },
+    MuiLinearProgress: {
+      styleOverrides: {
+        root: {
+          height: "5px",
+        },
+      },
+    },
+    MuiBox: {
+      styleOverrides: {
+        root: {
+          scrollbarWidth: "thin",
+          "&::webkit-scrollbarWidth": {
+            width: "0.4em",
+          },
+          outline: "none !important",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        elevation8: {
+          border: "1px solid #3791f8",
+          width: "420px",
         },
       },
     },

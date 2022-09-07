@@ -3,7 +3,9 @@
   background-color: #3791f8;
   width: 50%;
   height: 100vh;
-  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .fontcontainer > div > img {
@@ -11,6 +13,10 @@
   text-align: center;
   display: flex;
   justify-content: center;
+}
+
+.fontcontainer > div {
+  margin: 0 auto;
 }
 .login > img {
   position: absolute;

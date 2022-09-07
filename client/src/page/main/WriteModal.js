@@ -4,15 +4,27 @@ import { getUser, setUser } from "../../component/getUser/getUser";
 import ConfirmModal from "./ConfirmModal";
 import "./Modal.css";
 import SucessModal from "./SucessModal";
-import { MyContext } from "./DmTable";
+import { MyContext } from "../Main";
 import ShareUser from "./ShareUser";
 import { notipublish } from "../../api/noticeApi";
+import CircularProgress from "@mui/material/CircularProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { height } from "@mui/system";
+import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
+import {
+  OutlinedInput,
+  Stack,
+  styled,
+  TextField,
+  ThemeProvider,
+} from "@mui/material";
+import { theme } from "../../Config";
+import { TextFieldsOutlined } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -27,7 +39,17 @@ const style = {
   px: 4,
   pb: 3,
   overflow: "auto",
+  scrollbarWidth: "thin",
+  "&::-webkit-scrollbar": {
+    width: "0.4em",
+  },
 };
+
+export const InputBox = styled(OutlinedInput)({
+  "& legend": {
+    display: "none",
+  },
+});
 
 const openNoFileConfirm = (fileNull, setFileNull) => {
   fileNull ? setFileNull(false) : setFileNull(true);
@@ -44,13 +66,17 @@ const successWrite = (
   setWriteConfirm,
   check,
   setCheckHandler,
-  setFile
+  setFile,
+  setSizeCheck,
+  setLoading
 ) => {
   setWriteModal(false);
   setWriteSuccessConfirm(false);
   setWriteConfirm(false);
   check ? setCheckHandler(false) : setCheckHandler(true);
   setFile("");
+  setSizeCheck(2);
+  setLoading(false);
 };
 
 const WriteModal = (props) => {
@@ -59,7 +85,8 @@ const WriteModal = (props) => {
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [fileNull, setFileNull] = useState(false);
-  const [sizeCheck, setSizeCheck] = useState(false);
+  const [sizeCheck, setSizeCheck] = useState(2);
+  const [loading, setLoading] = useState(false);
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
 
@@ -77,111 +104,181 @@ const WriteModal = (props) => {
   const { check, setCheckHandler } = useContext(MyContext);
 
   return (
-    <React.Fragment>
-      <Modal
-        open={open}
-        onClose={() => setWriteModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={{ ...style, width: 800, height: 700 }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            문서 등록
-          </Typography>
-
-          <div>{props.children}</div>
-          <input
-            type="file"
-            id="fileUpload"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <ShareUser
-            searchList={searchList}
-            setSearchList={setSearchList}
-            type="document"
-          />
-          <div>파일 설명</div>
-          <input
-            type="text"
-            id="fileContent"
-            onChange={(e) => setText(e.target.value)}
-          />
-          <Typography>
-            <Button
-              onClick={() => {
-                setSearchList([]);
-                setWriteModal(false);
-              }}
-            >
-              닫기
-            </Button>
-            <Button
-              onClick={() => {
-                file
-                  ? setWriteConfirm(true)
-                  : openNoFileConfirm(fileNull, setFileNull);
-              }}
-            >
-              저장
-            </Button>
-          </Typography>
-        </Box>
-      </Modal>
-
-      <ConfirmModal
-        open={writeConfirm}
-        setOpen={setWriteConfirm}
-        act={() => {
-          {
-            writeFile(file, documentDTO, documentUser, setSizeCheck);
-            setSearchList([]);
-            openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
-            notipublish(searchList);
-            setWriteModal(false);
-            // check ? setCheckHandler(false) : setCheckHandler(true);
-          }
-        }}
-      >
-        <main>
-          <div>등록 하시겠습니까?</div>
-        </main>
-      </ConfirmModal>
-
-      <SucessModal
-        open={writeSuccessConfirm}
-        close={() =>
-          successWrite(
-            setWriteModal,
-            setWriteSuccessConfirm,
-            setWriteConfirm,
-            check,
-            setCheckHandler,
-            setFile,
-            setSizeCheck
-          )
-        }
-      >
-        {sizeCheck ? (
-          <main>
-            <div>작성 완료</div>
-          </main>
-        ) : (
-          <main>
-            <div>용량 초과</div>
-          </main>
-        )}
-      </SucessModal>
-      {
-        <SucessModal
-          open={fileNull}
-          close={() => openNoFileConfirm(fileNull, setFileNull)}
+    <ThemeProvider theme={theme}>
+      <React.Fragment>
+        <Modal
+          open={open}
+          onClose={() => setWriteModal(false)}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
         >
-          <main>
-            <div>파일이 없습니다.</div>
-          </main>
+          <Box sx={{ ...style, width: 500, height: 700 }}>
+            <Typography
+              variant="h6" //텍스트의 크기 뿐만 아니라 HTML 태그 결정, <h6/>로 마크업 됨
+              component="h2" //variant prop과 상이한 HTML 태그를 사용해야 할 때는 component prop으로 태그명을 명시
+              align="center"
+              mb={2}
+              mt={2}
+              id="modal-modal-title"
+            >
+              새로운 문서 등록
+            </Typography>
+
+            <Box mt={1}>{props.children}</Box>
+            {/* 09.03 모달창 수정 */}
+            <Box>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  sx={{ fontSize: "1.3em" }}
+                  component="label"
+                  htmlFor="fileUpload"
+                  startIcon={
+                    <DriveFolderUploadOutlinedIcon sx={{ fontSize: "1.3em" }} />
+                  }
+                >
+                  업로드
+                </Button>
+
+                <input
+                  type="file"
+                  id="fileUpload"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  style={{ display: "none" }}
+                />
+                <InputBox
+                  className="upload-name"
+                  placeholder="파일 선택"
+                  value={
+                    file
+                      ? file.name.length > 17
+                        ? file.name.slice(0, 16) + "..."
+                        : file.name
+                      : ""
+                  }
+                  disabled
+                />
+              </Stack>
+            </Box>
+
+            <ShareUser
+              searchList={searchList}
+              setSearchList={setSearchList}
+              type="document"
+            />
+            {/**파일 설명 input란 css 수정 */}
+            <Stack direction="column" spacing={1}>
+              <Box mt={2} mb={1}>
+                파일 설명
+              </Box>
+
+              <InputBox
+                type="text"
+                id="fileContent"
+              />
+            </Stack>
+
+            <Typography>
+              <Button
+                onClick={() => {
+                  setSearchList([]);
+                  setWriteModal(false);
+                  setFile();
+                  {
+                    /**닫기 버튼 누르면 input에 담긴 file내용 비워지게 */
+                  }
+                }}
+              >
+                닫기
+              </Button>
+              <Button
+                onClick={() => {
+                  const contentElem = document.getElementById("fileContent").value;
+                  setText(contentElem);
+                  file
+                    ? setWriteConfirm(true)
+                    : openNoFileConfirm(fileNull, setFileNull);
+                }}
+              >
+                저장
+              </Button>
+            </Typography>
+          </Box>
+        </Modal>
+
+        <ConfirmModal
+          open={writeConfirm}
+          setOpen={setWriteConfirm}
+          act={() => {
+            {
+              writeFile(file, documentDTO, documentUser, setSizeCheck);
+              setSearchList([]);
+              openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
+              notipublish(searchList);
+              setWriteModal(false);
+              setLoading(true);
+              // check ? setCheckHandler(false) : setCheckHandler(true);
+            }
+          }}
+        >
+          <Typography>등록 하시겠습니까?</Typography>
+        </ConfirmModal>
+        <SucessModal open={loading}>
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+          <Typography>업로드 중입니다...</Typography>
+        </Box>
+      </SucessModal>
+        {sizeCheck === 1 ? (
+        <SucessModal
+          open={writeSuccessConfirm}
+          close={() =>
+            successWrite(
+              setWriteModal,
+              setWriteSuccessConfirm,
+              setWriteConfirm,
+              check,
+              setCheckHandler,
+              setFile,
+              setSizeCheck,
+              setLoading
+            )
+          }
+        >
+          <Typography>작성 완료</Typography>
         </SucessModal>
-      }
-    </React.Fragment>
+      ) : sizeCheck === 0 ? (
+        <SucessModal
+          open={writeSuccessConfirm}
+          close={() =>
+            successWrite(
+              setWriteModal,
+              setWriteSuccessConfirm,
+              setWriteConfirm,
+              check,
+              setCheckHandler,
+              setFile,
+              setSizeCheck,
+              setLoading
+            )
+          }
+        >
+          <Typography>용량 초과</Typography>
+        </SucessModal>
+      ) : (
+        <></>
+      )}
+        {
+          <SucessModal
+            open={fileNull}
+            close={() => openNoFileConfirm(fileNull, setFileNull)}
+          >
+            <main>
+              <div>파일이 없습니다.</div>
+            </main>
+          </SucessModal>
+        }
+      </React.Fragment>
+    </ThemeProvider>
   );
 };
 
