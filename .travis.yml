@@ -27,8 +27,9 @@ cache:
   directories:
     - "$HOME/.m2"
 
-script: 
+script:
   - cd client
+  - node -v
   - npm install
   - npm run build
 
