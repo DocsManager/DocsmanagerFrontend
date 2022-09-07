@@ -24,6 +24,7 @@ import {
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
 import Sidebar from "./Sidebar";
+import { NoSearchData } from "./NoSearchData";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -158,6 +159,7 @@ export default function DmTable(props) {
   };
 
   const handleChangeRowsPerPage = (event) => {
+    console.log(event.target.value, parseInt(event.target.value, 10));
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -180,8 +182,23 @@ export default function DmTable(props) {
     <React.Fragment>
       {list.length === 0 && !searchData ? (
         <NoneData />
-      ) : searchData ? (
-        <div />
+      ) : list.length === 0 ? (
+        // 검색하는 창 살리려고 NoSearchData를 테이블 틀로 감쌌음!
+        <Box sx={{ width: "100%" }}>
+          <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
+            <MyContext.Provider value={{ check, setCheckHandler }}>
+              <DmTableToolbar
+                numSelected={selected.length}
+                newSelected={selected}
+                setSelected={setSelected}
+                documentUrl={props.documentUrl}
+                setList={setList}
+                setSearchData={setSearchData}
+              />
+            </MyContext.Provider>
+            <NoSearchData />
+          </Paper>
+        </Box>
       ) : (
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
@@ -268,7 +285,6 @@ export default function DmTable(props) {
                             onClick={() => {
                               setInfoModalOpen(true);
                               setDocumentInfo(li);
-                              console.log(li);
                             }}
                           >
                             {li.documentNo.originalName}
@@ -299,13 +315,14 @@ export default function DmTable(props) {
                         </TableRow>
                       );
                     })}
-                  {emptyRows >= 0 && (
+                  {emptyRows >
+                    0 /**>=0이면 애매하게 칸이 생겨서 >0으로 바꿈 */ && (
                     <TableRow
                       style={{
                         height: 45 * emptyRows,
                       }}
                     >
-                      <TableCell colSpan={6} />
+                      <TableCell colSpan={10} /> /**표 border 라인 조절 */
                     </TableRow>
                   )}
                 </TableBody>

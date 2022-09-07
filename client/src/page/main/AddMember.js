@@ -16,6 +16,10 @@ const style = {
   boxShadow: 24,
   p: 4,
   overflow: "auto",
+  scrollbarWidth: "thin",
+  "&::-webkit-scrollbar": {
+    width: "0.4em",
+  },
 };
 
 export default function AddMember(props) {
@@ -65,7 +69,10 @@ export default function AddMember(props) {
                 infoModalOpen(false);
               }
               setOpen(false);
-              workspaceMemberAddPublish(searchList);
+              workspaceMemberAddPublish(memberList, searchList, type, row);
+              {
+                /**type에 따른 메시지 내용 구분 */
+              }
 
               setSearchList([]);
               setOpen(false);

@@ -28,6 +28,7 @@ import AddMember from "../main/AddMember";
 import EditIcon from "@material-ui/icons/Edit";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
+import { ConstructionOutlined } from "@mui/icons-material";
 
 function createData(
   title,
@@ -113,19 +114,56 @@ function EnhancedTableHead(props) {
     numSelected,
     rowCount,
     onRequestSort,
+    page,
   } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
-
+  //페이징처리 변경 09.06
+  const totalPageCount = Math.ceil(rowCount / 5);
+  const intermediate = (numSelected, totalPageCount, rowCount, page) => {
+    if (
+      page + 1 === totalPageCount &&
+      numSelected < 5 &&
+      numSelected !== (rowCount % ((page + 1) * 5)) % 5 &&
+      numSelected !== 0
+    ) {
+      return true;
+    }
+    if (numSelected < 5 && numSelected !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const checkAll = (numSelected, totalPageCount, rowCount, page) => {
+    if (numSelected === 5) {
+      return true;
+    }
+    if (
+      page + 1 === totalPageCount &&
+      numSelected < 5 &&
+      numSelected === (rowCount % ((page + 1) * 5)) % 5 &&
+      numSelected !== 0
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   return (
     <TableHead>
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === 5}
+            indeterminate={intermediate(
+              numSelected,
+              totalPageCount,
+              rowCount,
+              page
+            )}
+            checked={checkAll(numSelected, totalPageCount, rowCount, page)}
             onChange={onSelectAllClick}
             inputProps={{
               "aria-label": "select all desserts",
@@ -182,7 +220,11 @@ const EnhancedTableToolbar = (props) => {
           variant="subtitle1"
           component="div"
         >
-          {numSelected} selected
+          <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+            {/**09.06 dmtable과 선택 시 나타나는 문구 맞춤 */}
+            {numSelected}
+          </span>
+          개가 선택되었습니다
         </Typography>
       )}
       {numSelected > 0 && (
@@ -217,6 +259,7 @@ export default function WorkspaceTable(props) {
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
+
   const rows = [];
   if (workspace.length !== 0) {
     workspace.map((v) =>
@@ -266,17 +309,22 @@ export default function WorkspaceTable(props) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    setSelected([]);
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
   console.log(rows);
+
+  // 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07
+  const emptyRows = page >= 0 ? Math.max(0, (1 + page) * 5 - rows.length) : 0;
   return (
     <React.Fragment>
       {rows.length == 0 ? (
         <NoneData />
       ) : (
         <Box sx={{ width: "100%" }}>
-          <Paper sx={{ width: "100%", mb: 2 }}>
+          <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
+            {/**테이블 너비 변경 */}
             <EnhancedTableToolbar
               numSelected={selected.length}
               selected={selected}
@@ -292,6 +340,7 @@ export default function WorkspaceTable(props) {
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
                   rowCount={rows.length}
+                  page={page}
                 />
                 <TableBody>
                   {stableSort(rows, getComparator(order, orderBy))
@@ -326,7 +375,7 @@ export default function WorkspaceTable(props) {
                             scope="row"
                             padding="none"
                           >
-                            <Link to={`/main/document?room=${row.workspaceNo}`}>
+                            <Link to={`/document?room=${row.workspaceNo}`}>
                               {row.title}
                             </Link>
                             <Button
@@ -381,6 +430,16 @@ export default function WorkspaceTable(props) {
                         </TableRow>
                       );
                     })}
+                  {/* 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07 */}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: 70 * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={10} />
+                    </TableRow>
+                  )}
                 </TableBody>
               </Table>
             </TableContainer>
