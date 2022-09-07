@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -14,6 +14,7 @@ import { IconButton, Typography, LinearProgress } from "@mui/material";
 import { fileSize } from "../../api/documentApi";
 import { getUser } from "../../component/getUser/getUser";
 import CloudOutlinedIcon from "@mui/icons-material/CloudOutlined";
+import { MyContext } from "../Main";
 
 const sidebarLinkStyle = {
   fontSize: "1.3rem",
@@ -115,9 +116,13 @@ export default function Sidebar() {
   const clickHandler = () => {
     setClick(!click);
   };
+
+  const { check, setCheckHandler } = useContext(MyContext);
+
   useEffect(() => {
     fileSize(getUser().userNo, setSize);
-  }, [size]);
+  }, [check]);
+
   return (
     <Box>
       <Box className="sidebar-nav">

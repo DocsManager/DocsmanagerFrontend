@@ -192,6 +192,7 @@ export function documentMember(documentNo, setMemberList) {
 // 파일 검색
 export function searchDocument(userNo, originalName, documentUrl, setList) {
   const url = `${baseUrl}document/${documentUrl}/${userNo}/${originalName}`;
+  console.log(originalName);
   axios
     .get(url)
     .then((res) => {

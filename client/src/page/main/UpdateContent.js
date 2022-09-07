@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Modal.css";
 import { updateContent } from "../../api/documentApi";
 import SucessModal from "./SucessModal";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
+import { MyContext } from "../Main";
 import { InputBox } from "./WriteModal";
 import { Typography } from "@mui/material";
 
@@ -26,14 +27,9 @@ const UpdateContent = (props) => {
   // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
   const [content, setContent] = useState("");
   const [contentUpdateModal, setContentUpdateModal] = useState(false);
-  const {
-    open,
-    setOpen,
-    document,
-    infoModalOpen,
-    check,
-    setCheckHandler,
-  } = props;
+  const { check, setCheckHandler } = useContext(MyContext);
+
+  const { open, setOpen, document, infoModalOpen } = props;
 
   return (
     <React.Fragment>

@@ -19,7 +19,7 @@ import {
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
-import { MyContext } from "./DmTable";
+import { MyContext } from "../Main";
 import WriteModal from "./WriteModal";
 import { getUser } from "../../component/getUser/getUser";
 
@@ -243,10 +243,12 @@ const DmTableToolbar = ({
                   setSuccessDeleteModalOpen(true);
                 }}
               >
-                <main>
-                  <div>선택된 파일들을 영구 삭제 하시겠습니까?</div>
-                  <div>영구 삭제시 복원이 불가능 합니다.</div>
-                </main>
+                <Box>
+                  <Typography>
+                    선택된 파일들을 영구 삭제 하시겠습니까?
+                  </Typography>
+                  <Typography>영구 삭제시 복원이 불가능 합니다.</Typography>
+                </Box>
               </ConfirmModal>
             );
           default:
@@ -260,9 +262,9 @@ const DmTableToolbar = ({
                   setSuccessDeleteModalOpen(true);
                 }}
               >
-                <main>
-                  <div>삭제 하시겠습니까?</div>
-                </main>
+                <Box>
+                  <Typography>삭제 하시겠습니까?</Typography>
+                </Box>
               </ConfirmModal>
             );
         }
@@ -279,9 +281,9 @@ const DmTableToolbar = ({
           )
         }
       >
-        <main>
-          <div>삭제 완료</div>
-        </main>
+        <Box>
+          <Typography>삭제 완료</Typography>
+        </Box>
       </SucessModal>
 
       <SucessModal
@@ -295,13 +297,13 @@ const DmTableToolbar = ({
           )
         }
       >
-        <main>
-          <div>복원 완료</div>
-        </main>
+        <Box>
+          <Typography>복원 완료</Typography>
+        </Box>
       </SucessModal>
 
       <WriteModal open={writeModalOpen} setWriteModal={setWriteModalOpen}>
-        <div>파일 선택</div>
+        <Typography>파일 선택</Typography>
       </WriteModal>
     </React.Fragment>
   );
