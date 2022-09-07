@@ -35,11 +35,12 @@ export function updateTitleWorkspace(workspaceNo, workspace, setList) {
 
 export function deleteWorkspace() {}
 
-export function addWorkspace(workspace, setOpen) {
+export function addWorkspace(workspace, setOpen, setNewWorkspace) {
   axios
     .post(baseUrl, workspace)
     .then((res) => {
       console.log(res.data);
+      setNewWorkspace(res.data.at(-1)); //workspace 받아오기 위한 용도
       setOpen(false);
     })
     .catch((err) => console.log(err));

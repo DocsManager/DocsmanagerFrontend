@@ -1,16 +1,12 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, React } from "react";
 
 const baseUrl = "/mail/";
 
 export function sendMail(params, setConfirmVerifyCode) {
-  //   const url = baseUrl + "send";
-  console.log(params);
+  const url = baseUrl + "send";
   axios
     .get("/api/mail/send", { params })
-
-    // .get(url, { params })
-    // .then(alert("메일이 전송중입니다. 잠시만 기다려주세요."))
     .then((response) => {
       if (response.data) {
         setConfirmVerifyCode(response.data);
@@ -23,8 +19,6 @@ export function sendMail(params, setConfirmVerifyCode) {
 }
 
 export function verifyMail(params, setVerifyResult) {
-  //   const url = baseUrl + "verify";
-  console.log(params);
   axios
     .get("/api/mail/verify", { params })
     .then(alert("검증중입니다."))
@@ -41,16 +35,32 @@ export function verifyMail(params, setVerifyResult) {
 }
 
 export function findId(params) {
-  console.log(params.data);
-  axios.get("/api/mail/finduser", { params }).then((response) => {
-    console.log(response.data);
-    // .then(alert("회원님의 아이디는" + +"입니다"));
-  });
+  const url = baseUrl + "finduser";
+  axios
+    .get("api/mail/finduser", { params })
+    .then((response) => {
+      const result = response.data[0];
+      if (params.name && result.name == params.name) {
+        alert("회원님의 아이디는" + result.id + "입니다");
+      } else {
+        alert("데이터를 입력해주세요");
+      }
+    })
+    .catch((err) => alert("해당 데이터로 조회된 아이디가 없습니다"));
 }
 
 export function findPw(params) {
-  console.log(params.data);
-  axios.get("/api/mail/findpassword", { params }).then((response) => {
-    console.log(response.data);
-  });
+  axios
+    .get("api/mail/findpassword", { params })
+    .then((response) => {
+      if (response.data.check) {
+        alert("해당 이메일 주소로 임시 비밀번호가 발송되었습니다.");
+        axios
+          .get("http://localhost:8080/mail/sendpw", { params })
+          .then(alert("로그인 화면으로 이동합니다."))
+          .then((window.location.href = "/"));
+      } else {
+        alert("일치하는 정보가 없습니다");
+      }
+    });
 }

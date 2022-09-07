@@ -5,7 +5,7 @@ import React from "react";
 export const loginMenu = [
   {
     id: "userId",
-    icon: <PersonIcon sx={{ color: "#ffff", background: "#3791F8" }} />,
+    icon: <PersonIcon sx={{ color: "#ffffff", background: "#3791F8" }} />,
     placeholder: " ID를 입력해주세요",
   },
   {
