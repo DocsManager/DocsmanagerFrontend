@@ -6,9 +6,21 @@ import "./Login.css";
 import { loginMenu } from "./loginMenu";
 
 function Login() {
+  const onKeyPress = (e) => {
+    if (e.key === "Enter") {
+      const userInfo = {
+        id: document.getElementById("userId").value,
+        password: document.getElementById("userPwd").value,
+      };
+      login(userInfo, setUser);
+    }
+  };
+
   const [user, setUser] = useState({});
   const [userList, setUserList] = useState([]);
   if (user.userNo) {
+    console.log(user);
+    alert(user.name + "님 환영합니다");
     window.location.href = "main";
   }
   useEffect(() => {
@@ -35,32 +47,36 @@ function Login() {
           환영합니다.
         </p>
         <div style={{ width: "30vw", margin: "0 auto", fontSize: 500 }}>
-          <Box
-            sx={{
-              "& > :not(style)": { m: 5 },
-              display: "flex",
-              justifyContent: "center",
-              flexDirection: "column",
-            }}
-          >
-            {loginMenu.map((menu) => {
-              return (
-                <TextField
-                  id={menu.id}
-                  placeholder={menu.placeholder}
-                  type={menu.type}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        {menu.icon}
-                      </InputAdornment>
-                    ),
-                  }}
-                  variant="standard"
-                />
-              );
-            })}
-          </Box>
+          <form>
+            <Box
+              sx={{
+                "& > :not(style)": { m: 5 },
+                display: "flex",
+                justifyContent: "center",
+                flexDirection: "column",
+              }}
+            >
+              {loginMenu.map((menu, idx) => {
+                return (
+                  <TextField
+                    key={idx}
+                    id={menu.id}
+                    placeholder={menu.placeholder}
+                    type={menu.type}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          {menu.icon}
+                        </InputAdornment>
+                      ),
+                    }}
+                    variant="standard"
+                    onKeyPress={onKeyPress}
+                  />
+                );
+              })}
+            </Box>
+          </form>
         </div>
 
         <Box
@@ -78,7 +94,6 @@ function Login() {
               };
               login(userInfo, setUser);
             }}
-            variant="contained"
           >
             로그인
           </Button>
