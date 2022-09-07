@@ -17,6 +17,7 @@ import {
 import Toastify from "../Toast";
 import { NoticeContext } from "./Header";
 import { withStyles } from "@material-ui/styles";
+import { Link } from "react-router-dom";
 
 //notice.isRead가 1이 되면 글자색이 lightgray가 됨
 const noticeColor = {
@@ -24,7 +25,12 @@ const noticeColor = {
   1: "lightgray",
 };
 
-export function NoticePopover({ noticeList, setNoticeList, newNotice }) {
+export function NoticePopover({
+  noticeList,
+  setNoticeList,
+  newNotice,
+  setCheck,
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { isRead, setIsReadHandler } = useContext(NoticeContext);
 
@@ -36,7 +42,6 @@ export function NoticePopover({ noticeList, setNoticeList, newNotice }) {
   const read = noticeList && noticeList.filter((notice) => notice.isRead !== 0);
 
   const handleClick = (event) => {
-    console.log(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
 
@@ -54,7 +59,6 @@ export function NoticePopover({ noticeList, setNoticeList, newNotice }) {
 
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChange = (e, newValue) => {
-    console.log(e, newValue);
     setSelectedTab(newValue);
   };
   const open = Boolean(anchorEl);
@@ -127,7 +131,7 @@ export function NoticePopover({ noticeList, setNoticeList, newNotice }) {
               horizontal: "right",
             }}
             container={containerRef.current}
-            sx={{ height: "600px" }}
+            sx={{ height: "650px" }}
           >
             <Box
               sx={{
@@ -140,7 +144,7 @@ export function NoticePopover({ noticeList, setNoticeList, newNotice }) {
               <Tabs onChange={handleChange} value={selectedTab}>
                 {/* label이라는 객체의 값만으로 map을 돌림 */}
                 {Object.values(label).map((la) => {
-                  return <CustomTab label={la} key={la.key} />;
+                  return <CustomTab label={la} key={la} />; //09.02 키 변경
                 })}
               </Tabs>
             </Box>
@@ -187,29 +191,41 @@ export function NoticePopover({ noticeList, setNoticeList, newNotice }) {
                       <Typography
                         sx={{
                           p: 2,
-                          width: "380px",
-                        }}
-                        onClick={() => {
-                          updateNotice(
-                            notice.noticeNo,
-                            notice.sender,
-                            notice.receiver,
-                            notice.content,
-                            notice.sendDate
-                          );
-                          updateModal(isRead, setIsReadHandler);
-                          // setChangeNotice(false);
+                          width: "400px",
+                          ":hover": {
+                            cursor: "pointer",
+                          },
                         }}
                       >
-                        {notice.content}
-
+                        <Link
+                          to={notice.urlParams}
+                          style={{
+                            color:
+                              notice.isRead === 0 ? "#3791f8" : "lightgray",
+                          }}
+                          onClick={() => {
+                            updateNotice(
+                              notice.noticeNo,
+                              notice.sender,
+                              notice.receiver,
+                              notice.content,
+                              notice.sendDate
+                            );
+                            updateModal(isRead, setIsReadHandler);
+                          }}
+                        >
+                          {notice.content}
+                        </Link>
                         <DeleteOutline
                           sx={{
                             margin: "-4px auto",
                             color:
                               notice.isRead === 0 ? "#3791f8" : "lightgray",
                           }}
-                          onClick={() => deleteNotice(notice.noticeNo)}
+                          onClick={() => {
+                            deleteNotice(notice.noticeNo);
+                            setCheck(true);
+                          }}
                         />
                         <span
                           style={{

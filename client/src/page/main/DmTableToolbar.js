@@ -1,6 +1,12 @@
 import React, { useState, useContext } from "react";
 import Toolbar from "@mui/material/Toolbar";
-import { Delete, FolderSpecial, Outbox, Warning } from "@mui/icons-material";
+import {
+  Delete,
+  FolderSpecial,
+  Outbox,
+  SearchOutlined,
+  Warning,
+} from "@mui/icons-material";
 import { Button, Typography, styled, TextField, Box } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import {
@@ -144,7 +150,8 @@ const DmTableToolbar = ({
       <Toolbar
         sx={{
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent:
+            "space-between" /**검색과 문서등록 버튼 떼어놓으려고 css 작업 */,
           pl: { sm: 2 },
           pr: { xs: 1, sm: 1 },
           ...(numSelected > 0 && {
@@ -156,26 +163,8 @@ const DmTableToolbar = ({
           }),
         }}
       >
-        {/* <TextField id="searchDocumentName" label="파일 검색" />
-        <Button
-          onClick={() => {
-            const searchName = document.getElementById("searchDocumentName")
-              .value;
-            if (searchName) {
-              searchDocument(
-                getUser().userNo,
-                searchName,
-                documentUrl ? documentUrl : "",
-                setList
-              );
-              setSearchData(searchName);
-            }
-          }}
-        >
-          검색
-        </Button> */}
         {numSelected > 0 ? (
-          <Typography
+          <Box
             sx={{ flex: " 1 1 100%" }}
             color="inherit"
             variant="subtitle1"
@@ -200,12 +189,22 @@ const DmTableToolbar = ({
                 setSuccessRestoreModalOpen
               )}
             </div>
-          </Typography>
+          </Box>
         ) : (
+          // 09.01 파일 검색과 문서등록 버튼 배치 조절
           <React.Fragment>
-            <Box>
-              <TextField id="searchDocumentName" label="파일 검색" />
+            <Box
+              sx={{ display: "flex", alignItems: "center", marginTop: "20px" }}
+            >
+              <TextField
+                id="searchDocumentName"
+                label="파일 검색"
+                sx={{ marginRight: "20px" }}
+              />
               <Button
+                variant="outlined"
+                sx={{ fontSize: "1rem" }}
+                endIcon={<SearchOutlined />}
                 onClick={() => {
                   const searchName = document.getElementById(
                     "searchDocumentName"
@@ -225,7 +224,9 @@ const DmTableToolbar = ({
                 검색
               </Button>
             </Box>
-            <div>{handleToolbarBtn(writeModalOpen, setWriteModalOpen)}</div>
+            <Box sx={{ marginTop: "20px" }}>
+              {handleToolbarBtn(writeModalOpen, setWriteModalOpen)}
+            </Box>
           </React.Fragment>
         )}
       </Toolbar>

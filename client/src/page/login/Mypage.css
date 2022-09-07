@@ -1,0 +1,9 @@
+.nameCell {
+  height: 70px;
+  width: 100px;
+  border-right: 1px solid rgba(224, 224, 224, 1);
+}
+
+.tbrow {
+  width: 200px;
+}

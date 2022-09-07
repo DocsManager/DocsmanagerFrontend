@@ -30,7 +30,6 @@ const SidebarSideLink = styled(ListItemButton)`
   font-size: 30px;
   padding: 5px 10px 5px 10px;
   margin: 10px 10px 10px 0;
-  /* width: 18vw; */
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -103,6 +102,7 @@ const useStyles = makeStyles({
   },
 });
 
+//드라이브 용량 표시 css 컴포넌트
 const Storage = styled(Box)({
   color: "white",
   padding: "20px",

@@ -1,0 +1,58 @@
+language: node_js
+node_js:
+  - 16.15.0
+
+branches:
+  only:
+    - main
+
+# Travis CI 서버의 Home
+cache:
+  directories:
+    - "$HOME/.m2"
+
+script:
+  - cd client
+  - node -v
+  - npm install
+  - CI=false npm run build
+
+before_deploy:
+  - mkdir -p before-deploy-frontend # zip에 포함시킬 파일들을 담을 디렉토리 생성
+  - cp appspec.yml before-deploy-frontend/
+  - cp -r build before-deploy-frontend/
+  - cd before-deploy-frontend && zip -r before-deploy-frontend * # before-deploy로 이동후 전체 압축
+  - cd ../ && mkdir -p deploy-frontend # 상위 디렉토리로 이동후 deploy 디렉토리 생성
+  - mv before-deploy-frontend/before-deploy-frontend.zip deploy-frontend/dm-frontend.zip # deploy로 zip파일 이동
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: docsmanager-codedeploy # S3 버킷
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: private # zip 파일 접근을 private으로
+    local_dir: deploy-frontend # before_deploy에서 생성한 디렉토리
+    wait-until-deployed: true
+    on:
+      all_branches: true
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY # Travis repo settings에 설정된 값
+    secret_access_key: $AWS_SECRET_KEY # Travis repo settings에 설정된 값
+    bucket: docsmanager-codedeploy # S3 버킷
+    key: dm-frontend.zip # 빌드 파일을 압축해서 전달
+    bundle_type: zip
+    application: docsmanager # 웹 콘솔에서 등록한 CodeDeploy 어플리케이션
+    deployment_group: docsmanager-group # 웹 콘솔에서 등록한 CodeDeploy 배포 그룹
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      all_branches: true
+
+# CI 실행 완료시 메일로 알람
+notifications:
+  email:
+    recipients:
+      - vles153@naver.com

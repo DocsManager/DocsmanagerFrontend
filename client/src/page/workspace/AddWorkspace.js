@@ -54,7 +54,10 @@ export default function AddWorkspace({ open, setOpen }) {
     setOpen(false);
     setSearchList([]);
   };
-
+  //워크스페이스 번호를 알림 파라미터로 넘겨주기 위해 생성
+  const [newWorkspace, setNewWorkspace] = useState();
+  const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
+  console.log(newWorkspaceNo);
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -71,7 +74,7 @@ export default function AddWorkspace({ open, setOpen }) {
               align="center"
               mb={2}
             >
-              워크스페이스
+              새로운 워크스페이스 {/**모달 이름 변경 */}
             </Typography>
             <React.Fragment>
               <Typography component="h3" mt={1}>
@@ -115,8 +118,11 @@ export default function AddWorkspace({ open, setOpen }) {
                       master: getUser(),
                       userList: searchList,
                     };
-                    worksapcepublish(searchList);
-                    addWorkspace(workspace, setOpen);
+                    addWorkspace(workspace, setOpen, setNewWorkspace);
+                    worksapcepublish(searchList, newWorkspaceNo);
+                    {
+                      /**함수 파라미터 변경 */
+                    }
                     setSearchList([]);
                   }
                 }}

@@ -9,6 +9,9 @@ import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/default.css";
 import "../../App.css";
 import { getTempContent, getWorkspace } from "../../api/workspaceApi";
+import Header from "../main/Header";
+import { Box, Button, Typography } from "@mui/material";
+import { Save } from "@mui/icons-material";
 
 function Workspace() {
   const [client, setClient] = useState(null);
@@ -48,7 +51,9 @@ function Workspace() {
     getWorkspace(workspaceNo, setWorkspace);
     if (workspace.workspaceNo) {
       setClient(
-        new w3cwebsocket("ws://3.39.189.222:8000" + window.location.search)
+        new w3cwebsocket(
+          "ws://localhost:8000/document" + window.location.search
+        ) /**소켓 통신 확인하려고 localhost로 변경했음 */
       );
     }
   }, [workspace.workspaceNo]);
@@ -97,6 +102,8 @@ function Workspace() {
 
   return (
     <React.Fragment>
+      <Header />
+      {/**워크스페이스에 헤더만 나타나게 하려고 index.js에서 분리해서 Header 첨부함 */}
       <div className="container-fluid">
         <div className="main-content">
           <div className="document-holder">
@@ -166,7 +173,7 @@ function Workspace() {
             </ul>
             <div>
               <input id="chat" />
-              <button
+              <Button
                 onClick={() => {
                   const chatMessage = document.getElementById("chat");
                   chatMessage.value && sendChat(chatMessage.value);
@@ -175,7 +182,7 @@ function Workspace() {
                 }}
               >
                 전송
-              </button>
+              </Button>
             </div>
           </div>
         </div>
