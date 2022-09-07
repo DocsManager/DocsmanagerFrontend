@@ -33,7 +33,7 @@ const ConfirmModal = (props) => {
         aria-describedby="child-modal-description"
       >
         <Box sx={{ ...style, width: 350 }}>
-          <Typography id="child-modal-description">{props.children}</Typography>
+          <Box id="child-modal-description">{props.children}</Box>
           <Button onClick={() => setOpen(false)}>취소</Button>
           <Button onClick={act}>확인</Button>
         </Box>

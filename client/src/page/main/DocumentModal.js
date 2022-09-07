@@ -8,7 +8,7 @@ import {
   restoreFile,
   updateRecycleBinFile,
 } from "../../api/documentApi";
-import { MyContext } from "./DmTable";
+import { MyContext } from "../Main";
 import UpdateContent from "./UpdateContent";
 import AddMember from "./AddMember";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -72,7 +72,7 @@ const DocumentModal = (props) => {
                   return (
                     <Button
                       onClick={() => {
-                        restoreFile([document.documentNo.documentNo]);
+                        restoreFile([document]);
                         setSuccessModalOpen(true);
                         infoModalOpen(false);
                       }}
@@ -139,8 +139,6 @@ const DocumentModal = (props) => {
         successModalOpen={successModalOpen}
         document={document.documentNo}
         infoModalOpen={infoModalOpen}
-        check={check}
-        setCheckHandler={setCheckHandler}
       />
 
       {openShareAdd && (
@@ -185,7 +183,7 @@ const DocumentModal = (props) => {
                 open={confirmModalOpen}
                 setOpen={setConfirmModalOpen}
                 act={() => {
-                  updateRecycleBinFile([document.documentNo.documentNo]);
+                  updateRecycleBinFile([document]);
                   setConfirmModalOpen(false);
                   setSuccessModalOpen(true);
                   infoModalOpen(false);

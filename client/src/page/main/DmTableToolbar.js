@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import { Delete, FolderSpecial, Outbox, Warning } from "@mui/icons-material";
-import { Button, Typography, styled, TextField } from "@mui/material";
+import { Button, Typography, styled, TextField, Box } from "@mui/material";
 import { alpha } from "@mui/material/styles";
 import {
   deleteFile,
@@ -13,7 +13,7 @@ import {
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
-import { MyContext } from "./DmTable";
+import { MyContext } from "../Main";
 import WriteModal from "./WriteModal";
 import { getUser } from "../../component/getUser/getUser";
 
@@ -143,6 +143,8 @@ const DmTableToolbar = ({
     <React.Fragment>
       <Toolbar
         sx={{
+          display: "flex",
+          justifyContent: "space-between",
           pl: { sm: 2 },
           pr: { xs: 1, sm: 1 },
           ...(numSelected > 0 && {
@@ -154,7 +156,7 @@ const DmTableToolbar = ({
           }),
         }}
       >
-        <TextField id="searchDocumentName" label="파일 검색" />
+        {/* <TextField id="searchDocumentName" label="파일 검색" />
         <Button
           onClick={() => {
             const searchName = document.getElementById("searchDocumentName")
@@ -168,11 +170,10 @@ const DmTableToolbar = ({
               );
               setSearchData(searchName);
             }
-            // console.log(list);
           }}
         >
           검색
-        </Button>
+        </Button> */}
         {numSelected > 0 ? (
           <Typography
             sx={{ flex: " 1 1 100%" }}
@@ -201,7 +202,31 @@ const DmTableToolbar = ({
             </div>
           </Typography>
         ) : (
-          <div>{handleToolbarBtn(writeModalOpen, setWriteModalOpen)}</div>
+          <React.Fragment>
+            <Box>
+              <TextField id="searchDocumentName" label="파일 검색" />
+              <Button
+                onClick={() => {
+                  const searchName = document.getElementById(
+                    "searchDocumentName"
+                  ).value;
+                  if (searchName) {
+                    searchDocument(
+                      getUser().userNo,
+                      searchName,
+                      documentUrl ? documentUrl : "",
+                      setList
+                    );
+                    setSearchData(searchName);
+                  }
+                  console.log(searchName);
+                }}
+              >
+                검색
+              </Button>
+            </Box>
+            <div>{handleToolbarBtn(writeModalOpen, setWriteModalOpen)}</div>
+          </React.Fragment>
         )}
       </Toolbar>
       {(() => {
@@ -217,10 +242,12 @@ const DmTableToolbar = ({
                   setSuccessDeleteModalOpen(true);
                 }}
               >
-                <main>
-                  <div>선택된 파일들을 영구 삭제 하시겠습니까?</div>
-                  <div>영구 삭제시 복원이 불가능 합니다.</div>
-                </main>
+                <Box>
+                  <Typography>
+                    선택된 파일들을 영구 삭제 하시겠습니까?
+                  </Typography>
+                  <Typography>영구 삭제시 복원이 불가능 합니다.</Typography>
+                </Box>
               </ConfirmModal>
             );
           default:
@@ -234,9 +261,9 @@ const DmTableToolbar = ({
                   setSuccessDeleteModalOpen(true);
                 }}
               >
-                <main>
-                  <div>삭제 하시겠습니까?</div>
-                </main>
+                <Box>
+                  <Typography>삭제 하시겠습니까?</Typography>
+                </Box>
               </ConfirmModal>
             );
         }
@@ -253,9 +280,9 @@ const DmTableToolbar = ({
           )
         }
       >
-        <main>
-          <div>삭제 완료</div>
-        </main>
+        <Box>
+          <Typography>삭제 완료</Typography>
+        </Box>
       </SucessModal>
 
       <SucessModal
@@ -269,13 +296,13 @@ const DmTableToolbar = ({
           )
         }
       >
-        <main>
-          <div>복원 완료</div>
-        </main>
+        <Box>
+          <Typography>복원 완료</Typography>
+        </Box>
       </SucessModal>
 
       <WriteModal open={writeModalOpen} setWriteModal={setWriteModalOpen}>
-        <div>파일 선택</div>
+        <Typography>파일 선택</Typography>
       </WriteModal>
     </React.Fragment>
   );

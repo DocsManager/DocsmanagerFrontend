@@ -36,7 +36,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
             <img src={`${process.env.PUBLIC_URL}/012.png`} />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
-            <Typography>
+            <Box>
               <div
                 style={{
                   margin: "0 auto",
@@ -61,7 +61,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
                 setWriteModal={setWriteModalOpen}
                 close={() => wirteOpen(writeModalOpen, setWriteModalOpen)}
               />
-            </Typography>
+            </Box>
           </Box>
         </Box>
       );
@@ -80,7 +80,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
             <img src={`${process.env.PUBLIC_URL}/015.png`} />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
-            <Typography>
+            <Box>
               <div
                 style={{
                   margin: "0 auto",
@@ -93,7 +93,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
                 </p>
                 <p>중요 문서를 관리해보세요!</p>
               </div>
-            </Typography>
+            </Box>
           </Box>
         </Box>
       );
@@ -112,7 +112,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
             <img src={`${process.env.PUBLIC_URL}/005.png`} />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
-            <Typography>
+            <Box>
               <div
                 style={{
                   margin: "0 auto",
@@ -123,7 +123,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
                 <p style={{ fontSize: "1.3em" }}>항목 없음</p>
                 <p>휴지통으로 이동된 항목이 없습니다.</p>
               </div>
-            </Typography>
+            </Box>
           </Box>
         </Box>
       );
@@ -143,7 +143,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
             <img src={`${process.env.PUBLIC_URL}/014.png`} />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
-            <Typography>
+            <Box>
               <div
                 style={{
                   margin: "0 auto",
@@ -154,7 +154,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
                 <p style={{ fontSize: "1.3em" }}>워크스페이스가 없습니다.</p>
                 <p>생성된 워크스페이스가 없습니다.</p>
               </div>
-            </Typography>
+            </Box>
           </Box>
         </Box>
       );
@@ -174,7 +174,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
             <img src={`${process.env.PUBLIC_URL}/011.png`} />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
-            <Typography>
+            <Box>
               <div
                 style={{
                   margin: "0 auto",
@@ -194,7 +194,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
                   문서 등록하기
                 </EnrollBtn>
               </div>
-            </Typography>
+            </Box>
           </Box>
           <WriteModal
             open={writeModalOpen}

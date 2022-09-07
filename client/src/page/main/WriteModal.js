@@ -4,9 +4,11 @@ import { getUser, setUser } from "../../component/getUser/getUser";
 import ConfirmModal from "./ConfirmModal";
 import "./Modal.css";
 import SucessModal from "./SucessModal";
-import { MyContext } from "./DmTable";
+import { MyContext } from "../Main";
 import ShareUser from "./ShareUser";
 import { notipublish } from "../../api/noticeApi";
+import CircularProgress from "@mui/material/CircularProgress";
+import LinearProgress from "@mui/material/LinearProgress";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -44,13 +46,17 @@ const successWrite = (
   setWriteConfirm,
   check,
   setCheckHandler,
-  setFile
+  setFile,
+  setSizeCheck,
+  setLoading
 ) => {
   setWriteModal(false);
   setWriteSuccessConfirm(false);
   setWriteConfirm(false);
   check ? setCheckHandler(false) : setCheckHandler(true);
   setFile("");
+  setSizeCheck(2);
+  setLoading(false);
 };
 
 const WriteModal = (props) => {
@@ -59,7 +65,8 @@ const WriteModal = (props) => {
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [fileNull, setFileNull] = useState(false);
-  const [sizeCheck, setSizeCheck] = useState(false);
+  const [sizeCheck, setSizeCheck] = useState(2);
+  const [loading, setLoading] = useState(false);
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
 
@@ -101,11 +108,7 @@ const WriteModal = (props) => {
             type="document"
           />
           <div>파일 설명</div>
-          <input
-            type="text"
-            id="fileContent"
-            onChange={(e) => setText(e.target.value)}
-          />
+          <input type="text" id="fileContent" />
           <Typography>
             <Button
               onClick={() => {
@@ -117,6 +120,9 @@ const WriteModal = (props) => {
             </Button>
             <Button
               onClick={() => {
+                const contentElem = document.getElementById("fileContent")
+                  .value;
+                setText(contentElem);
                 file
                   ? setWriteConfirm(true)
                   : openNoFileConfirm(fileNull, setFileNull);
@@ -138,39 +144,60 @@ const WriteModal = (props) => {
             openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
             notipublish(searchList);
             setWriteModal(false);
+            setLoading(true);
             // check ? setCheckHandler(false) : setCheckHandler(true);
           }
         }}
       >
-        <main>
-          <div>등록 하시겠습니까?</div>
-        </main>
+        <Typography>등록 하시겠습니까?</Typography>
       </ConfirmModal>
-
-      <SucessModal
-        open={writeSuccessConfirm}
-        close={() =>
-          successWrite(
-            setWriteModal,
-            setWriteSuccessConfirm,
-            setWriteConfirm,
-            check,
-            setCheckHandler,
-            setFile,
-            setSizeCheck
-          )
-        }
-      >
-        {sizeCheck ? (
-          <main>
-            <div>작성 완료</div>
-          </main>
-        ) : (
-          <main>
-            <div>용량 초과</div>
-          </main>
-        )}
+      <SucessModal open={loading}>
+        <Box sx={{ width: "100%" }}>
+          <LinearProgress />
+          <Typography>업로드 중입니다...</Typography>
+        </Box>
       </SucessModal>
+
+      {sizeCheck === 1 ? (
+        <SucessModal
+          open={writeSuccessConfirm}
+          close={() =>
+            successWrite(
+              setWriteModal,
+              setWriteSuccessConfirm,
+              setWriteConfirm,
+              check,
+              setCheckHandler,
+              setFile,
+              setSizeCheck,
+              setLoading
+            )
+          }
+        >
+          <Typography>작성 완료</Typography>
+        </SucessModal>
+      ) : sizeCheck === 0 ? (
+        <SucessModal
+          open={writeSuccessConfirm}
+          close={() =>
+            successWrite(
+              setWriteModal,
+              setWriteSuccessConfirm,
+              setWriteConfirm,
+              check,
+              setCheckHandler,
+              setFile,
+              setSizeCheck,
+              setLoading
+            )
+          }
+        >
+          <Typography>용량 초과</Typography>
+        </SucessModal>
+      ) : (
+        <></>
+      )}
+
       {
         <SucessModal
           open={fileNull}

@@ -83,7 +83,11 @@ function DmTableHead(props) {
             checked={
               (rowCount > 0 &&
                 numSelected !== 0 &&
-                numSelected === rowCount % (rowsPerPage * (page + 1))) ||
+                numSelected ===
+                  rowCount -
+                    (rowCount -
+                      ((rowCount % (rowsPerPage * (page + 1))) %
+                        rowsPerPage))) ||
               numSelected === rowsPerPage
             }
             //리스트의 총 길이가 0보다 크고 선택된 행의 개수가 리스트 총 길이와 같으면 전체 체크

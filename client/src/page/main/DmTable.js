@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import {
   TableBody,
   TableCell,
@@ -15,11 +15,13 @@ import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
 import { getUser } from "../../component/getUser/getUser";
+import { MyContext } from "../Main";
 import {
   fileSize,
   getList,
   importantFile,
   searchDocument,
+  removeImportantFile,
 } from "../../api/documentApi";
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
@@ -53,25 +55,62 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-// function LinearProgressWithLabel(props) {
-//   return (
-//     <Box sx={{ display: "flex", alignItems: "center" }}>
-//       <Box sx={{ width: "100%", mr: 1 }}>
-//         <LinearProgress variant="determinate" {...props} />
-//       </Box>
-//       <Box sx={{ minWidth: 35 }}>
-//         <Typography variant="body2" color="text.secondary">{`${Math.round(
-//           props.value
-//         )}%`}</Typography>
-//       </Box>
-//     </Box>
-//   );
-// }
+function fileCategoryIcon(fileCategory) {
+  switch (true) {
+    case fileCategory.includes("jpeg"):
+    case fileCategory.includes("png"):
+      return (
+        <TableCell>
+          <img src="https://img.icons8.com/fluency/30/000000/image.png" />
+        </TableCell>
+      );
+    case fileCategory.includes("pdf"):
+      return (
+        <TableCell>
+          <img src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png" />{" "}
+        </TableCell>
+      );
+    case fileCategory.includes("ppt"):
+    case fileCategory.includes("powerpoint"):
+      return (
+        <TableCell>
+          <img src="https://img.icons8.com/color/30/000000/powerpoint.png" />{" "}
+        </TableCell>
+      );
+    case fileCategory.includes("excel"):
+    case fileCategory.includes("xls"):
+      return (
+        <TableCell>
+          <img src="https://img.icons8.com/color/30/000000/xls.png" />{" "}
+        </TableCell>
+      );
+    case fileCategory.includes("docx"):
+    case fileCategory.includes("hwp"):
+    case fileCategory.includes("word"):
+      return (
+        <TableCell>
+          <img src="https://img.icons8.com/color/30/000000/google-docs--v1.png" />{" "}
+        </TableCell>
+      );
+    case fileCategory.includes("zip"):
+      return (
+        <TableCell>
+          <img src="https://img.icons8.com/color/30/000000/archive.png" />{" "}
+        </TableCell>
+      );
+    default:
+      return (
+        <TableCell>
+          <img src="https://img.icons8.com/color/30/000000/file.png" />{" "}
+        </TableCell>
+      );
+  }
+}
 
-export const MyContext = createContext({
-  check: "",
-  setCheckHandler: (check) => {},
-});
+// export const MyContext = createContext({
+//   check: "",
+//   setCheckHandler: (check) => {},
+// });
 
 export default function DmTable(props) {
   const [order, setOrder] = useState("desc");
@@ -83,15 +122,18 @@ export default function DmTable(props) {
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
-  const [check, setCheck] = useState(false);
+  // const [check, setCheck] = useState(false);
   const [searchData, setSearchData] = useState("");
   // const [size, setSize] = useState(0);
+  const { check, setCheckHandler } = useContext(MyContext);
 
-  const setCheckHandler = (check) => setCheck(check);
+  // const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
     getList(setList, props.documentUrl ? props.documentUrl : "");
     // fileSize(getUser().userNo, setSize);
+
+    // setPage(0);
   }, [check]);
   let newSelected = [];
 
@@ -105,6 +147,8 @@ export default function DmTable(props) {
     if (event.target.checked) {
       console.log("--------------");
       //체크 표시할 시, 모든 documentNo를 담음
+      console.log(page);
+      console.log(rowsPerPage);
       newSelected = list.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
       setSelected(newSelected);
     } else {
@@ -114,6 +158,8 @@ export default function DmTable(props) {
 
   //각 table row에 걸려있는 클릭 이벤트
   const handleClick = (event, li) => {
+    console.log(page);
+    console.log(rowsPerPage);
     if (event.target.checked) {
       setSelected(selected.length === 0 ? [li] : [...selected, li]);
     } else {
@@ -144,12 +190,15 @@ export default function DmTable(props) {
         selectStar.slice(selectedIndex + 1)
       );
     }
-
-    li.important
-      ? importantFile(li.documentNo.documentNo, 0)
-      : importantFile(li.documentNo.documentNo, 1);
-    check ? setCheck(false) : setCheck(true);
     setSelectStar(newSelected);
+    if (li.important) {
+      importantFile(li.documentNo.documentNo, 0);
+      check ? setCheckHandler(false) : setCheckHandler(true);
+    } else {
+      importantFile(li.documentNo.documentNo, 1);
+    }
+
+    //렌더링 - 별 씹힘
   };
 
   const handleChangePage = (event, newPage) => {
@@ -180,21 +229,19 @@ export default function DmTable(props) {
     <React.Fragment>
       {list.length === 0 && !searchData ? (
         <NoneData />
-      ) : searchData ? (
-        <div />
+      ) : list.length === 0 ? (
+        <></>
       ) : (
         <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-            <MyContext.Provider value={{ check, setCheckHandler }}>
-              <DmTableToolbar
-                numSelected={selected.length}
-                newSelected={selected}
-                setSelected={setSelected}
-                documentUrl={props.documentUrl}
-                setList={setList}
-                setSearchData={setSearchData}
-              />
-            </MyContext.Provider>
+            <DmTableToolbar
+              numSelected={selected.length}
+              newSelected={selected}
+              setSelected={setSelected}
+              documentUrl={props.documentUrl}
+              setList={setList}
+              setSearchData={setSearchData}
+            />
             <TableContainer>
               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                 <DmTableHead
@@ -257,9 +304,8 @@ export default function DmTable(props) {
                               />
                             )}
                           </TableCell>
-                          <TableCell>
-                            <img src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png" />{" "}
-                          </TableCell>
+                          {fileCategoryIcon(li.documentNo.fileCategory)}
+
                           <TableCell
                             component="th"
                             id={labelId}
@@ -305,7 +351,7 @@ export default function DmTable(props) {
                         height: 45 * emptyRows,
                       }}
                     >
-                      <TableCell colSpan={6} />
+                      <TableCell colSpan={10} />
                     </TableRow>
                   )}
                 </TableBody>
@@ -321,15 +367,13 @@ export default function DmTable(props) {
               onRowsPerPageChange={handleChangeRowsPerPage}
             />
           </Paper>
-          <MyContext.Provider value={{ check, setCheckHandler }}>
-            {documentInfo && (
-              <DocumentModal
-                open={infoModalOpen}
-                document={documentInfo}
-                infoModalOpen={setInfoModalOpen}
-              />
-            )}
-          </MyContext.Provider>
+          {documentInfo && (
+            <DocumentModal
+              open={infoModalOpen}
+              document={documentInfo}
+              infoModalOpen={setInfoModalOpen}
+            />
+          )}
         </Box>
       )}
     </React.Fragment>

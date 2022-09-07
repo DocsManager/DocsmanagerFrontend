@@ -16,6 +16,7 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
 const SucessModal = (props) => {
   const { open, close } = props;
 
@@ -28,8 +29,8 @@ const SucessModal = (props) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={{ ...style, width: 500 }}>
-          <Typography id="modal-modal-description">{props.children}</Typography>
-          <Button onClick={close}>확인</Button>
+          <Box id="modal-modal-description">{props.children}</Box>
+          {close ? <Button onClick={close}>확인</Button> : <></>}
         </Box>
       </Modal>
     </React.Fragment>
