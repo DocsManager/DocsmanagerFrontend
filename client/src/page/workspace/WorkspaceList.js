@@ -15,7 +15,17 @@ function WorkspaceList() {
   }, [check]);
 
   return (
-    <div>
+    <div style={{ display: "grid", gridTemplateRows: "0.2fr  3fr" }}>
+      <h2
+        style={{
+          textAlign: "left",
+          padding: "15px",
+          borderBottom: "1px solid #d9d9d9",
+          paddingLeft: "30px",
+        }}
+      >
+        워크스페이스
+      </h2>
       <WorkspaceTable
         workspace={workspaces}
         setWorkspace={setWorkspace}

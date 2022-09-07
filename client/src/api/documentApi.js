@@ -18,29 +18,21 @@ export function getList(setList, documentUrl) {
 }
 
 // 휴지통 보내기
-export function updateRecycleBinFile(
-  documentNo,
-  setConfirmModalOpen,
-  setSuccessModalOpen
-) {
+export function updateRecycleBinFile(documentNo) {
   const url = baseUrl + "documents/" + getUser().userNo;
   let arr = [];
+  console.log(documentNo);
   documentNo.map((v) =>
-    arr.push({ documentNo: { documentNo: v }, recycleBin: 1 })
+    arr.push({
+      documentNo: { documentNo: v.documentNo.documentNo },
+      recycleBin: 1,
+    })
   );
-  axios
-    .put(url, arr)
-    .then(setConfirmModalOpen(false))
-    .then(setSuccessModalOpen(true))
-    .catch((err) => console.log(err));
+  axios.put(url, arr).catch((err) => console.log(err));
 }
 
 // 영구 삭제
-export function deleteFile(
-  newSelected,
-  setConfirmModalOpen,
-  setSuccessModalOpen
-) {
+export function deleteFile(newSelected) {
   const url = baseUrl + "document/" + getUser().userNo;
   console.log(newSelected);
   axios
@@ -50,33 +42,39 @@ export function deleteFile(
       },
       data: newSelected,
     })
-    .then(setConfirmModalOpen(false))
-    .then(setSuccessModalOpen(true))
     .catch((err) => console.log(err));
 }
 
-// 파일 정보 모달
-export function openInfoModal(setInfoModalOpen, documentNo) {
-  setInfoModalOpen(true);
-  const url = baseUrl + "document/" + documentNo;
-  axios.get(url).then((res) => {
-    // setDocument(res.data);
-  });
+// 마스터 영구 삭제
+export function masterDeleteFile(newSelected) {
+  const url = baseUrl + "documents/";
+  console.log(newSelected);
+  axios
+    .delete(url, {
+      headers: {
+        "Content-Type": `application/json`,
+      },
+      data: newSelected,
+    })
+    .catch((err) => console.log(err));
 }
 
 // 파일 복원
-export function restoreFile(documentNo, setSuccessModalOpen) {
+export function restoreFile(documentNo) {
   const url = baseUrl + "documents/" + getUser().userNo;
   let arr = [];
   documentNo.map((v) =>
-    arr.push({ documentNo: { documentNo: v }, recycleBin: 0 })
+    arr.push({
+      documentNo: { documentNo: v.documentNo.documentNo },
+      recycleBin: 0,
+    })
   );
   console.log(documentNo);
-  axios.put(url, arr).then(setSuccessModalOpen(true));
+  axios.put(url, arr);
 }
 
 // 중요 표시
-export function importantFile(documentNo) {
+export function importantFile(documentNo, important) {
   const url = baseUrl + "documents/" + getUser().userNo;
   axios
     .put(url, [
@@ -85,30 +83,21 @@ export function importantFile(documentNo) {
           documentNo: documentNo,
         },
 
-        important: 1,
+        important: important,
       },
     ])
-    .then((res) => console.log(res.data));
-}
-
-//중요 표시 해제
-export function removeImportantFile(documentNo) {
-  const url = baseUrl + "documents/" + getUser().userNo;
-  axios
-    .put(url, [
-      {
-        documentNo: {
-          documentNo: documentNo,
-        },
-        important: 0,
-      },
-    ])
-    .then((res) => console.log(res.data));
+    .catch((err) => console.log(err));
 }
 
 // 문서 작성
 
-export function writeFile(file, documentDTO, documentUser, fileName) {
+export function writeFile(
+  file,
+  documentDTO,
+  documentUser,
+  sizeCheck,
+  fileName
+) {
   const url = "/api/document";
 
   const fd = new FormData();
@@ -133,11 +122,12 @@ export function writeFile(file, documentDTO, documentUser, fileName) {
       },
     })
     .then((res) => {
+      sizeCheck(res.data);
       console.log(res.data);
     });
 }
 
-// content 수정
+// content 변경
 export function updateContent(documentNo, text) {
   const url = baseUrl + "document/" + documentNo;
   axios
@@ -147,7 +137,7 @@ export function updateContent(documentNo, text) {
     .then((res) => console.log(res.data));
 }
 
-// File 수정
+// File 변경
 export function updateFile(documentNo, file) {
   const url = baseUrl + "document/" + documentNo;
 
@@ -195,6 +185,29 @@ export function documentMember(documentNo, setMemberList) {
         memberList.push(v.userNo);
       });
       setMemberList(memberList);
+    })
+    .catch((err) => console.log(err));
+}
+
+// 파일 검색
+export function searchDocument(userNo, originalName, documentUrl, setList) {
+  const url = `${baseUrl}document/${documentUrl}/${userNo}/${originalName}`;
+  axios
+    .get(url)
+    .then((res) => {
+      setList(res.data);
+    })
+    .catch((err) => console.log(err));
+}
+
+// 내 문서 용량
+export function fileSize(userNo, setSize) {
+  const url = `${baseUrl}documents/size/${userNo}`;
+  axios
+    .get(url)
+    .then((res) => {
+      setSize(res.data);
+      console.log(res.data);
     })
     .catch((err) => console.log(err));
 }

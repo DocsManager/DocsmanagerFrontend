@@ -1,16 +1,17 @@
 .sidebar-nav {
-  background: #f9f9f9;
+  background: #3791f8;
   height: 100vh;
-  width: 18vw;
+  width: "20vw";
   position: sticky;
   top: 0px;
+  border-radius: 0px 20px 0px 0px;
 }
 .sidebar-nav-child {
-  width: 18vw;
+  width: 300px;
   margin: 0 auto;
   text-decoration: none;
   padding: 20px;
   display: flex;
   justify-content: center;
-  border-bottom: 2px solid #d9d9d9;
+  align-items: center;
 }

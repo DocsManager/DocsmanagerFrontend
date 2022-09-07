@@ -6,13 +6,15 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
 export default function AuthoritySelect({ search }) {
-  const [authority, setAuthority] = useState("");
+  const [authority, setAuthority] = useState("READ");
   const handleChange = (event) => {
     setAuthority(event.target.value);
     search.authority = event.target.value;
   };
   useEffect(() => {
-    search.authority && setAuthority(search.authority);
+    search.authority
+      ? setAuthority(search.authority)
+      : (search.authority = authority);
   }, []);
 
   return (
