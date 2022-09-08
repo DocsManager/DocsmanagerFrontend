@@ -4,6 +4,7 @@ import SucessModal from "./SucessModal";
 import "./Modal.css";
 import {
   deleteFile,
+  fileDownload,
   masterDeleteFile,
   restoreFile,
   updateRecycleBinFile,
@@ -92,14 +93,21 @@ const DocumentModal = (props) => {
                 default:
                   return (
                     <span>
-                      <a
+                      {/* <a
                         href={document.documentNo.filePath}
                         download={document.documentNo.originalName}
+                      > */}
+                      <Button
+                        onClick={() =>
+                          fileDownload(
+                            document.documentNo.filePath,
+                            document.documentNo.originalName
+                          )
+                        }
                       >
-                        <Button>
-                          <FileDownloadIcon />
-                        </Button>
-                      </a>
+                        <FileDownloadIcon />
+                      </Button>
+                      {/* </a> */}
                       {document.authority !== "READ" ? (
                         <Button onClick={() => setUpdateModalOpen(true)}>
                           <EditIcon />

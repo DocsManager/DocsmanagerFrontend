@@ -51,6 +51,12 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           outline: "none",
+          ":focus": {
+            outline: "none !important",
+          },
+          ":active": {
+            outline: "none !important",
+          },
         },
       },
     },
@@ -127,6 +133,19 @@ export const theme = createTheme({
         elevation8: {
           border: "1px solid #3791f8",
           width: "420px",
+        },
+      },
+    },
+    MuiSvgIcon: {
+      styleOverride: {
+        root: {
+          ":focus": {
+            outline: "none !important",
+          },
+          ":active": {
+            outline: "none !important",
+          },
+          outline: "none!important",
         },
       },
     },

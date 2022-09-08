@@ -26,7 +26,6 @@ function EditTitle({ open, setOpen, row, setList }) {
           <Typography id="newTitle" component={"h1"} align="center">
             새로운 워크스페이스 이름을 입력하세요
           </Typography>
-          <hr />
           <br />
           <div style={{ textAlign: "center" }}>
             <TextField

@@ -216,3 +216,24 @@ export function fileSize(userNo, setSize) {
     })
     .catch((err) => console.log(err));
 }
+
+export function fileDownload(url, originalName) {
+  fetch(url, { method: "GET" })
+    .then((res) => {
+      return res.blob();
+    })
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = originalName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 60000);
+      a.remove();
+    })
+    .catch((err) => console.log("err :", err));
+  // axios({ url: url, method: "GET", responseType: "blob" });
+}

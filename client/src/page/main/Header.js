@@ -36,6 +36,7 @@ const PopoverBtn = styled(Button)({
 
 export default function Header() {
   const name = getUser().name;
+  const user = getUser();
   const [noticeList, setNoticeList] = useState([]);
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
@@ -85,7 +86,7 @@ export default function Header() {
               <Avatar
                 onClick={handleClick}
                 sx={{ bgcolor: "#3791F8" }}
-                src={`${process.env.PUBLIC_URL}/kihonglee.jpg`}
+                src={user.profile}
               />
               <Popover
                 id={id}

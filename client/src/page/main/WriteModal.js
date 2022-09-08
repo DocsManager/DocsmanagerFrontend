@@ -29,6 +29,7 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 
+
 const style = {
   position: "absolute",
   top: "50%",
