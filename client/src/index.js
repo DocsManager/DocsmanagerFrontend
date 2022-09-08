@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import * as serviceWorker from "./serviceWorker";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Switch } from "react-router-dom";
 import Login from "./page/login/Login";
 import SignUp from "./page/login/SignUp";
 import Main from "./page/Main";
@@ -15,16 +15,12 @@ import Important from "./page/main/Important";
 import Mypage from "./page/login/MyPage";
 import FindIdAndPw from "./page/login/FindIdAndPw";
 import SuccessSignup from "./page/login/SuccessSignup";
-import PrivateRoutes from "./page/login/PrivateRoute";
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route element={<PrivateRoutes />}>
-        <Route path="/mypage" element={<Mypage />} />
-      </Route>
       <Route path="/findidpw" element={<FindIdAndPw />} />
       <Route path="/successsignup" element={<SuccessSignup />} />
       <Route path="/main" element={<Main />}>
@@ -33,6 +29,7 @@ ReactDOM.render(
         <Route path="important" element={<Important />} />
         <Route path="workspace" element={<WorkspaceList />} />
         <Route path="trashcan" element={<TrashCan />} />
+        <Route path="mypage" element={<Mypage />} />
       </Route>
       <Route path="document" element={<Workspace />} />
       {/* workspace에 사이드바 안 보이게 하려고 뺏는데 알림 토스트 메시지가 안 오는 부작용.. */}
