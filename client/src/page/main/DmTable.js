@@ -368,7 +368,7 @@ export default function DmTable(props) {
                         height: 45 * emptyRows,
                       }}
                     >
-                      <TableCell colSpan={10} /> /**표 border 라인 조절 */
+                      <TableCell colSpan={10} />
                     </TableRow>
                   )}
                 </TableBody>
