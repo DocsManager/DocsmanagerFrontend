@@ -6,6 +6,7 @@ import {
   TextField,
   Typography,
   ThemeProvider,
+  Pagination,
 } from "@mui/material";
 import { Box, TablePagination, TableRow, LinearProgress } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -118,11 +119,16 @@ export default function DmTable(props) {
   const [orderBy, setOrderBy] = useState("");
   const [selected, setSelected] = useState([]);
   const [selectStar, setSelectStar] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
+
+  // const [pageList, setPageList] = useState({});
+
+  // const [pageNum, setPageNum] = useState(1);
+
   // const [check, setCheck] = useState(false);
   const [searchData, setSearchData] = useState("");
   // const [size, setSize] = useState(0);
@@ -131,13 +137,24 @@ export default function DmTable(props) {
   // const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
-    getList(setList, props.documentUrl ? props.documentUrl : "");
+    getList(
+      setList,
+      page ? page : page + 1,
+      props.documentUrl ? props.documentUrl : ""
+    );
     // fileSize(getUser().userNo, setSize);
-
     // setPage(0);
-  }, [check]);
+  }, [check, page]);
+  console.log(page);
+  // {
+  //   console.log(pageList.dtoList && pageList.dtoList.length);
+  // }
+  if (list.dtoList) {
+    if (page !== 0 && list.dtoList.length === 0) {
+      setPage(page - 1);
+    }
+  }
   let newSelected = [];
-
   const handleRequestSort = (event, property) => {
     console.log(property);
     const isAsc = orderBy === property && order === "asc";
@@ -150,7 +167,11 @@ export default function DmTable(props) {
       //체크 표시할 시, 모든 documentNo를 담음
       console.log(page);
       console.log(rowsPerPage);
-      newSelected = list.slice(page * rowsPerPage, (page + 1) * rowsPerPage);
+      newSelected = list.dtoList;
+      // .slice(
+      //   page * rowsPerPage,
+      //   (page + 1) * rowsPerPage
+      // );
       setSelected(newSelected);
     } else {
       setSelected([]); //아닐 경우 selected에는 빈값
@@ -170,6 +191,10 @@ export default function DmTable(props) {
         )
       );
     }
+  };
+  const handleChange = (event, value) => {
+    setPage(value);
+    setSelected([]);
   };
 
   //행마다 별 클릭하는 이벤트
@@ -229,13 +254,30 @@ export default function DmTable(props) {
 
   return (
     <React.Fragment>
-      {list.length === 0 && !searchData ? (
-        <NoneData />
-      ) : list.length === 0 ? (
-        // 검색하는 창 살리려고 NoSearchData를 테이블 틀로 감쌌음!
-        <Box sx={{ width: "100%" }}>
-          <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-            <MyContext.Provider value={{ check, setCheckHandler }}>
+      {list.dtoList ? (
+        list.dtoList.length === 0 && !searchData ? (
+          <NoneData />
+        ) : list.dtoList.length === 0 ? (
+          // 검색하는 창 살리려고 NoSearchData를 테이블 틀로 감쌌음!
+          <Box sx={{ width: "100%" }}>
+            <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
+              <MyContext.Provider value={{ check, setCheckHandler }}>
+                <DmTableToolbar
+                  numSelected={selected.length}
+                  newSelected={selected}
+                  setSelected={setSelected}
+                  documentUrl={props.documentUrl}
+                  setList={setList}
+                  setSearchData={setSearchData}
+                />
+              </MyContext.Provider>
+              <NoSearchData />
+            </Paper>
+          </Box>
+        ) : (
+          <Box sx={{ width: "100%" }}>
+            {console.log(list.dtoList)}
+            <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
               <DmTableToolbar
                 numSelected={selected.length}
                 newSelected={selected}
@@ -244,154 +286,199 @@ export default function DmTable(props) {
                 setList={setList}
                 setSearchData={setSearchData}
               />
-            </MyContext.Provider>
-            <NoSearchData />
-          </Paper>
-        </Box>
-      ) : (
-        <Box sx={{ width: "100%" }}>
-          <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-            <DmTableToolbar
-              numSelected={selected.length}
-              newSelected={selected}
-              setSelected={setSelected}
-              documentUrl={props.documentUrl}
-              setList={setList}
-              setSearchData={setSearchData}
-            />
-            <TableContainer>
-              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-                <DmTableHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={list.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                />
-                <TableBody>
-                  {stableSort(list, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((li, index) => {
-                      const isItemSelected = isSelected(
-                        li.documentNo.documentNo
-                      );
-                      const isStarSelected = isStarClicked(li.documentNo);
-                      const labelId = `enhanced-table-checkbox-${index}`;
-                      return (
-                        <TableRow
-                          hover
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          tabIndex={-1} //탭 순서 임의로 컨트롤
-                          key={li.documentNo.documentNo}
-                          selected={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                "aria-labelledby": labelId,
-                              }}
-                              // onClick={(event) => handleClick(event, li)}
-                              onChange={(event) => handleClick(event, li)}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            {li.important ? (
-                              <Checkbox
-                                icon={
-                                  <StarOutlined sx={{ color: "#F4E029" }} />
-                                }
-                                checked={isStarSelected}
-                                checkedIcon={<StarBorderOutlined />}
-                                onClick={(event) => handleStarClick(event, li)}
-                              />
-                            ) : (
-                              <Checkbox
-                                icon={<StarBorderOutlined />}
-                                checked={isStarSelected}
-                                checkedIcon={
-                                  <StarOutlined sx={{ color: "#F4E029" }} />
-                                }
-                                onClick={(event) => handleStarClick(event, li)}
-                              />
-                            )}
-                          </TableCell>
-                          {fileCategoryIcon(li.documentNo.fileCategory)}
-
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            align="center"
-                            onClick={() => {
-                              setInfoModalOpen(true);
-                              setDocumentInfo(li);
-                            }}
+              <TableContainer>
+                <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                  <DmTableHead
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={list.dtoList && list.dtoList.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    totalPage={list.totalPage}
+                  />
+                  <TableBody>
+                    {stableSort(list.dtoList, getComparator(order, orderBy))
+                      // .slice(
+                      //   page * rowsPerPage,
+                      //   page * rowsPerPage + rowsPerPage
+                      // )
+                      .map((li, index) => {
+                        const isItemSelected = isSelected(
+                          li.documentNo.documentNo
+                        );
+                        const isStarSelected = isStarClicked(li.documentNo);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1} //탭 순서 임의로 컨트롤
+                            key={li.documentNo.documentNo}
+                            selected={isItemSelected}
                           >
-                            {li.documentNo.originalName}
-                          </TableCell>
-                          <TableCell align="center">
-                            {li.documentNo.user.name}
-                          </TableCell>
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                inputProps={{
+                                  "aria-labelledby": labelId,
+                                }}
+                                // onClick={(event) => handleClick(event, li)}
+                                onChange={(event) => handleClick(event, li)}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {li.important ? (
+                                <Checkbox
+                                  icon={
+                                    <StarOutlined sx={{ color: "#F4E029" }} />
+                                  }
+                                  checked={isStarSelected}
+                                  checkedIcon={<StarBorderOutlined />}
+                                  onClick={(event) =>
+                                    handleStarClick(event, li)
+                                  }
+                                />
+                              ) : (
+                                <Checkbox
+                                  icon={<StarBorderOutlined />}
+                                  checked={isStarSelected}
+                                  checkedIcon={
+                                    <StarOutlined sx={{ color: "#F4E029" }} />
+                                  }
+                                  onClick={(event) =>
+                                    handleStarClick(event, li)
+                                  }
+                                />
+                              )}
+                            </TableCell>
+                            {fileCategoryIcon(li.documentNo.fileCategory)}
 
-                          {li.documentNo.fileSize < 1024 ? (
-                            <TableCell align="center">
-                              {li.documentNo.fileSize.toFixed(2)} KB
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              align="center"
+                              onClick={() => {
+                                setInfoModalOpen(true);
+                                setDocumentInfo(li);
+                              }}
+                            >
+                              {li.documentNo.originalName}
                             </TableCell>
-                          ) : (
                             <TableCell align="center">
-                              {(li.documentNo.fileSize / 1024).toFixed(2)} MB
+                              {li.documentNo.user.name}
                             </TableCell>
-                          )}
-                          <TableCell align="center">
-                            {li.documentNo.registerDate
-                              .replace("T", " ")
-                              .slice(0, 16)}
-                          </TableCell>
-                          <TableCell align="center">
-                            {li.documentNo.modifyDate
-                              .replace("T", " ")
-                              .slice(0, 16)}
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows >
-                    0 /**>=0이면 애매하게 칸이 생겨서 >0으로 바꿈 */ && (
-                    <TableRow
-                      style={{
-                        height: 45 * emptyRows,
-                      }}
-                    >
-                      <TableCell colSpan={10} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
+
+                            {li.documentNo.fileSize < 1024 ? (
+                              <TableCell align="center">
+                                {li.documentNo.fileSize.toFixed(2)} KB
+                              </TableCell>
+                            ) : (
+                              <TableCell align="center">
+                                {(li.documentNo.fileSize / 1024).toFixed(2)} MB
+                              </TableCell>
+                            )}
+                            <TableCell align="center">
+                              {li.documentNo.registerDate
+                                .replace("T", " ")
+                                .slice(0, 16)}
+                            </TableCell>
+                            <TableCell align="center">
+                              {li.documentNo.modifyDate
+                                .replace("T", " ")
+                                .slice(0, 16)}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows >
+                      0 /**>=0이면 애매하게 칸이 생겨서 >0으로 바꿈 */ && (
+                      <TableRow
+                        style={{
+                          height: 45 * emptyRows,
+                        }}
+                      >
+                        <TableCell colSpan={10} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              {/* <TablePagination
               rowsPerPageOptions={[10]}
               component="div"
-              count={list.length}
+              count={list.length * 2}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Paper>
-          {documentInfo && (
-            <DocumentModal
-              open={infoModalOpen}
-              document={documentInfo}
-              infoModalOpen={setInfoModalOpen}
-            />
-          )}
-        </Box>
+            /> */}
+              <Pagination
+                count={list.totalPage}
+                page={page}
+                onChange={handleChange}
+              />
+            </Paper>
+            {documentInfo && (
+              <DocumentModal
+                open={infoModalOpen}
+                document={documentInfo}
+                infoModalOpen={setInfoModalOpen}
+                page={page}
+                setPage={setPage}
+                dtoList={list.dtoList.length}
+              />
+            )}
+            {/* <div>
+            <button
+              className="pageButton"
+              onClick={() =>
+                setPages(
+                  pageList.start - pageList.size >= 1
+                    ? pageList.start - pageList.size
+                    : pages
+                )
+              }
+            >
+              이전
+            </button>
+
+            {pageList &&
+              pageList.pageList.map((page) => {
+                return (
+                  <span
+                    className={pages === page ? "pageNum" : "pageOut"}
+                    onClick={() => {
+                      setPages(page);
+                    }}
+                    key={page}
+                  >
+                    {page}
+                  </span>
+                );
+              })}
+            <button
+              className="pageButton"
+              onClick={() =>
+                setPages(
+                  pageList.start + pageList.size > pageList.totalPage
+                    ? pages
+                    : pageList.start + pageList.size
+                )
+              }
+            >
+              다음
+            </button>
+          </div> */}
+          </Box>
+        )
+      ) : (
+        <></>
       )}
     </React.Fragment>
   );
