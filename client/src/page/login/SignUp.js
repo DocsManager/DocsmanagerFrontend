@@ -11,7 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import Swal from "sweetalert2";
 
 function SignUp() {
   const [confirmVerifyCode, setConfirmVerifyCode] = useState({});
@@ -38,7 +38,7 @@ function SignUp() {
   const password = useRef(null);
   password.current = watch("newPwd");
 
-  const onValid = (data) => {
+  const onSubmit = (data) => {
     if (
       verifyResult &&
       document.getElementById("newPwd").value ===
@@ -53,14 +53,24 @@ function SignUp() {
           deptNo: value,
         },
       };
-      console.log(newUser);
       signUp(newUser);
+      console.log(newUser);
+      Swal.fire({
+        title: "회원가입 성공",
+        icon: "success",
+        confirmButtonColor: "#3791f8",
+      });
+    } else {
+      Swal.fire({
+        title: "회원가입 실패",
+        icon: "error",
+        confirmButtonColor: "#3791f8",
+      });
     }
-    alert("회원가입 성공")((window.location.href = "/successsignup"));
-  };
 
-  const onInvalid = (data) => {
-    alert("회원가입에 실패하였습니다.");
+    setTimeout(function() {
+      window.location.href = "/successsignup";
+    }, 1000);
   };
 
   return (
@@ -84,7 +94,7 @@ function SignUp() {
           </Link>
         </div>
         <div className="formcontainer">
-          <form onSubmit={handleSubmit(onValid, onInvalid)}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <Box
               className="signupform"
               sx={{
@@ -111,10 +121,10 @@ function SignUp() {
                 {...register("newId", { required: true, maxLength: 10 })}
               />
               {errors.newId && errors.newId.type === "required" && (
-                <p className="ptag">id는 필수 값 입니다.</p>
+                <p className="signupptag">id는 필수 값 입니다.</p>
               )}
               {errors.newId && errors.newId.type === "maxLength" && (
-                <p>id는 최대 10자까지로 구성해주세요.</p>
+                <p className="signupptag">id는 최대 10자까지로 구성해주세요.</p>
               )}
               <TextField
                 style={{ marginLeft: 0 }}
@@ -131,13 +141,13 @@ function SignUp() {
                 })}
               />
               {errors.newName && errors.newName.type === "required" && (
-                <div className="ptag">이름은 필수 값입니다.</div>
+                <div className="signupptag">이름은 필수 값입니다.</div>
               )}
               {errors.newName && errors.newName.type === "minLength" && (
-                <p className="ptag">이름을 정확히 입력해주세요</p>
+                <p className="signupptag">이름을 정확히 입력해주세요</p>
               )}
               {errors.newName && errors.newName.type === "pattern" && (
-                <p className="ptag">이름은 한글만 입력 가능합니다.</p>
+                <p className="signupptag">이름은 한글만 입력 가능합니다.</p>
               )}
               <TextField
                 style={{ marginLeft: 0 }}
@@ -166,10 +176,10 @@ function SignUp() {
                 인증메일 발송
               </Button>
               {errors.newEmail && errors.newEmail.type === "required" && (
-                <p className="ptag">이메일은 필수 입력 항목입니다.</p>
+                <p className="signupptag">이메일은 필수 입력 항목입니다.</p>
               )}
               {errors.newEmail && errors.newEmail.type === "pattern" && (
-                <p className="ptag">잘못된 이메일 형식입니다.</p>
+                <p className="signupptag">잘못된 이메일 형식입니다.</p>
               )}
               <TextField
                 style={{ marginLeft: 0 }}
@@ -199,7 +209,7 @@ function SignUp() {
               </Button>
               {errors.confirmEmail &&
                 errors.confirmEmail.type === "required" && (
-                  <p className="ptag">이메일 검증을 실시해 주세요</p>
+                  <p className="signupptag">이메일 검증을 실시해 주세요</p>
                 )}
               <TextField
                 style={{ marginLeft: 0 }}
@@ -218,22 +228,20 @@ function SignUp() {
                 })}
               />
               {errors.newPwd && errors.newPwd.type === "required" && (
-                <p className="ptag"> 비밀번호는 필수입력 항목 입니다.</p>
+                <p className="signupptag"> 비밀번호는 필수입력 항목 입니다.</p>
               )}
               {errors.newPwd && errors.newPwd.type === "minLength" && (
-                <p className="ptag">
-                  {" "}
+                <p className="signupptag">
                   비밀번호는 최소 8자에서 12자로 구성해주세요
                 </p>
               )}
               {errors.newPwd && errors.newPwd.type === "maxLength" && (
-                <p className="ptag">
-                  {" "}
+                <p className="signupptag">
                   비밀번호는 최소 8자에서 12자로 구성해주세요
                 </p>
               )}
               {errors.newPwd && errors.newPwd.type === "pattern" && (
-                <p className="ptag">올바른 비밀번호 형식이 아닙니다.</p>
+                <p className="signupptag">올바른 비밀번호 형식이 아닙니다.</p>
               )}
               <TextField
                 style={{ marginLeft: 0 }}
@@ -249,10 +257,12 @@ function SignUp() {
                 })}
               />
               {errors.confirmPwd && errors.confirmPwd.type === "required" && (
-                <p className="ptag">비밀번호 확인은 필수 입력 항목입니다.</p>
+                <p className="signupptag">
+                  비밀번호 확인은 필수 입력 항목입니다.
+                </p>
               )}
               {errors.confirmPwd && errors.confirmPwd.type === "validate" && (
-                <p className="ptag">비밀번호와 값이 일치하지 않습니다.</p>
+                <p className="signupptag">비밀번호와 값이 일치하지 않습니다.</p>
               )}
               <FormControl
                 style={{ marginLeft: 0 }}
@@ -282,17 +292,22 @@ function SignUp() {
                 </Select>
               </FormControl>
               {errors.department && errors.department.type === "required" && (
-                <p className="ptag">부서선택은 필수선택사항입니다.</p>
+                <p className="signupptag">부서선택은 필수선택사항입니다.</p>
               )}
-              <Button
-                style={{ marginLeft: 0 }}
-                type="submit"
-                fullWidth
-                className="signupbtn"
-                variant="contained"
-              >
-                회원가입
-              </Button>
+              <Box textAlign="center">
+                <Button
+                  style={{
+                    width: "80%",
+                    magin: "20px 0px 20px 0px",
+                    marginTop: "20px",
+                  }}
+                  type="submit"
+                  className="signupbtn"
+                  variant="contained"
+                >
+                  회원가입
+                </Button>
+              </Box>
             </Box>
           </form>
         </div>

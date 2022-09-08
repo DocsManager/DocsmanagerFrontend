@@ -30,9 +30,10 @@ const style = {
   width: 600,
   height: 450,
   bgcolor: "background.paper",
-  border: "2px solid #8bc7ff",
+  // border: "2px solid #3791f8",
   boxShadow: 24,
   p: 4,
+  margin: "0 auto",
 };
 
 function MyPage() {
