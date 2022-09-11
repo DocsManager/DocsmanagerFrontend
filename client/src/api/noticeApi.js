@@ -140,11 +140,11 @@ export const notipublish = (searchList) => {
   });
 };
 
-export const worksapcepublish = (searchList, newWorkspaceNo) => {
+export const worksapcepublish = (searchList, newWorkspaceNo, setLoading) => {
   if (!client.connected) {
     return;
   }
-
+  setLoading(false);
   searchList.map((element) => {
     return client.publish({
       destination: `/send/workspace`,
@@ -153,7 +153,7 @@ export const worksapcepublish = (searchList, newWorkspaceNo) => {
         receiver: element,
         content: `${getUser().name}님이 워크스페이스에 초대했습니다`,
         isRead: 0,
-        urlParams: `/document?room=${newWorkspaceNo}`,
+        urlParams: `/document?room=${newWorkspaceNo + 1}`,
         // urlParams: `/document?room=${workspace.workspaceNo.workspaceNo}`,
       }),
       skipContentLengthHeader: true,
@@ -211,4 +211,16 @@ export const deleteNotice = (noticeNo) => {
 export const deleteAllNotice = (setNoticeList) => {
   const url = baseUrl + `notice/receiver/${getUser().userNo}/all`;
   axios.delete(url).then((res) => setNoticeList([]));
+};
+
+// 읽지 않은 알림 전체 삭제
+export const deleteAllUnreadNotice = (setNoticeList) => {
+  const url = baseUrl + `notice/receiver/${getUser().userNo}/unread`;
+  axios.delete(url).then((res) => setNoticeList(res.data));
+};
+
+//읽은 알림 전체 삭제
+export const deleteAllReadNotice = (setNoticeList) => {
+  const url = baseUrl + `notice/receiver/${getUser().userNo}/read`;
+  axios.delete(url).then((res) => setNoticeList(res.data));
 };

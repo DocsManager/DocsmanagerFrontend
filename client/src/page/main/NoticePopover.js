@@ -2,17 +2,15 @@ import React, { useState, useContext } from "react";
 import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
 import { Badge, Box, Tabs, Button } from "@mui/material";
-import {
-  DeleteOutline,
-  Notifications,
-  NotificationsOutlined,
-} from "@mui/icons-material";
+import { DeleteOutline, NotificationsOutlined } from "@mui/icons-material";
 import { Popover } from "@mui/material";
 import {
   deleteNotice,
   updateNotice,
   updateAllNotce,
   deleteAllNotice,
+  deleteAllUnreadNotice,
+  deleteAllReadNotice,
 } from "../../api/noticeApi";
 import Toastify from "../Toast";
 import { NoticeContext } from "./Header";
@@ -51,8 +49,8 @@ export function NoticePopover({
 
   const label = {
     0: `전체 ${noticeList.length}`,
-    1: `읽은 알림 ${read.length}`,
-    2: `읽지 않은 알림 ${unRead.length} `,
+    1: `읽지 않은 알림 ${unRead.length}`,
+    2: `읽은 알림 ${read.length}`,
     // 3: <Button>전체 알림 삭제</Button>,
     // 4: <Button>전체 알림 읽음</Button>,
   };
@@ -82,17 +80,97 @@ export function NoticePopover({
       case 0:
         return noticeList;
       case 1:
-        return read;
-
+        return unRead;
       case 2:
-        return unRead.length == 0 ? (
-          <div>존재하는 알림이 없습니다</div>
-        ) : (
-          unRead
-        );
+        return read;
     }
   };
 
+  const tabContentButton = () => {
+    switch (selectedTab) {
+      case 0:
+        return (
+          <React.Fragment>
+            <Button
+              sx={{
+                fontSize: "1rem",
+                textAlign: "center",
+              }}
+              onClick={() => {
+                deleteAllNotice(setNoticeList);
+                setCheck(true);
+              }}
+            >
+              전체 알림 삭제
+            </Button>
+            <Button
+              sx={{
+                fontSize: "1rem",
+                textAlign: "center",
+              }}
+              onClick={() => {
+                updateAllNotce(noticeList, setNoticeList);
+                updateModal(isRead, setIsReadHandler);
+              }}
+            >
+              전체 알림 읽음
+            </Button>
+          </React.Fragment>
+        );
+      case 1:
+        return (
+          <React.Fragment>
+            <Button
+              sx={{
+                fontSize: "1rem",
+                textAlign: "center",
+              }}
+              onClick={() => {
+                deleteAllUnreadNotice(setNoticeList);
+                setCheck(true);
+              }}
+            >
+              <span>
+                읽지 않은 알림
+                <br />
+                전체 삭제
+              </span>
+            </Button>
+            <Button
+              sx={{
+                fontSize: "1rem",
+                textAlign: "center",
+              }}
+              onClick={() => {
+                updateAllNotce(noticeList, setNoticeList);
+                updateModal(isRead, setIsReadHandler);
+              }}
+            >
+              <span>
+                읽지 않은 알림
+                <br />
+                전체 읽음
+              </span>
+            </Button>
+          </React.Fragment>
+        );
+      case 2:
+        return (
+          <Button
+            sx={{
+              fontSize: "1rem",
+              textAlign: "center",
+            }}
+            onClick={() => {
+              deleteAllReadNotice(setNoticeList);
+              setCheck(true);
+            }}
+          >
+            읽은 알림 전체 삭제
+          </Button>
+        );
+    }
+  };
   const updateModal = (isRead, setIsReadHandler) => {
     isRead ? setIsReadHandler(false) : setIsReadHandler(true);
   };
@@ -106,7 +184,6 @@ export function NoticePopover({
         color="info"
         badgeContent={unRead ? unRead.length : 0} //알림 개수
         max={99}
-        // style={{ fontSize: "1rem", marginLeft: "-5px" }}
         showZero //알림 개수가 0일때 숫자 0이 보이도록 설정
         onClick={handleClick}
         overlap="circular"
@@ -155,28 +232,9 @@ export function NoticePopover({
                 padding: "5px",
               }}
             >
-              <Button
-                sx={{
-                  fontSize: "1rem",
-                  textAlign: "center",
-                }}
-                onClick={() => deleteAllNotice(setNoticeList)}
-              >
-                전체 알림 삭제
-              </Button>
-              <Button
-                sx={{
-                  fontSize: "1rem",
-                  textAlign: "center",
-                }}
-                onClick={() => {
-                  updateAllNotce(noticeList, setNoticeList);
-                  updateModal(isRead, setIsReadHandler);
-                }}
-              >
-                전체 알림 읽음
-              </Button>
+              {tabContentButton()}
             </div>
+
             <Box>
               {tabContent().length > 0 ? (
                 tabContent().map((notice) => {
@@ -243,8 +301,8 @@ export function NoticePopover({
                 })
               ) : (
                 <div>
-                  <Typography sx={{ p: 3 }}>
-                    존재하는 알림이 없습니다.
+                  <Typography sx={{ p: 3, marginTop: "0 !important" }}>
+                    존재하는 알림이 없습니다!
                   </Typography>
                 </div>
               )}

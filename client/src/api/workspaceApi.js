@@ -35,7 +35,7 @@ export function updateTitleWorkspace(workspaceNo, workspace, setList) {
 
 export function deleteWorkspace() {}
 
-export function addWorkspace(workspace, setOpen, setNewWorkspace) {
+export function addWorkspace(workspace, setOpen, setNewWorkspace, setLoading) {
   axios
     .post(baseUrl, workspace)
     .then((res) => {
