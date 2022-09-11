@@ -48,6 +48,7 @@ export default function Header() {
     wsDocsSubscribe(setNewNotice, setNoticeList, noticeList);
     // return () => wsDisconnect();
   }, [isRead, newNotice, check]);
+  console.log(noticeList);
 
   //Toast message 띄워주는 함수
   const showNotice = (newNotice) => {
