@@ -25,8 +25,10 @@ import {
 } from "@mui/material";
 import { theme } from "../../Config";
 import { TextFieldsOutlined } from "@mui/icons-material";
-import { WorkspaceButton } from "../workspace/AddWorkspace";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { WorkspaceButton } from "../workspace/AddWorkspace";
+
 
 const style = {
   position: "absolute",
@@ -189,6 +191,7 @@ const WriteModal = (props) => {
                 }}
               >
                 저장
+                <AddBoxOutlinedIcon />
               </WorkspaceButton>
               <WorkspaceButton
                 variant="contained"
@@ -196,6 +199,9 @@ const WriteModal = (props) => {
                   setSearchList([]);
                   setWriteModal(false);
                   setFile();
+                  {
+                    /**닫기 버튼 누르면 input에 담긴 file내용 비워지게 */
+                  }
                 }}
               >
                 닫기

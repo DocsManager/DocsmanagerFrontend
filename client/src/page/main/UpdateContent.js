@@ -8,7 +8,10 @@ import Modal from "@mui/material/Modal";
 import { MyContext } from "../Main";
 import { InputBox } from "./WriteModal";
 import { Typography } from "@mui/material";
-
+import { WorkspaceButton } from "../workspace/AddWorkspace";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { AddBox } from "@mui/icons-material";
 const style = {
   position: "absolute",
   top: "50%",
@@ -56,14 +59,9 @@ const UpdateContent = (props) => {
               />
             </main>
           </div>
-          <Button
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            취소
-          </Button>
-          <Button
+
+          <WorkspaceButton
+            variant="contained"
             onClick={() => {
               infoModalOpen(false);
               setContentUpdateModal(true);
@@ -73,7 +71,17 @@ const UpdateContent = (props) => {
             }}
           >
             확인
-          </Button>
+            <AddBoxOutlinedIcon />
+          </WorkspaceButton>
+          <WorkspaceButton
+            variant="contained"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            취소
+            <CloseOutlinedIcon />
+          </WorkspaceButton>
         </Box>
       </Modal>
       <SucessModal

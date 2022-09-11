@@ -4,7 +4,9 @@ import ShareUser from "./ShareUser";
 import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
 import { documentAddUser, documentMember } from "../../api/documentApi";
 import { workspaceMemberAddPublish } from "../../api/noticeApi";
-
+import { WorkspaceButton } from "../workspace/AddWorkspace";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 const style = {
   position: "absolute",
   top: "50%",
@@ -59,7 +61,8 @@ export default function AddMember(props) {
             member={memberList}
             type={type}
           />
-          <Button
+          <WorkspaceButton
+            variant="contained"
             onClick={() => {
               if (type === "workspace") {
                 addWorkspaceUser(row, searchList, check, setCheck);
@@ -79,15 +82,18 @@ export default function AddMember(props) {
             }}
           >
             추가
-          </Button>
-          <Button
+            <AddBoxOutlinedIcon />
+          </WorkspaceButton>
+          <WorkspaceButton
+            variant="contained"
             onClick={() => {
               setSearchList([]);
               setOpen(false);
             }}
           >
             취소
-          </Button>
+            <CloseOutlinedIcon />
+          </WorkspaceButton>
         </Box>
       </Modal>
     </div>

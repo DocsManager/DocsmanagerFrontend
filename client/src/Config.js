@@ -94,6 +94,7 @@ export const theme = createTheme({
         },
       },
     },
+
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
@@ -136,16 +137,26 @@ export const theme = createTheme({
         },
       },
     },
-    MuiSvgIcon: {
-      styleOverride: {
+    MuiAvatar: {
+      styleOverrides: {
         root: {
-          ":focus": {
-            outline: "none !important",
-          },
-          ":active": {
-            outline: "none !important",
-          },
-          outline: "none!important",
+          marginLeft: "-8px !important",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        outlined: {
+          border: "2px solid #3791f8",
+        },
+        filled: {
+          align: "center",
+        },
+        colorPrimary: {
+          backgroundColor: "#3791f8",
+        },
+        root: {
+          marginBottom: "10px",
         },
       },
     },
