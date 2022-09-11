@@ -67,6 +67,7 @@ function Workspace() {
     overflowY: "scroll",
   };
 
+  //inputBox style
   const inputStyle = {
     width: "80%",
     height: "40px !important",
@@ -87,6 +88,7 @@ function Workspace() {
     },
     padding: "0px !important",
   };
+
   useEffect(() => {
     getWorkspace(workspaceNo, setWorkspace);
     if (workspace.workspaceNo) {

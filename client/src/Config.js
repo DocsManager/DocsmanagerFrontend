@@ -154,18 +154,5 @@ export const theme = createTheme({
         },
       },
     },
-    MuiBox: {
-      styleOverrides: {
-        root: {
-          "&::webkit-scrollbar": {
-            display: "none",
-            width: "0 !important",
-          },
-        },
-        ".css-90xd9x": {
-          backgroundColor: "#8bc7ff !important",
-        },
-      },
-    },
   },
 });
