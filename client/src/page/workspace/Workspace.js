@@ -10,8 +10,9 @@ import "medium-editor/dist/css/themes/default.css";
 import "../../App.css";
 import { getTempContent, getWorkspace } from "../../api/workspaceApi";
 import Header from "../main/Header";
-import { Box, Button, Typography } from "@mui/material";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import { Save } from "@mui/icons-material";
+import { flexbox } from "@mui/system";
 
 function Workspace() {
   const [client, setClient] = useState(null);
@@ -117,13 +118,19 @@ function Workspace() {
                   return (
                     <React.Fragment key={username + index}>
                       <span id={username} className="userInfo" key={username}>
-                        <Identicon
+                        <Box sx={{ display: "flex", flexDirection: "column" }}>
+                          <Avatar
+                            sx={{ bgcolor: "#3791F8" }}
+                            src={user.profile}
+                          />
+                        </Box>
+                        {/* <Identicon
                           className="account__avatar"
                           // 프로필로 변경 예정
-                          style={{ backgroundColor: user.randomcolor }}
+                          // style={{ backgroundColor: user.randomcolor }}
                           size={40}
                           string={username}
-                        />
+                        /> */}
                       </span>
                       <UncontrolledTooltip placement="top" target={username}>
                         {username}

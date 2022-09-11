@@ -29,6 +29,7 @@ import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
 import { theme } from "../../Config";
+import { deleteWorkspace } from "../../api/workspaceApi";
 
 function createData(
   title,
@@ -246,7 +247,7 @@ export default function WorkspaceTable(props) {
       rows.push(
         createData(
           v.workspaceNo.title,
-          v.workspaceNo.master.name,
+          v.workspaceNo.master,
           v.workspaceNo.registerDate,
           v.member,
           v.workspaceNo.workspaceNo,
@@ -297,6 +298,7 @@ export default function WorkspaceTable(props) {
 
   // 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07
   const emptyRows = page >= 0 ? Math.max(0, (1 + page) * 5 - rows.length) : 0;
+  // console.log(rows);
   return (
     <ThemeProvider theme={theme}>
       <React.Fragment>
@@ -380,7 +382,9 @@ export default function WorkspaceTable(props) {
                               }}
                             /> */}
                             </TableCell>
-                            <TableCell align="center">{row.master}</TableCell>
+                            <TableCell align="center">
+                              {row.master.name}
+                            </TableCell>
                             <TableCell align="center">
                               {row.registerDate.split("T")[0]}
                             </TableCell>
@@ -398,23 +402,33 @@ export default function WorkspaceTable(props) {
                               )}
                             </TableCell>
                             <TableCell align="center">
-                              <Button
-                                onClick={() => {
-                                  setRow(row);
-                                  setMemberOpen(true);
-                                }}
-                              >
-                                멤버추가
-                              </Button>
+                              {row.master.userNo === user.userNo ? (
+                                <Button
+                                  onClick={() => {
+                                    setRow(row);
+                                    setMemberOpen(true);
+                                  }}
+                                >
+                                  멤버추가
+                                </Button>
+                              ) : (
+                                <></>
+                              )}
 
                               <Button
                                 sx={{ color: "red" }}
                                 onClick={() =>
-                                  deleteUserWorkspace(
-                                    user.userNo,
-                                    row.workspaceNo,
-                                    setWorkspace
-                                  )
+                                  row.master.userNo === user.userNo
+                                    ? deleteWorkspace(
+                                        row.workspaceNo,
+                                        setCheck,
+                                        check
+                                      )
+                                    : deleteUserWorkspace(
+                                        user.userNo,
+                                        row.workspaceNo,
+                                        setWorkspace
+                                      )
                                 }
                               >
                                 나가기
