@@ -50,17 +50,15 @@ export function findId(params) {
 }
 
 export function findPw(params) {
-  axios
-    .get("api/mail/findpassword", { params })
-    .then((response) => {
-      if (response.data.check) {
-        alert("해당 이메일 주소로 임시 비밀번호가 발송되었습니다.");
-        axios
-          .get("http://localhost:8080/mail/sendpw", { params })
-          .then(alert("로그인 화면으로 이동합니다."))
-          .then((window.location.href = "/"));
-      } else {
-        alert("일치하는 정보가 없습니다");
-      }
-    });
+  axios.get("api/mail/findpassword", { params }).then((response) => {
+    if (response.data.check) {
+      alert("해당 이메일 주소로 임시 비밀번호가 발송되었습니다.");
+      axios
+        .get("api/mail/sendpw", { params })
+        .then(alert("로그인 화면으로 이동합니다."))
+        .then((window.location.href = "/"));
+    } else {
+      alert("일치하는 정보가 없습니다");
+    }
+  });
 }

@@ -5,15 +5,19 @@ const baseUrl = "/api/";
 const documentBaseUrl = baseUrl + "documents/user/";
 
 // 페이지별 리스트 출력
-export function getList(setList, documentUrl) {
-  const url = documentBaseUrl + documentUrl + getUser().userNo;
+export function getList(setList, pages, documentUrl) {
+  const url =
+    documentBaseUrl + documentUrl + getUser().userNo + "?page=" + pages;
   axios.get(url).then((res) => {
     res.data.dtoList.map((data, index) => {
       data.id = index + 1;
       data.userName = data.userNo.name;
     });
+    console.log(pages);
     console.log(res.data);
-    setList(res.data.dtoList);
+    setList(res.data);
+    // console.log(res.data.dtoList);
+    // setPageList(res.data);
   });
 }
 
@@ -211,4 +215,25 @@ export function fileSize(userNo, setSize) {
       console.log(res.data);
     })
     .catch((err) => console.log(err));
+}
+
+export function fileDownload(url, originalName) {
+  fetch(url, { method: "GET" })
+    .then((res) => {
+      return res.blob();
+    })
+    .then((blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = originalName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url);
+      }, 60000);
+      a.remove();
+    })
+    .catch((err) => console.log("err :", err));
+  // axios({ url: url, method: "GET", responseType: "blob" });
 }

@@ -51,6 +51,12 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           outline: "none",
+          ":focus": {
+            outline: "none !important",
+          },
+          ":active": {
+            outline: "none !important",
+          },
         },
       },
     },
