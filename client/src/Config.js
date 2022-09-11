@@ -88,6 +88,7 @@ export const theme = createTheme({
         },
       },
     },
+
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
@@ -127,6 +128,42 @@ export const theme = createTheme({
         elevation8: {
           border: "1px solid #3791f8",
           width: "420px",
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          marginLeft: "-8px !important",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        outlined: {
+          border: "2px solid #3791f8",
+        },
+        filled: {
+          align: "center",
+        },
+        colorPrimary: {
+          backgroundColor: "#3791f8",
+        },
+        root: {
+          marginBottom: "10px",
+        },
+      },
+    },
+    MuiBox: {
+      styleOverrides: {
+        root: {
+          "&::webkit-scrollbar": {
+            display: "none",
+            width: "0 !important",
+          },
+        },
+        ".css-90xd9x": {
+          backgroundColor: "#8bc7ff !important",
         },
       },
     },
