@@ -32,6 +32,7 @@ import { ConstructionOutlined } from "@mui/icons-material";
 import Delete from "@mui/icons-material/Delete";
 import { ToRecyclebin } from "../main/DmTableToolbar";
 import { theme } from "../../Config";
+import { deleteWorkspace } from "../../api/workspaceApi";
 
 function createData(
   title,
@@ -155,7 +156,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align="center"
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -163,6 +164,7 @@ function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
+              style={{ fontSize: "1.1em" }}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
@@ -259,7 +261,7 @@ export default function WorkspaceTable(props) {
       rows.push(
         createData(
           v.workspaceNo.title,
-          v.workspaceNo.master.name,
+          v.workspaceNo.master,
           v.workspaceNo.registerDate,
           v.member,
           v.workspaceNo.workspaceNo,
@@ -310,6 +312,7 @@ export default function WorkspaceTable(props) {
 
   // 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07
   const emptyRows = page >= 0 ? Math.max(0, (1 + page) * 5 - rows.length) : 0;
+  // console.log(rows);
   return (
     <ThemeProvider theme={theme}>
       <React.Fragment>
@@ -367,25 +370,39 @@ export default function WorkspaceTable(props) {
                               component="th"
                               id={labelId}
                               scope="row"
-                              padding="none"
+                              align="center"
                             >
-                              <Link to={`/document?room=${row.workspaceNo}`}>
+                              <Link
+                                to={`/document?room=${row.workspaceNo}`}
+                                sx={{ marginRight: "30px" }}
+                              >
                                 {row.title}
                               </Link>
-                              <Button
-                                startIcon={<EditIcon />}
+                              <IconButton
                                 onClick={() => {
                                   // const open = { member: false, edit: true };
                                   setEditOpen(true);
                                   setRow(row);
                                 }}
-                              />
+                              >
+                                <CreateOutlinedIcon />
+                              </IconButton>
+                              {/* <Button
+                              startIcon={<CreateOutlinedIcon />}
+                              onClick={() => {
+                                // const open = { member: false, edit: true };
+                                setEditOpen(true);
+                                setRow(row);
+                              }}
+                            /> */}
                             </TableCell>
-                            <TableCell align="right">{row.master}</TableCell>
-                            <TableCell align="right">
+                            <TableCell align="center">
+                              {row.master.name}
+                            </TableCell>
+                            <TableCell align="center">
                               {row.registerDate.split("T")[0]}
                             </TableCell>
-                            <TableCell align="right">
+                            <TableCell align="center">
                               {row.member.map((member, index) =>
                                 row.member.length - 1 != index ? (
                                   <Fragment key={index}>{`${
@@ -398,24 +415,34 @@ export default function WorkspaceTable(props) {
                                 )
                               )}
                             </TableCell>
-                            <TableCell align="right">
-                              <Button
-                                onClick={() => {
-                                  setRow(row);
-                                  setMemberOpen(true);
-                                }}
-                              >
-                                멤버추가
-                              </Button>
+                            <TableCell align="center">
+                              {row.master.userNo === user.userNo ? (
+                                <Button
+                                  onClick={() => {
+                                    setRow(row);
+                                    setMemberOpen(true);
+                                  }}
+                                >
+                                  멤버추가
+                                </Button>
+                              ) : (
+                                <></>
+                              )}
 
                               <Button
                                 sx={{ color: "red" }}
                                 onClick={() =>
-                                  deleteUserWorkspace(
-                                    user.userNo,
-                                    row.workspaceNo,
-                                    setWorkspace
-                                  )
+                                  row.master.userNo === user.userNo
+                                    ? deleteWorkspace(
+                                        row.workspaceNo,
+                                        setCheck,
+                                        check
+                                      )
+                                    : deleteUserWorkspace(
+                                        user.userNo,
+                                        row.workspaceNo,
+                                        setWorkspace
+                                      )
                                 }
                               >
                                 나가기

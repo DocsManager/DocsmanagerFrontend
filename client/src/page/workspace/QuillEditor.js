@@ -68,7 +68,7 @@ const QuillEditor = ({
               저장
             </Button>
           </Box>
-          <Link to="/main/workspace">
+          <a href="/main/workspace">
             <Button
               variant="contained"
               endIcon={<ArrowBackOutlinedIcon />}
@@ -76,7 +76,7 @@ const QuillEditor = ({
             >
               워크스페이스 목록으로 이동
             </Button>
-          </Link>
+          </a>
         </Box>
 
         <ReactQuill

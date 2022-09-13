@@ -4,7 +4,9 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-
+import { WorkspaceButton } from "../workspace/AddWorkspace";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 const style = {
   position: "absolute",
   top: "50%",
@@ -34,8 +36,14 @@ const ConfirmModal = (props) => {
       >
         <Box sx={{ ...style, width: 350 }}>
           <Box id="child-modal-description">{props.children}</Box>
-          <Button onClick={() => setOpen(false)}>취소</Button>
-          <Button onClick={act}>확인</Button>
+          <WorkspaceButton variant="contained" onClick={act}>
+            확인
+            <AddBoxOutlinedIcon />
+          </WorkspaceButton>
+          <WorkspaceButton variant="contained" onClick={() => setOpen(false)}>
+            취소
+            <CloseOutlinedIcon />
+          </WorkspaceButton>
         </Box>
       </Modal>
     </React.Fragment>

@@ -24,7 +24,7 @@ export function updateWorkspace(content, workspace) {
 
 // 제목 변경
 export function updateTitleWorkspace(workspaceNo, workspace, setList) {
-  const url = baseUrl + `/${workspaceNo}`;
+  const url = `${baseUrl}/${workspaceNo}`;
   axios
     .put(url, workspace)
     .then((res) => {
@@ -33,7 +33,10 @@ export function updateTitleWorkspace(workspaceNo, workspace, setList) {
     .catch((err) => console.log(err));
 }
 
-export function deleteWorkspace() {}
+export function deleteWorkspace(workspaceNo, setCheck, check) {
+  const url = `${baseUrl}/${workspaceNo}`;
+  axios.delete(url).then(() => setCheck(!check));
+}
 
 export function addWorkspace(workspace, setOpen, setNewWorkspace, setLoading) {
   axios

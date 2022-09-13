@@ -35,7 +35,7 @@ export const ModalIcon = styled(SvgIcon)({
   color: "#3791f8",
 });
 
-const WorkspaceButton = styled(Button)({
+export const WorkspaceButton = styled(Button)({
   backgroundColor: "#3791f8",
   fontSize: "1em",
 });
