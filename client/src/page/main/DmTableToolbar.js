@@ -165,7 +165,12 @@ const DmTableToolbar = ({
       >
         {numSelected > 0 ? (
           <Box
-            sx={{ flex: " 1 1 100%" }}
+            /**영훈이가 거슬려했던 Toolbar와 table head 너비차이 조절 */
+            sx={{
+              marginTop: "10px",
+              marginBottom: "10px",
+              flex: "1 1 100%",
+            }}
             color="inherit"
             variant="subtitle1"
             component="div"
@@ -194,7 +199,11 @@ const DmTableToolbar = ({
           // 09.01 파일 검색과 문서등록 버튼 배치 조절
           <React.Fragment>
             <Box
-              sx={{ display: "flex", alignItems: "center", marginTop: "20px" }}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "12px",
+              }} /*영훈이가 거슬려했던 Toolbar와 table head 너비차이 조절 */
             >
               <TextField
                 id="searchDocumentName"
@@ -224,7 +233,8 @@ const DmTableToolbar = ({
                 검색
               </Button>
             </Box>
-            <Box sx={{ marginTop: "20px" }}>
+            <Box sx={{ marginTop: "10px" }}>
+              {/**margin 조절 */}
               {handleToolbarBtn(writeModalOpen, setWriteModalOpen)}
             </Box>
           </React.Fragment>

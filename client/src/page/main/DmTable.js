@@ -57,55 +57,36 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function fileCategoryIcon(fileCategory) {
+export function fileCategoryIcon(fileCategory) {
   switch (true) {
     case fileCategory.includes("jpeg"):
     case fileCategory.includes("png"):
-      return (
-        <TableCell>
-          <img src="https://img.icons8.com/fluency/30/000000/image.png" />
-        </TableCell>
-      );
+      return <img src="https://img.icons8.com/fluency/30/000000/image.png" />;
     case fileCategory.includes("pdf"):
       return (
-        <TableCell>
-          <img src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png" />{" "}
-        </TableCell>
+        <img src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png" />
       );
     case fileCategory.includes("ppt"):
     case fileCategory.includes("powerpoint"):
+    case fileCategory.includes("show"):
       return (
-        <TableCell>
-          <img src="https://img.icons8.com/color/30/000000/powerpoint.png" />{" "}
-        </TableCell>
+        <img src="https://img.icons8.com/color/30/000000/powerpoint.png" />
       );
     case fileCategory.includes("excel"):
     case fileCategory.includes("xls"):
-      return (
-        <TableCell>
-          <img src="https://img.icons8.com/color/30/000000/xls.png" />{" "}
-        </TableCell>
-      );
+    case fileCategory.includes("cell"):
+      return <img src="https://img.icons8.com/color/30/000000/xls.png" />;
     case fileCategory.includes("docx"):
     case fileCategory.includes("hwp"):
     case fileCategory.includes("word"):
+    case fileCategory.includes("hwdt"):
       return (
-        <TableCell>
-          <img src="https://img.icons8.com/color/30/000000/google-docs--v1.png" />{" "}
-        </TableCell>
+        <img src="https://img.icons8.com/color/30/000000/google-docs--v1.png" />
       );
     case fileCategory.includes("zip"):
-      return (
-        <TableCell>
-          <img src="https://img.icons8.com/color/30/000000/archive.png" />{" "}
-        </TableCell>
-      );
+      return <img src="https://img.icons8.com/color/30/000000/archive.png" />;
     default:
-      return (
-        <TableCell>
-          <img src="https://img.icons8.com/color/30/000000/file.png" />{" "}
-        </TableCell>
-      );
+      return <img src="https://img.icons8.com/color/30/000000/file.png" />;
   }
 }
 
@@ -119,7 +100,7 @@ export default function DmTable(props) {
   const [orderBy, setOrderBy] = useState("");
   const [selected, setSelected] = useState([]);
   const [selectStar, setSelectStar] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -137,6 +118,7 @@ export default function DmTable(props) {
   // const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
+    console.log("======================");
     getList(
       setList,
       page ? page : page + 1,
@@ -145,12 +127,16 @@ export default function DmTable(props) {
     // fileSize(getUser().userNo, setSize);
     // setPage(0);
   }, [check, page]);
-  console.log(page);
+  console.log(check);
   // {
   //   console.log(pageList.dtoList && pageList.dtoList.length);
   // }
   if (list.dtoList) {
-    if (page !== 0 && list.dtoList.length === 0) {
+    console.log("2222222222222");
+    console.log(page);
+    console.log(list.dtoList);
+    if (page !== 0 && list.totalPage === page - 1) {
+      console.log("1111111111111111111111");
       setPage(page - 1);
     }
   }
@@ -193,8 +179,8 @@ export default function DmTable(props) {
     }
   };
   const handleChange = (event, value) => {
-    setPage(value);
     setSelected([]);
+    setPage(value);
   };
 
   //행마다 별 클릭하는 이벤트
@@ -217,12 +203,16 @@ export default function DmTable(props) {
       );
     }
     setSelectStar(newSelected);
-    if (li.important) {
-      importantFile(li.documentNo.documentNo, 0);
-      check ? setCheckHandler(false) : setCheckHandler(true);
-    } else {
-      importantFile(li.documentNo.documentNo, 1);
-    }
+    // if (li.important) {
+    //   importantFile(li.documentNo.documentNo, 0);
+    //   check ? setCheckHandler(false) : setCheckHandler(true);
+    // } else {
+    //   importantFile(li.documentNo.documentNo, 1);
+    //   check ? setCheckHandler(false) : setCheckHandler(true);
+    // }
+
+    importantFile(li.documentNo.documentNo, li.important ? 0 : 1);
+    check ? setCheckHandler(false) : setCheckHandler(true);
 
     //렌더링 - 별 씹힘
   };
@@ -356,7 +346,9 @@ export default function DmTable(props) {
                                 />
                               )}
                             </TableCell>
-                            {fileCategoryIcon(li.documentNo.fileCategory)}
+                            <TableCell>
+                              {fileCategoryIcon(li.documentNo.fileCategory)}
+                            </TableCell>
 
                             <TableCell
                               component="th"
@@ -418,12 +410,16 @@ export default function DmTable(props) {
               onPageChange={handleChangePage}
               onRowsPerPageChange={handleChangeRowsPerPage}
             /> */}
-              <Pagination
-                count={list.totalPage}
-                page={page}
-                onChange={handleChange}
-              />
             </Paper>
+            <Pagination
+              style={{
+                display: "flex",
+                justifyContent: "right",
+              }}
+              count={list.totalPage}
+              page={page ? page : page + 1}
+              onChange={handleChange}
+            />
             {documentInfo && (
               <DocumentModal
                 open={infoModalOpen}

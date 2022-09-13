@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { alpha } from "@mui/material/styles";
+import { alpha, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -23,12 +23,17 @@ import {
   deleteUserWorkspace,
 } from "../../api/workspaceUserApi";
 import { getUser } from "../../component/getUser/getUser";
-import { Button, ThemeProvider } from "@mui/material";
+import { Button } from "@mui/material";
 import AddMember from "../main/AddMember";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import EditIcon from "@material-ui/icons/Edit";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
+import { ConstructionOutlined } from "@mui/icons-material";
+import Delete from "@mui/icons-material/Delete";
+import { ToRecyclebin } from "../main/DmTableToolbar";
 import { theme } from "../../Config";
+import { deleteWorkspace } from "../../api/workspaceApi";
 
 function createData(
   title,
@@ -59,8 +64,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -194,30 +197,41 @@ const EnhancedTableToolbar = (props) => {
       }}
     >
       {numSelected > 0 && (
-        <Typography
+        <Box
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
-          <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-            {/**09.06 dmtable과 선택 시 나타나는 문구 맞춤 */}
-            {numSelected}
-          </span>
-          개가 선택되었습니다
-        </Typography>
-      )}
-      {numSelected > 0 && (
-        <Tooltip title="Delete">
-          <IconButton
-            onClick={() => {
-              deleteAllWorkspaceUser(getUser().userNo, selected, setWorkspace);
-              setSelected([]);
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+            <Typography>
+              <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+                {numSelected}
+              </span>
+              개가 선택되었습니다
+            </Typography>
+            <ToRecyclebin
+              variant="contained"
+              startIcon={<Delete />}
+              onClick={() => {
+                deleteAllWorkspaceUser(
+                  getUser().userNo,
+                  selected,
+                  setWorkspace
+                );
+                setSelected([]);
+              }}
+            >
+              삭제
+            </ToRecyclebin>
+          </div>
+        </Box>
       )}
     </Toolbar>
   );
@@ -225,8 +239,8 @@ const EnhancedTableToolbar = (props) => {
 
 export default function WorkspaceTable(props) {
   const { user, workspace, setWorkspace, check, setCheck } = props;
-  const [order, setOrder] = useState("asc");
-  const [orderBy, setOrderBy] = useState("calories");
+  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState("registerDate");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   // const [open, setOpen] = useState({ member: false, edit: false });
@@ -246,7 +260,7 @@ export default function WorkspaceTable(props) {
       rows.push(
         createData(
           v.workspaceNo.title,
-          v.workspaceNo.master.name,
+          v.workspaceNo.master,
           v.workspaceNo.registerDate,
           v.member,
           v.workspaceNo.workspaceNo,
@@ -297,6 +311,7 @@ export default function WorkspaceTable(props) {
 
   // 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07
   const emptyRows = page >= 0 ? Math.max(0, (1 + page) * 5 - rows.length) : 0;
+  // console.log(rows);
   return (
     <ThemeProvider theme={theme}>
       <React.Fragment>
@@ -380,7 +395,9 @@ export default function WorkspaceTable(props) {
                               }}
                             /> */}
                             </TableCell>
-                            <TableCell align="center">{row.master}</TableCell>
+                            <TableCell align="center">
+                              {row.master.name}
+                            </TableCell>
                             <TableCell align="center">
                               {row.registerDate.split("T")[0]}
                             </TableCell>
@@ -398,23 +415,33 @@ export default function WorkspaceTable(props) {
                               )}
                             </TableCell>
                             <TableCell align="center">
-                              <Button
-                                onClick={() => {
-                                  setRow(row);
-                                  setMemberOpen(true);
-                                }}
-                              >
-                                멤버추가
-                              </Button>
+                              {row.master.userNo === user.userNo ? (
+                                <Button
+                                  onClick={() => {
+                                    setRow(row);
+                                    setMemberOpen(true);
+                                  }}
+                                >
+                                  멤버추가
+                                </Button>
+                              ) : (
+                                <></>
+                              )}
 
                               <Button
                                 sx={{ color: "red" }}
                                 onClick={() =>
-                                  deleteUserWorkspace(
-                                    user.userNo,
-                                    row.workspaceNo,
-                                    setWorkspace
-                                  )
+                                  row.master.userNo === user.userNo
+                                    ? deleteWorkspace(
+                                        row.workspaceNo,
+                                        setCheck,
+                                        check
+                                      )
+                                    : deleteUserWorkspace(
+                                        user.userNo,
+                                        row.workspaceNo,
+                                        setWorkspace
+                                      )
                                 }
                               >
                                 나가기

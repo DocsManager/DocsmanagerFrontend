@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import "./Header.css";
-import { getUser } from "../../component/getUser/getUser";
+import { deleteUser, getUser } from "../../component/getUser/getUser";
 import {
   getNoticeList,
   wsDisconnect,
@@ -10,7 +10,6 @@ import {
 import { NoticePopover } from "./NoticePopover";
 import { createContext } from "react";
 import { notify } from "../Toast";
-
 import "react-toastify/dist/ReactToastify.css";
 import "../Toast.css";
 import { Avatar, Popover, Button } from "@mui/material";
@@ -19,6 +18,9 @@ import { Box } from "@mui/system";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import { AccountBox, Logout } from "@mui/icons-material";
 import { theme } from "../../Config";
+import { MyContext } from "../Main";
+import { logout } from "../../api/userApi";
+import { Link } from "react-router-dom";
 
 export const NoticeContext = createContext({
   isRead: "",
@@ -41,13 +43,21 @@ export default function Header() {
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
   const setIsReadHandler = (isRead) => setIsRead(isRead);
-  const [check, setCheck] = useState(false);
-
+  const [headerCheck, setHeaderCheck] = useState(false);
+  const { check, setCheckHandler } = useContext(MyContext);
   useEffect(() => {
     getNoticeList(setNoticeList);
-    wsDocsSubscribe(setNewNotice, setNoticeList, noticeList);
     // return () => wsDisconnect();
-  }, [isRead, newNotice, check]);
+  }, [isRead, newNotice, headerCheck]);
+  useEffect(() => {
+    wsDocsSubscribe(
+      setNewNotice,
+      setNoticeList,
+      noticeList,
+      setCheckHandler,
+      0
+    );
+  }, []);
 
   //Toast message 띄워주는 함수
   const showNotice = (newNotice) => {
@@ -110,10 +120,19 @@ export default function Header() {
                     justifyContent: "space-around",
                   }}
                 >
-                  <PopoverBtn variant="contained" endIcon={<AccountBox />}>
-                    마이페이지
-                  </PopoverBtn>
-                  <PopoverBtn variant="contained" endIcon={<Logout />}>
+                  <Link to="/main/mypage">
+                    <PopoverBtn variant="contained" endIcon={<AccountBox />}>
+                      마이페이지
+                    </PopoverBtn>
+                  </Link>
+                  <PopoverBtn
+                    variant="contained"
+                    endIcon={<Logout />}
+                    onClick={() => {
+                      logout();
+                      deleteUser();
+                    }}
+                  >
                     로그아웃
                   </PopoverBtn>
                   {/* <PopoverBtn variant="contained">로그아웃</PopoverBtn> */}
@@ -130,7 +149,7 @@ export default function Header() {
                   noticeList={noticeList}
                   setNoticeList={setNoticeList}
                   newNotice={newNotice}
-                  setCheck={setCheck}
+                  setCheck={setHeaderCheck}
                 />
               </NoticeContext.Provider>
               <div className="header-profile" />

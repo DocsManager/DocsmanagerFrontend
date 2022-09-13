@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Modal } from "@mui/material";
+import { Box, Button, Modal, Typography } from "@mui/material";
 import ShareUser from "./ShareUser";
 import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
 import { documentAddUser, documentMember } from "../../api/documentApi";
@@ -61,39 +61,47 @@ export default function AddMember(props) {
             member={memberList}
             type={type}
           />
-          <WorkspaceButton
-            variant="contained"
-            onClick={() => {
-              if (type === "workspace") {
-                addWorkspaceUser(row, searchList, check, setCheck);
-              } else if (type === "document") {
-                setDocumentShareModal(true);
-                documentAddUser(searchList, row);
-                infoModalOpen(false);
-              }
-              setOpen(false);
-              workspaceMemberAddPublish(memberList, searchList, type, row);
-              {
-                /**type에 따른 메시지 내용 구분 */
-              }
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+            mt={2}
+          >
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                if (type === "workspace") {
+                  addWorkspaceUser(row, searchList, check, setCheck);
+                } else if (type === "document") {
+                  setDocumentShareModal(true);
+                  documentAddUser(searchList, row);
+                  infoModalOpen(false);
+                }
+                setOpen(false);
+                workspaceMemberAddPublish(memberList, searchList, type, row);
+                {
+                  /**type에 따른 메시지 내용 구분 */
+                }
 
-              setSearchList([]);
-              setOpen(false);
-            }}
-          >
-            추가
-            <AddBoxOutlinedIcon />
-          </WorkspaceButton>
-          <WorkspaceButton
-            variant="contained"
-            onClick={() => {
-              setSearchList([]);
-              setOpen(false);
-            }}
-          >
-            취소
-            <CloseOutlinedIcon />
-          </WorkspaceButton>
+                setSearchList([]);
+                setOpen(false);
+              }}
+            >
+              추가
+              <AddBoxOutlinedIcon />
+            </WorkspaceButton>
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                setSearchList([]);
+                setOpen(false);
+              }}
+            >
+              취소
+              <CloseOutlinedIcon />
+            </WorkspaceButton>
+          </Typography>
         </Box>
       </Modal>
     </div>

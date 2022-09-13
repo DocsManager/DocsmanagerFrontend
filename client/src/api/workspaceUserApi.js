@@ -44,11 +44,11 @@ export function workspaceMember(workspaceNo, setMemberList) {
   axios
     .get(url)
     .then((res) => {
-      const workspaceList = res.data.filter(
-        (v) => v.workspaceNo.master.userNo !== v.userNo.userNo
-      );
+      // const workspaceList = res.data.filter(
+      //   (v) => v.workspaceNo.master.userNo !== v.userNo.userNo
+      // );
       const memberList = [];
-      workspaceList.map((v) => memberList.push(v.userNo));
+      res.data.map((v) => memberList.push(v.userNo));
       setMemberList(memberList);
     })
     .catch((err) => console.log(err));
