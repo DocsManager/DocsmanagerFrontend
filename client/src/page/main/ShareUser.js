@@ -80,135 +80,133 @@ function ShareUser({ searchList, setSearchList, type, member }) {
     setSearchList(searchList.filter((v) => v.userNo !== userNo));
   };
   return (
-    <ThemeProvider theme={theme}>
-      <React.Fragment>
-        <Typography component="h3" mt={1}>
-          사원 검색
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
+    <React.Fragment>
+      <Typography component="h3" mt={1}>
+        사원 검색
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
+      >
+        <TextField
+          id="searchUserName"
+          InputProps={{
+            startAdornment: (
+              <ModalIcon position="start">
+                <BadgeIcon />
+              </ModalIcon>
+            ),
+          }}
+          variant="outlined"
+          label="사원 이름"
+          margin="normal"
+        />
+        <IconButton
+          size="large"
+          onClick={() => {
+            const userName = document.getElementById("searchUserName").value;
+            userName && findUser(userName, setUserList);
           }}
         >
-          <TextField
-            id="searchUserName"
-            InputProps={{
-              startAdornment: (
-                <ModalIcon position="start">
-                  <BadgeIcon />
-                </ModalIcon>
-              ),
-            }}
-            variant="outlined"
-            label="사원 이름"
-            margin="normal"
-          />
-          <IconButton
-            size="large"
-            onClick={() => {
-              const userName = document.getElementById("searchUserName").value;
-              userName && findUser(userName, setUserList);
-            }}
-          >
-            <Search sx={{ fontSize: "1.2em" }} />
-          </IconButton>
-        </Box>
-        <Typography component="h3" mt={1}>
-          검색 결과
-        </Typography>
-        <Card variant="outlined" sx={{ minHeight: 275 }}>
-          {userList.map((users, index) => {
-            if (
-              users.userNo !== user.userNo &&
-              !checkDuplication(searchList, users)
-            ) {
-              return (
-                <Box key={users.userNo} sx={{ display: "flex" }}>
-                  <Checkbox
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSearchList(
-                          searchList.length === 0
-                            ? [users]
-                            : [...searchList, users]
-                        );
-                      } else {
-                        deleteHandler(users.userNo);
-                      }
-                    }}
-                  />
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-around",
-                      width: "130px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <span>{users.dept.deptName + "팀"}</span>
-                    <span>{users.name}</span>
-                  </Box>
-                </Box>
-              );
-            }
-          })}
-        </Card>
-        <Typography component="h3" mt={1}>
-          사원 목록
-        </Typography>
-        <Table aria-labelledby="tableTitle">
-          <TableHead>
-            <TableRow>
-              {headCells.map((headCell) => (
-                <TableCell
-                  sx={{ fontSize: "1em" }}
-                  key={headCell.id}
-                  align={headCell.numeric ? "right" : "left"}
+          <Search sx={{ fontSize: "1.2em" }} />
+        </IconButton>
+      </Box>
+      <Typography component="h3" mt={1}>
+        검색 결과
+      </Typography>
+      <Card variant="outlined" sx={{ minHeight: 275 }}>
+        {userList.map((users, index) => {
+          if (
+            users.userNo !== user.userNo &&
+            !checkDuplication(searchList, users)
+          ) {
+            return (
+              <Box key={users.userNo} sx={{ display: "flex" }}>
+                <Checkbox
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSearchList(
+                        searchList.length === 0
+                          ? [users]
+                          : [...searchList, users]
+                      );
+                    } else {
+                      deleteHandler(users.userNo);
+                    }
+                  }}
+                />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    width: "130px",
+                    alignItems: "center",
+                  }}
                 >
-                  {headCell.label}
-                </TableCell>
-              ))}
-              <TableCell />
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {searchList.map((search, index) => (
-              <TableRow
-                key={search.userNo}
-                sx={{ maxHeight: 70 }}
-                hover
-                role="checkbox"
+                  <span>{users.dept.deptName + "팀"}</span>
+                  <span>{users.name}</span>
+                </Box>
+              </Box>
+            );
+          }
+        })}
+      </Card>
+      <Typography component="h3" mt={1}>
+        사원 목록
+      </Typography>
+      <Table aria-labelledby="tableTitle">
+        <TableHead>
+          <TableRow>
+            {headCells.map((headCell) => (
+              <TableCell
+                sx={{ fontSize: "1em" }}
+                key={headCell.id}
+                align={headCell.numeric ? "right" : "left"}
               >
-                {console.log(search)}
-                <TableCell component="th">{search.dept.deptName}</TableCell>
-                <TableCell component="th">{search.name}</TableCell>
-                {type !== "workspace" ? (
-                  <TableCell component="th">
-                    <AuthoritySelect search={search} />
-                  </TableCell>
-                ) : (
-                  <></>
-                )}
-                <TableCell component="th">
-                  {checkDuplication(member, search) ? (
-                    <IconButton disabled>
-                      <DeleteIcon />
-                    </IconButton>
-                  ) : (
-                    <IconButton onClick={() => deleteHandler(search.userNo)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
-                </TableCell>
-              </TableRow>
+                {headCell.label}
+              </TableCell>
             ))}
-          </TableBody>
-        </Table>
-      </React.Fragment>
-    </ThemeProvider>
+            <TableCell />
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {searchList.map((search, index) => (
+            <TableRow
+              key={search.userNo}
+              sx={{ maxHeight: 70 }}
+              hover
+              role="checkbox"
+            >
+              {console.log(search)}
+              <TableCell component="th">{search.dept.deptName}</TableCell>
+              <TableCell component="th">{search.name}</TableCell>
+              {type !== "workspace" ? (
+                <TableCell component="th">
+                  <AuthoritySelect search={search} />
+                </TableCell>
+              ) : (
+                <></>
+              )}
+              <TableCell component="th">
+                {checkDuplication(member, search) ? (
+                  <IconButton disabled>
+                    <DeleteIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={() => deleteHandler(search.userNo)}>
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </React.Fragment>
   );
 }
 

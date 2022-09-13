@@ -41,11 +41,11 @@ const SidebarSideLink = styled(ListItemButton)`
   border-radius: 30px 0px 0px 30px;
 
   &:hover {
-    background: white;
+    background: #8bc7ff;
     border-left: 3px solid #3791f8;
     cursor: pointer;
     text-decoration-line: none;
-    color: #3791f8;
+    color: white;
     font-weight: bold;
   }
 `;
@@ -79,7 +79,7 @@ const SidebarSideLinkPage = styled(ListItemButton)`
 `;
 
 const style = {
-  fontSize: "1.3rem",
+  fontSize: "1.4rem",
   width: "193px",
   display: "flex",
   alignContent: "center",
@@ -130,6 +130,7 @@ const useStyles = makeStyles({
     fontSize: "1em",
     backgroundColor: "rgba(0, 0, 0, 0.6)",
     color: "white",
+    fontFamily: "Pretendard-Regular",
   },
 });
 

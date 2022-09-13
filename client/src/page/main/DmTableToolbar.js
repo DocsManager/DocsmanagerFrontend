@@ -33,7 +33,12 @@ const EnrollBtn = styled(Button)({
   cursor: "pointer",
   fontSize: "1em",
 });
-
+const InfoFunctionBox = styled(Box)({
+  backgroundColor: "#3791f8",
+  color: "white",
+  padding: "10px",
+  borderRadius: "5px",
+});
 const ToRecyclebin = styled(Button)({
   backgroundColor: "#FF6262",
   color: "white",
@@ -52,16 +57,34 @@ const handleToolbarBtn = (writeModalOpen, setWriteModalOpen) => {
   switch (window.location.href.split("/main")[1]) {
     case "/important":
       return (
-        <EnrollBtn variant="contained" endIcon={<FolderSpecial />}>
-          중요한 문서를 관리해보세요!
-        </EnrollBtn>
+        <InfoFunctionBox variant="contained">
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "250px",
+            }}
+          >
+            중요한 문서를 관리해보세요!
+            <FolderSpecial />
+          </Typography>
+        </InfoFunctionBox>
       );
 
     case "/trashcan":
       return (
-        <EnrollBtn variant="contained" endIcon={<Warning />}>
-          휴지통에서 삭제되면 복원할 수 없습니다!
-        </EnrollBtn>
+        <InfoFunctionBox variant="contained">
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "350px",
+            }}
+          >
+            휴지통에서 삭제되면 복원할 수 없습니다!
+            <Warning />
+          </Typography>
+        </InfoFunctionBox>
       );
     default:
       return (

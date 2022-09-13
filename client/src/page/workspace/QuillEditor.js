@@ -50,65 +50,61 @@ const QuillEditor = ({
 
   return (
     // 임시저장, 저장, 워크스페이스 목록으로 이동 버튼 전반적인 css 수정
-    <ThemeProvider theme={theme}>
-      <div>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
-          <Box>
-            {workspace.master && workspace.master.userNo === user.userNo ? (
-              <>
-                <Button
-                  startIcon={<SaveAs />}
-                  sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-                  onClick={() => {
-                    updateWorkspace(message, workspace);
-                  }}
-                >
-                  임시 저장
-                </Button>
-                <Button
-                  startIcon={<Save />}
-                  sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-                  onClick={() => setOpen(true)}
-                >
-                  저장
-                </Button>
-              </>
-            ) : (
-              <></>
-            )}
-          </Box>
-          <a href="/main/workspace">
-            <Button
-              variant="contained"
-              endIcon={<ArrowBackOutlinedIcon />}
-              sx={{ fontSize: "1rem" }}
-            >
-              워크스페이스 목록으로 이동
-            </Button>
-          </a>
+    <div>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
+        <Box>
+          {workspace.master && workspace.master.userNo === user.userNo ? (
+            <>
+              <Button
+                startIcon={<SaveAs />}
+                sx={{ fontSize: "1.2rem", color: "#3791f8" }}
+                onClick={() => {
+                  updateWorkspace(message, workspace);
+                }}
+              >
+                임시 저장
+              </Button>
+              <Button
+                startIcon={<Save />}
+                sx={{ fontSize: "1.2rem", color: "#3791f8" }}
+                onClick={() => setOpen(true)}
+              >
+                저장
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
         </Box>
+        <a href="/main/workspace" style={{ textDecoration: "none" }}>
+          <Button
+            variant="contained"
+            endIcon={<ArrowBackOutlinedIcon />}
+            sx={{ fontSize: "1rem" }}
+          >
+            워크스페이스 목록으로 이동
+          </Button>
+        </a>
+      </Box>
 
-        <ReactQuill
-          id="reactQuill"
-          style={{ height: "75vh" }}
-          modules={modules}
-          placeholder="내용을 입력해주세요."
-          ref={editor}
-          onChange={(e) => {
-            console.log(e);
-            if (
-              document.activeElement === document.querySelector(".ql-editor")
-            ) {
-              onEditorStateChange(e);
-              setMessage(e);
-            }
-          }}
-          preserveWhitespace={true}
-          value={message}
-        />
-        <SaveWorksapce open={open} setOpen={setOpen} />
-      </div>
-    </ThemeProvider>
+      <ReactQuill
+        id="reactQuill"
+        style={{ height: "75vh" }}
+        modules={modules}
+        placeholder="내용을 입력해주세요."
+        ref={editor}
+        onChange={(e) => {
+          console.log(e);
+          if (document.activeElement === document.querySelector(".ql-editor")) {
+            onEditorStateChange(e);
+            setMessage(e);
+          }
+        }}
+        preserveWhitespace={true}
+        value={message}
+      />
+      <SaveWorksapce open={open} setOpen={setOpen} />
+    </div>
   );
 };
 export default QuillEditor;

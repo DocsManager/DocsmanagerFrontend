@@ -102,136 +102,136 @@ const WriteModal = (props) => {
   documentUser.push({ userNo: user, authority: "MASTER" });
 
   return (
-    <ThemeProvider theme={theme}>
-      <React.Fragment>
-        <Modal
-          open={open}
-          onClose={() => setWriteModal(false)}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={{ ...style, width: 500, height: 700 }}>
-            <Typography
-              variant="h6" //텍스트의 크기 뿐만 아니라 HTML 태그 결정, <h6/>로 마크업 됨
-              component="h2" //variant prop과 상이한 HTML 태그를 사용해야 할 때는 component prop으로 태그명을 명시
-              align="center"
-              mb={2}
-              mt={2}
-              id="modal-modal-title"
-            >
-              새로운 문서 등록
-            </Typography>
+    // <ThemeProvider theme={theme}>
+    <React.Fragment>
+      <Modal
+        open={open}
+        onClose={() => setWriteModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={{ ...style, width: 500, height: 700 }}>
+          <Typography
+            variant="h6" //텍스트의 크기 뿐만 아니라 HTML 태그 결정, <h6/>로 마크업 됨
+            component="h2" //variant prop과 상이한 HTML 태그를 사용해야 할 때는 component prop으로 태그명을 명시
+            align="center"
+            mb={2}
+            mt={2}
+            id="modal-modal-title"
+          >
+            새로운 문서 등록
+          </Typography>
 
-            <Box mt={1}>{props.children}</Box>
-            {/* 09.03 모달창 수정 */}
-            <Box>
-              <Stack direction="row" spacing={2}>
-                <Button
-                  sx={{ fontSize: "1.3em" }}
-                  component="label"
-                  htmlFor="fileUpload"
-                  startIcon={
-                    <DriveFolderUploadOutlinedIcon sx={{ fontSize: "1.3em" }} />
-                  }
-                >
-                  업로드
-                </Button>
+          <Box mt={1}>{props.children}</Box>
+          {/* 09.03 모달창 수정 */}
+          <Box>
+            <Stack direction="row" spacing={2}>
+              <Button
+                sx={{ fontSize: "1.3em" }}
+                component="label"
+                htmlFor="fileUpload"
+                startIcon={
+                  <DriveFolderUploadOutlinedIcon sx={{ fontSize: "1.3em" }} />
+                }
+              >
+                업로드
+              </Button>
 
-                <input
-                  type="file"
-                  id="fileUpload"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: "none" }}
-                />
-                <InputBox
-                  className="upload-name"
-                  placeholder="파일 선택"
-                  value={
-                    file
-                      ? file.name.length > 17
-                        ? file.name.slice(0, 16) + "..."
-                        : file.name
-                      : ""
-                  }
-                  disabled
-                />
-              </Stack>
-            </Box>
-
-            <ShareUser
-              searchList={searchList}
-              setSearchList={setSearchList}
-              type="document"
-            />
-            {/**파일 설명 input란 css 수정 */}
-            <Stack direction="column" spacing={1}>
-              <Box mt={2} mb={1}>
-                파일 설명
-              </Box>
-
-              <TextField
-                type="text"
-                variant="outlined"
-                id="fileContent"
-                inputProps={{ maxLength: 100 }}
-                helperText="100자 제한"
-                sx={{
-                  "& legend": {
-                    display: "none",
-                  },
-                }}
+              <input
+                type="file"
+                id="fileUpload"
+                onChange={(e) => setFile(e.target.files[0])}
+                style={{ display: "none" }}
+              />
+              <InputBox
+                className="upload-name"
+                placeholder="파일 선택"
+                value={
+                  file
+                    ? file.name.length > 17
+                      ? file.name.slice(0, 16) + "..."
+                      : file.name
+                    : ""
+                }
+                disabled
               />
             </Stack>
-
-            <Typography
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
-              }}
-              mt={2}
-            >
-              <WorkspaceButton
-                variant="contained"
-                onClick={() => {
-                  const contentElem = document.getElementById("fileContent")
-                    .value;
-                  setText(contentElem);
-                  file
-                    ? setWriteConfirm(true)
-                    : openNoFileConfirm(fileNull, setFileNull);
-                }}
-              >
-                저장
-                <AddBoxOutlinedIcon />
-              </WorkspaceButton>
-              <WorkspaceButton
-                variant="contained"
-                onClick={() => {
-                  setSearchList([]);
-                  setWriteModal(false);
-                  setFile();
-                  {
-                    /**닫기 버튼 누르면 input에 담긴 file내용 비워지게 */
-                  }
-                }}
-              >
-                닫기
-                <CloseOutlinedIcon />
-              </WorkspaceButton>
-            </Typography>
           </Box>
-        </Modal>
-        <UploadModal
-          sizeCheck={sizeCheck}
-          writeSuccessConfirm={writeSuccessConfirm}
-          successWrite={successWrite}
-          openSuccessWriteModal={openSuccessWriteModal}
-          loading={loading}
-          writeFile={writeFile}
-          writeConfirm={writeConfirm}
-          setWriteConfirm={setWriteConfirm}
-        />
-        {/* <ConfirmModal
+
+          <ShareUser
+            searchList={searchList}
+            setSearchList={setSearchList}
+            type="document"
+          />
+          {/**파일 설명 input란 css 수정 */}
+          <Stack direction="column" spacing={1}>
+            <Box mt={2} mb={1}>
+              파일 설명
+            </Box>
+
+            <TextField
+              type="text"
+              variant="outlined"
+              id="fileContent"
+              inputProps={{ maxLength: 100 }}
+              helperText="100자 제한"
+              sx={{
+                "& legend": {
+                  display: "none",
+                },
+              }}
+            />
+          </Stack>
+
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+            mt={2}
+          >
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                const contentElem = document.getElementById("fileContent")
+                  .value;
+                setText(contentElem);
+                file
+                  ? setWriteConfirm(true)
+                  : openNoFileConfirm(fileNull, setFileNull);
+              }}
+            >
+              저장
+              <AddBoxOutlinedIcon />
+            </WorkspaceButton>
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                setSearchList([]);
+                setWriteModal(false);
+                setFile();
+                {
+                  /**닫기 버튼 누르면 input에 담긴 file내용 비워지게 */
+                }
+              }}
+            >
+              닫기
+              <CloseOutlinedIcon />
+            </WorkspaceButton>
+          </Typography>
+        </Box>
+      </Modal>
+      <UploadModal
+        sizeCheck={sizeCheck}
+        writeSuccessConfirm={writeSuccessConfirm}
+        successWrite={successWrite}
+        openSuccessWriteModal={openSuccessWriteModal}
+        loading={loading}
+        writeFile={writeFile}
+        writeConfirm={writeConfirm}
+        setWriteConfirm={setWriteConfirm}
+      />
+      {/* <ConfirmModal
           open={writeConfirm}
           setOpen={setWriteConfirm}
           act={() => {
@@ -294,18 +294,18 @@ const WriteModal = (props) => {
         ) : (
           <></>
         )} */}
-        {
-          <SucessModal
-            open={fileNull}
-            close={() => openNoFileConfirm(fileNull, setFileNull)}
-          >
-            <main>
-              <div>파일이 없습니다.</div>
-            </main>
-          </SucessModal>
-        }
-      </React.Fragment>
-    </ThemeProvider>
+      {
+        <SucessModal
+          open={fileNull}
+          close={() => openNoFileConfirm(fileNull, setFileNull)}
+        >
+          <main>
+            <div>파일이 없습니다.</div>
+          </main>
+        </SucessModal>
+      }
+    </React.Fragment>
+    // </ThemeProvider>
   );
 };
 

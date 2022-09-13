@@ -105,12 +105,6 @@ export default function DmTable(props) {
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
-
-  // const [pageList, setPageList] = useState({});
-
-  // const [pageNum, setPageNum] = useState(1);
-
-  // const [check, setCheck] = useState(false);
   const [searchData, setSearchData] = useState("");
   // const [size, setSize] = useState(0);
   const { check, setCheckHandler } = useContext(MyContext);
@@ -203,14 +197,6 @@ export default function DmTable(props) {
       );
     }
     setSelectStar(newSelected);
-    // if (li.important) {
-    //   importantFile(li.documentNo.documentNo, 0);
-    //   check ? setCheckHandler(false) : setCheckHandler(true);
-    // } else {
-    //   importantFile(li.documentNo.documentNo, 1);
-    //   check ? setCheckHandler(false) : setCheckHandler(true);
-    // }
-
     importantFile(li.documentNo.documentNo, li.important ? 0 : 1);
     check ? setCheckHandler(false) : setCheckHandler(true);
 
@@ -240,8 +226,14 @@ export default function DmTable(props) {
   const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
 
   const emptyRows =
-    page >= 0 ? Math.max(0, (1 + page) * rowsPerPage - list.length) : 0;
-
+    page >= 0
+      ? Math.max(
+          0,
+          (1 + page) * rowsPerPage - (list.dtoList && list.dtoList.length)
+        )
+      : 0;
+  console.log(page, rowsPerPage, list.dtoList && list.dtoList.length);
+  console.log(emptyRows);
   return (
     <React.Fragment>
       {list.dtoList ? (
@@ -266,7 +258,7 @@ export default function DmTable(props) {
           </Box>
         ) : (
           <Box sx={{ width: "100%" }}>
-            {console.log(list.dtoList)}
+            {console.log(list)}
             <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
               <DmTableToolbar
                 numSelected={selected.length}

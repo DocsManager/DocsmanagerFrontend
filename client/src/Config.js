@@ -1,6 +1,22 @@
 import { createTheme } from "@mui/material/styles";
 export const theme = createTheme({
+  typography: {
+    fontFamily: `"Pretendard-Regular"`,
+    fontSize: 16,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightBold: 800,
+  },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: `{
+        @font-face {
+          font-family: 'Pretendard-Regular';
+          src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+          font-weight: 500;
+          font-style: normal;`,
+    },
     MuiTableCell: {
       styleOverrides: {
         root: {

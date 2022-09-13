@@ -168,7 +168,6 @@ export const worksapcepublish = (searchList, newWorkspaceNo, setLoading) => {
         content: `${getUser().name}님이 워크스페이스에 초대했습니다`,
         isRead: 0,
         urlParams: `/document?room=${newWorkspaceNo + 1}`,
-        // urlParams: `/document?room=${workspace.workspaceNo.workspaceNo}`,
       }),
       skipContentLengthHeader: true,
     });

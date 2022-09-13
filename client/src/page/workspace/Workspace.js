@@ -157,174 +157,172 @@ function Workspace() {
   };
   console.log(users);
   return (
-    <ThemeProvider theme={theme}>
-      <Box>
-        {/**워크스페이스에 헤더만 나타나게 하려고 index.js에서 분리해서 Header 첨부함 */}
-        <Header />
-        {/* 프로필 그룹으로 띄워주도록 */}
-        <div className="container-fluid" style={{ marginLeft: "20px" }}>
-          <AvatarGroup
-            sx={{
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-            max={5}
-          >
-            {users.users &&
-              users.users.map((user, index) => {
-                console.log(user);
-                for (let key in user) {
-                  user = user[key].user;
-                }
-                return (
-                  <Box key={user.userNo}>
-                    <Avatar
-                      alt={user.name}
-                      src={
-                        user.profile
-                          ? user.profile
-                          : "/static/images/avatar/1.jpg"
-                      }
-                      id={user.name}
-                      className="userInfo"
-                      key={user.name}
-                      sizes="50px"
-                      sx={{ marginLeft: "-8px" }}
-                    />
+    <Box>
+      {/**워크스페이스에 헤더만 나타나게 하려고 index.js에서 분리해서 Header 첨부함 */}
+      <Header />
+      {/* 프로필 그룹으로 띄워주도록 */}
+      <div className="container-fluid" style={{ marginLeft: "20px" }}>
+        <AvatarGroup
+          sx={{
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+          max={5}
+        >
+          {users.users &&
+            users.users.map((user, index) => {
+              console.log(user);
+              for (let key in user) {
+                user = user[key].user;
+              }
+              return (
+                <Box key={user.userNo}>
+                  <Avatar
+                    alt={user.name}
+                    src={
+                      user.profile
+                        ? user.profile
+                        : "/static/images/avatar/1.jpg"
+                    }
+                    id={user.name}
+                    className="userInfo"
+                    key={user.name}
+                    sizes="50px"
+                    sx={{ marginLeft: "-8px" }}
+                  />
 
-                    <UncontrolledTooltip placement="top" target={user.name}>
-                      {user.name}
-                    </UncontrolledTooltip>
-                  </Box>
-                );
-              })}
-          </AvatarGroup>
+                  <UncontrolledTooltip placement="top" target={user.name}>
+                    {user.name}
+                  </UncontrolledTooltip>
+                </Box>
+              );
+            })}
+        </AvatarGroup>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "80% 20%",
+            height: "100%",
+          }}
+        >
+          <QuillEditor
+            onEditorStateChange={onEditorStateChange}
+            setMessage={setMessage}
+            message={message}
+            workspace={workspace}
+          />
           <Box
             sx={{
-              display: "grid",
-              gridTemplateColumns: "80% 20%",
-              height: "100%",
+              padding: "10px",
+              marginLeft: "10px",
+              height: "100vh",
             }}
           >
-            <QuillEditor
-              onEditorStateChange={onEditorStateChange}
-              setMessage={setMessage}
-              message={message}
-              workspace={workspace}
-            />
-            <Box
-              sx={{
-                padding: "10px",
-                marginLeft: "10px",
-                height: "100vh",
-              }}
-            >
-              <Box sx={style}>
-                <Box sx={{ height: "90%", width: "100%" }}>
-                  {users.userActivity &&
-                    users.userActivity.map((activity, index) => {
-                      console.log(activity);
-                      if (activity.username) {
-                        // console.log(myId);
-                        if (activity.sender.userNo === user.userNo) {
-                          return (
-                            //내가 보낸 채팅
-                            <Box>
-                              <Box
-                                key={`activity-${index}`}
-                                className="myChat"
-                                sx={{
-                                  display: "flex",
-                                  justifyContent: "flex-end",
-                                }}
-                              >
-                                <span>{activity.time}</span>
-                                <Chip
-                                  label={activity.message}
-                                  variant="outlined"
-                                  sx={{ marginLeft: "5px" }}
-                                />
-                              </Box>
-                            </Box>
-                          );
-                        } else {
-                          return (
-                            //내가 아닌 유저의 채팅
+            <Box sx={style}>
+              <Box sx={{ height: "90%", width: "100%" }}>
+                {users.userActivity &&
+                  users.userActivity.map((activity, index) => {
+                    console.log(activity);
+                    if (activity.username) {
+                      // console.log(myId);
+                      if (activity.sender.userNo === user.userNo) {
+                        return (
+                          //내가 보낸 채팅
+                          <Box>
                             <Box
                               key={`activity-${index}`}
-                              className="userChat"
+                              className="myChat"
                               sx={{
                                 display: "flex",
-                                alignItems: "center",
+                                justifyContent: "flex-end",
                               }}
                             >
-                              <Avatar src={activity.sender.profile} />
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  marginLeft: "15px",
-                                }}
-                              >
-                                <Typography>{activity.username}</Typography>
-                                <Box sx={{ display: "flex" }}>
-                                  <Chip
-                                    label={activity.message}
-                                    color="primary"
-                                    sx={{
-                                      backGroundColor: "#3791f8",
-                                      marginRight: "5px",
-                                    }}
-                                  />{" "}
-                                  <span>{activity.time}</span>
-                                </Box>
-                              </Box>
+                              <span>{activity.time}</span>
+                              <Chip
+                                label={activity.message}
+                                variant="outlined"
+                                sx={{ marginLeft: "5px" }}
+                              />
                             </Box>
-                          );
-                        }
+                          </Box>
+                        );
                       } else {
                         return (
-                          //입장 퇴장 메시지
+                          //내가 아닌 유저의 채팅
                           <Box
                             key={`activity-${index}`}
-                            sx={{ display: "flex", justifyContent: "center" }}
+                            className="userChat"
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                            }}
                           >
-                            <Chip
-                              label={activity.message + activity.time}
-                              key={`activity-${index}`}
-                              className="attend"
-                              sx={{ marginBottom: "10px" }}
-                            />
+                            <Avatar src={activity.sender.profile} />
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                marginLeft: "15px",
+                              }}
+                            >
+                              <Typography>{activity.username}</Typography>
+                              <Box sx={{ display: "flex" }}>
+                                <Chip
+                                  label={activity.message}
+                                  color="primary"
+                                  sx={{
+                                    backGroundColor: "#3791f8",
+                                    marginRight: "5px",
+                                  }}
+                                />{" "}
+                                <span>{activity.time}</span>
+                              </Box>
+                            </Box>
                           </Box>
                         );
                       }
-                    })}
-                </Box>
+                    } else {
+                      return (
+                        //입장 퇴장 메시지
+                        <Box
+                          key={`activity-${index}`}
+                          sx={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <Chip
+                            label={activity.message + activity.time}
+                            key={`activity-${index}`}
+                            className="attend"
+                            sx={{ marginBottom: "10px" }}
+                          />
+                        </Box>
+                      );
+                    }
+                  })}
               </Box>
-              {/* 대화 입력창 */}
-              <div>
-                <TextField
-                  id="chat"
-                  placeholder="메시지를 입력하세요"
-                  onKeyPress={onKeyPress}
-                  sx={inputStyle}
-                />
-                <Button
-                  onClick={() => {
-                    const chatMessage = document.getElementById("chat");
-                    chatMessage.value && sendChat(chatMessage.value);
-                    chatMessage.value = "";
-                    chatMessage.focus();
-                  }}
-                >
-                  <Send />
-                </Button>
-              </div>
             </Box>
+            {/* 대화 입력창 */}
+            <div>
+              <TextField
+                id="chat"
+                placeholder="메시지를 입력하세요"
+                onKeyPress={onKeyPress}
+                sx={inputStyle}
+              />
+              <Button
+                onClick={() => {
+                  const chatMessage = document.getElementById("chat");
+                  chatMessage.value && sendChat(chatMessage.value);
+                  chatMessage.value = "";
+                  chatMessage.focus();
+                }}
+              >
+                <Send />
+              </Button>
+            </div>
           </Box>
-        </div>
-      </Box>
-    </ThemeProvider>
+        </Box>
+      </div>
+    </Box>
   );
 }
 

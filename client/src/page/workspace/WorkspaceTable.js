@@ -313,80 +313,82 @@ export default function WorkspaceTable(props) {
   const emptyRows = page >= 0 ? Math.max(0, (1 + page) * 5 - rows.length) : 0;
   // console.log(rows);
   return (
-    <ThemeProvider theme={theme}>
-      <React.Fragment>
-        {rows.length == 0 ? (
-          <NoneData />
-        ) : (
-          <Box sx={{ width: "100%" }}>
-            <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-              {/**테이블 너비 변경 */}
-              <EnhancedTableToolbar
-                numSelected={selected.length}
-                selected={selected}
-                setWorkspace={setWorkspace}
-                setSelected={setSelected}
-              />
-              <TableContainer>
-                <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-                  <EnhancedTableHead
-                    numSelected={selected.length}
-                    order={order}
-                    orderBy={orderBy}
-                    onSelectAllClick={handleSelectAllClick}
-                    onRequestSort={handleRequestSort}
-                    rowCount={rows.length}
-                    page={page}
-                  />
-                  <TableBody>
-                    {stableSort(rows, getComparator(order, orderBy))
-                      .slice(page * 5, page * 5 + 5)
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row.workspaceNo);
-                        const labelId = `enhanced-table-checkbox-${index}`;
-                        return (
-                          <TableRow
-                            hover
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.workspaceNo}
-                            selected={isItemSelected}
+    <React.Fragment>
+      {rows.length == 0 ? (
+        <NoneData />
+      ) : (
+        <Box sx={{ width: "100%" }}>
+          <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
+            {/**테이블 너비 변경 */}
+            <EnhancedTableToolbar
+              numSelected={selected.length}
+              selected={selected}
+              setWorkspace={setWorkspace}
+              setSelected={setSelected}
+            />
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={rows.length}
+                  page={page}
+                />
+                <TableBody>
+                  {stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * 5, page * 5 + 5)
+                    .map((row, index) => {
+                      const isItemSelected = isSelected(row.workspaceNo);
+                      const labelId = `enhanced-table-checkbox-${index}`;
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.workspaceNo}
+                          selected={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              color="primary"
+                              onClick={(event) =>
+                                handleClick(event, row.workspaceNo)
+                              }
+                              checked={isItemSelected}
+                              inputProps={{
+                                "aria-labelledby": labelId,
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            align="center"
                           >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                onClick={(event) =>
-                                  handleClick(event, row.workspaceNo)
-                                }
-                                checked={isItemSelected}
-                                inputProps={{
-                                  "aria-labelledby": labelId,
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              align="center"
+                            <Link
+                              to={`/document?room=${row.workspaceNo}`}
+                              style={{
+                                marginRight: "30px",
+                                textDecoration: "none",
+                              }}
                             >
-                              <Link
-                                to={`/document?room=${row.workspaceNo}`}
-                                sx={{ marginRight: "30px" }}
-                              >
-                                {row.title}
-                              </Link>
-                              <IconButton
-                                onClick={() => {
-                                  // const open = { member: false, edit: true };
-                                  setEditOpen(true);
-                                  setRow(row);
-                                }}
-                              >
-                                <CreateOutlinedIcon />
-                              </IconButton>
-                              {/* <Button
+                              {row.title}
+                            </Link>
+                            <IconButton
+                              onClick={() => {
+                                // const open = { member: false, edit: true };
+                                setEditOpen(true);
+                                setRow(row);
+                              }}
+                            >
+                              <CreateOutlinedIcon />
+                            </IconButton>
+                            {/* <Button
                               startIcon={<CreateOutlinedIcon />}
                               onClick={() => {
                                 // const open = { member: false, edit: true };
@@ -394,105 +396,104 @@ export default function WorkspaceTable(props) {
                                 setRow(row);
                               }}
                             /> */}
-                            </TableCell>
-                            <TableCell align="center">
-                              {row.master.name}
-                            </TableCell>
-                            <TableCell align="center">
-                              {row.registerDate.split("T")[0]}
-                            </TableCell>
-                            <TableCell align="center">
-                              {row.member.map((member, index) =>
-                                row.member.length - 1 != index ? (
-                                  <Fragment key={index}>{`${
-                                    member.split(",")[1]
-                                  },`}</Fragment>
-                                ) : (
-                                  <Fragment key={index}>
-                                    {member.split(",")[1]}
-                                  </Fragment>
-                                )
-                              )}
-                            </TableCell>
-                            <TableCell align="center">
-                              {row.master.userNo === user.userNo ? (
-                                <Button
-                                  onClick={() => {
-                                    setRow(row);
-                                    setMemberOpen(true);
-                                  }}
-                                >
-                                  멤버추가
-                                </Button>
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.master.name}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.registerDate.split("T")[0]}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.member.map((member, index) =>
+                              row.member.length - 1 != index ? (
+                                <Fragment key={index}>{`${
+                                  member.split(",")[1]
+                                },`}</Fragment>
                               ) : (
-                                <></>
-                              )}
-
+                                <Fragment key={index}>
+                                  {member.split(",")[1]}
+                                </Fragment>
+                              )
+                            )}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.master.userNo === user.userNo ? (
                               <Button
-                                sx={{ color: "red" }}
-                                onClick={() =>
-                                  row.master.userNo === user.userNo
-                                    ? deleteWorkspace(
-                                        row.workspaceNo,
-                                        setCheck,
-                                        check
-                                      )
-                                    : deleteUserWorkspace(
-                                        user.userNo,
-                                        row.workspaceNo,
-                                        setWorkspace
-                                      )
-                                }
+                                onClick={() => {
+                                  setRow(row);
+                                  setMemberOpen(true);
+                                }}
                               >
-                                나가기
+                                멤버추가
                               </Button>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {/* 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07 */}
-                    {emptyRows > 0 && (
-                      <TableRow
-                        style={{
-                          height: 70 * emptyRows,
-                        }}
-                      >
-                        <TableCell colSpan={10} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={5}
-                page={page}
-                onPageChange={handleChangePage}
-              />
-            </Paper>
-            {row.workspaceNo && (
-              <AddMember
-                open={memberOpen}
-                setOpen={setMemberOpen}
-                row={row}
-                check={check}
-                setCheck={setCheck}
-                type={"workspace"}
-                number={row.workspaceNo}
-                // setList={setWorkspace}
-              />
-            )}
-            <EditTitle
-              open={editOpen}
-              setOpen={setEditOpen}
-              row={row}
-              setList={setWorkspace}
+                            ) : (
+                              <></>
+                            )}
+
+                            <Button
+                              sx={{ color: "red" }}
+                              onClick={() =>
+                                row.master.userNo === user.userNo
+                                  ? deleteWorkspace(
+                                      row.workspaceNo,
+                                      setCheck,
+                                      check
+                                    )
+                                  : deleteUserWorkspace(
+                                      user.userNo,
+                                      row.workspaceNo,
+                                      setWorkspace
+                                    )
+                              }
+                            >
+                              나가기
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {/* 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07 */}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: 70 * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={10} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10]}
+              component="div"
+              count={rows.length}
+              rowsPerPage={5}
+              page={page}
+              onPageChange={handleChangePage}
             />
-          </Box>
-        )}
-      </React.Fragment>
-    </ThemeProvider>
+          </Paper>
+          {row.workspaceNo && (
+            <AddMember
+              open={memberOpen}
+              setOpen={setMemberOpen}
+              row={row}
+              check={check}
+              setCheck={setCheck}
+              type={"workspace"}
+              number={row.workspaceNo}
+              // setList={setWorkspace}
+            />
+          )}
+          <EditTitle
+            open={editOpen}
+            setOpen={setEditOpen}
+            row={row}
+            setList={setWorkspace}
+          />
+        </Box>
+      )}
+    </React.Fragment>
   );
 }
