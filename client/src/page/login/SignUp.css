@@ -1,10 +1,6 @@
-.ptag {
+.signupptag {
   color: #bf1650;
-}
-
-.signuptitle {
-  font-size: 30px;
-  text-align: center;
+  margin: 0 !important;
 }
 
 .maincontainer {
@@ -29,16 +25,18 @@
   flex-direction: column;
   width: 35%;
   height: 100%;
-  background-color: rgba(139, 199, 255, 1);
+  background-color: #3791f8;
 }
 
 .formcontainer {
   display: flex;
-  align-items: stretch;
-  width: 47%;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   margin-left: auto;
   margin-right: auto;
   flex-direction: column;
+  overflow-y: auto;
 }
 
 .signupform {
@@ -60,10 +58,6 @@
   padding: 5%;
 }
 
-.signupbtn {
-  text-align: center;
-}
-
 .homebtn {
   display: flex;
   align-items: center;
@@ -77,14 +71,8 @@
 .mailbtn {
   float: right;
   width: 123px;
-  margin-right: auto;
 }
 
-.scroll {
-  width: 45vw;
-  overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 750px;
-  height: 85vh;
-  padding-top: 10px;
+.profilediv {
+  text-align: center;
 }

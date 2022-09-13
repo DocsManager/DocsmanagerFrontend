@@ -6,6 +6,8 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import "./Mypage.css";
 import { useForm } from "react-hook-form";
+import { InputBox } from "../main/WriteModal";
+import Swal from "sweetalert2";
 
 function Pwupdate({ open, style, setOpen }) {
   const {
@@ -38,7 +40,11 @@ function Pwupdate({ open, style, setOpen }) {
   };
 
   const onInvalid = (data) => {
-    alert("비밀번호를 다시 확인하여주세요");
+    Swal.fire({
+      text: "비밀번호를 다시 확인하여주세요",
+      icon: "warning",
+      confirmButtonColor: "#3791f8",
+    });
   };
 
   const handleClose = () => {
@@ -46,7 +52,7 @@ function Pwupdate({ open, style, setOpen }) {
   };
   return (
     <Modal
-      hideBackdrop
+      // hideBackdrop moadl활성화시 주변 검은색으로되는거 막음
       open={open}
       onClose={handleClose}
       aria-labelledby="child-modal-title"
@@ -58,72 +64,101 @@ function Pwupdate({ open, style, setOpen }) {
           <p id="child-modal-description">
             계속하려면 먼저 본인임을 인증하세요.
           </p>
-          <TextField
-            id="oldPassword"
-            name="oldPassword"
-            placeholder="현재 비밀번호"
-            type="password"
-            size="small"
-            fullWidth
-            variant="outlined"
-            {...register("oldPassword", { required: true })}
-          />
-          {errors.oldPassword && errors.oldPassword.type === "required" && (
-            <p className="ptag">기존의 비밀번호는 필수 입력 항목입니다.</p>
-          )}
-          <TextField
-            id="newPassword"
-            name="newPassword"
-            placeholder="새 비밀번호"
-            type="password"
-            size="small"
-            fullWidth
-            variant="outlined"
-            {...register("newPassword", {
-              required: true,
-              minLength: 8,
-              maxLength: 12,
-              validate: (value) => !(value === checkOldPassword.current),
-              pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9가-힣]).{8,12}/,
-            })}
-          />
-          {errors.newPassword && errors.newPassword.type === "required" && (
-            <p className="ptag"> 비밀번호는 필수입력 항목 입니다.</p>
-          )}
-          {errors.newPassword && errors.newPassword.type === "minLength" && (
-            <p className="ptag"> 비밀번호는 최소 8자에서 12자로 구성해주세요</p>
-          )}
-          {errors.newPasword && errors.newPasword.type === "maxLength" && (
-            <p className="ptag"> 비밀번호는 최소 8자에서 12자로 구성해주세요</p>
-          )}
-          {errors.newPassword && errors.newPassword.type === "pattern" && (
-            <p className="ptag">올바른 비밀번호 형식이 아닙니다.</p>
-          )}
-          {errors.newPassword && errors.newPassword.type === "validate" && (
-            <p className="ptag">기존의 비밀번호와 같습니다.</p>
-          )}
-          <TextField
-            id="confirmNewPassword"
-            helperText="비밀번호는 대/소문자와 특수문자를 포함한 8~12자리로 구성해주세요 "
-            placeholder="새 비밀번호 확인"
-            name="confirmNewPassword"
-            type="password"
-            size="small"
-            fullWidth
-            variant="outlined"
-            {...register("confirmNewPassword", {
-              required: true,
-              validate: (value) => value === checkPassword.current,
-            })}
-          />
-          {errors.confirmNewPassword &&
-            errors.confirmNewPassword.type === "required" && (
-              <p className="ptag">비밀번호 확인은 필수 입력 항목입니다.</p>
+          <Box style={{ marginTop: "40px" }}>
+            <InputBox
+              id="oldPassword"
+              name="oldPassword"
+              placeholder="현재 비밀번호"
+              type="password"
+              size="small"
+              fullWidth
+              variant="outlined"
+              sx={{
+                marginBottom:
+                  errors.newPassword && errors.newPassword.type === "required"
+                    ? "5px"
+                    : "42px",
+              }}
+              {...register("oldPassword", { required: true })}
+            />
+            {errors.oldPassword && errors.oldPassword.type === "required" && (
+              <p className="mypageptag">
+                기존의 비밀번호는 필수 입력 항목입니다.
+              </p>
             )}
-          {errors.confirmNewPassword &&
-            errors.confirmNewPassword.type === "validate" && (
-              <p className="ptag">비밀번호와 값이 일치하지 않습니다.</p>
+            <InputBox
+              id="newPassword"
+              name="newPassword"
+              placeholder="새 비밀번호"
+              type="password"
+              size="small"
+              fullWidth
+              variant="outlined"
+              sx={{
+                marginBottom:
+                  errors.newPassword && errors.newPassword.type === "required"
+                    ? "5px"
+                    : "42px",
+              }}
+              {...register("newPassword", {
+                required: true,
+                minLength: 8,
+                maxLength: 12,
+                validate: (value) => !(value === checkOldPassword.current),
+                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9가-힣]).{8,12}/,
+              })}
+            />
+            {errors.newPassword && errors.newPassword.type === "required" && (
+              <p className="mypageptag"> 비밀번호는 필수입력 항목 입니다.</p>
             )}
+            {errors.newPassword && errors.newPassword.type === "minLength" && (
+              <p className="mypageptag">
+                비밀번호는 최소 8자에서 12자로 구성해주세요
+              </p>
+            )}
+            {errors.newPasword && errors.newPasword.type === "maxLength" && (
+              <p className="mypageptag">
+                비밀번호는 최소 8자에서 12자로 구성해주세요
+              </p>
+            )}
+            {errors.newPassword && errors.newPassword.type === "pattern" && (
+              <p className="mypageptag">올바른 비밀번호 형식이 아닙니다.</p>
+            )}
+            {errors.newPassword && errors.newPassword.type === "validate" && (
+              <p className="mypageptag">기존의 비밀번호와 같습니다.</p>
+            )}
+            <InputBox
+              id="confirmNewPassword"
+              helperText="비밀번호는 대/소문자와 특수문자를 포함한 8~12자리로 구성해주세요 "
+              placeholder="새 비밀번호 확인"
+              name="confirmNewPassword"
+              type="password"
+              size="small"
+              fullWidth
+              variant="outlined"
+              {...register("confirmNewPassword", {
+                required: true,
+                validate: (value) => value === checkPassword.current,
+              })}
+              sx={{
+                marginBottom:
+                  errors.newPassword && errors.newPassword.type === "required"
+                    ? "5px"
+                    : "42px",
+              }}
+            />
+
+            {errors.confirmNewPassword &&
+              errors.confirmNewPassword.type === "required" && (
+                <p className="mypageptag">
+                  비밀번호 확인은 필수 입력 항목입니다.
+                </p>
+              )}
+            {errors.confirmNewPassword &&
+              errors.confirmNewPassword.type === "validate" && (
+                <p className="mypageptag">비밀번호와 값이 일치하지 않습니다.</p>
+              )}
+          </Box>
           <div className="buttondiv">
             <Button type="submit">다음</Button>
             <Button onClick={handleClose}>닫기</Button>

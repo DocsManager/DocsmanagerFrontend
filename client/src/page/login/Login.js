@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { allUser, login } from "../../api/userApi";
 import "./Login.css";
 import { loginMenu } from "./loginMenu";
+import Swal from "sweetalert2";
 
 function Login() {
   const onKeyPress = (e) => {
@@ -20,8 +21,14 @@ function Login() {
   const [userList, setUserList] = useState([]);
   if (user.userNo) {
     console.log(user);
-    alert(user.name + "님 환영합니다");
-    window.location.href = "main";
+    Swal.fire({
+      title: "로그인성공",
+      text: user.name + "님 환영합니다",
+      icon: "success",
+      confirmButtonColor: "#3791f8",
+    }).then((result) => {
+      window.location.href = "main";
+    });
   }
   useEffect(() => {
     allUser(setUserList);

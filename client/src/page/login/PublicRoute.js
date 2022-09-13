@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
-const PrivateRoute = () => {
+const PublicRoute = () => {
   function getCookie(name) {
     let matches = document.cookie.match(
       new RegExp(
@@ -14,7 +14,7 @@ const PrivateRoute = () => {
   }
 
   let auth = getCookie("accessToken");
-  return auth ? <Outlet /> : <Navigate to="/" />;
+  return auth ? <Navigate to="main" /> : <Outlet />;
 };
 
-export default PrivateRoute;
+export default PublicRoute;
