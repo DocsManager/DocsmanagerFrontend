@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { alpha } from "@mui/material/styles";
+import { alpha, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -23,11 +23,15 @@ import {
   deleteUserWorkspace,
 } from "../../api/workspaceUserApi";
 import { getUser } from "../../component/getUser/getUser";
-import { Button, ThemeProvider } from "@mui/material";
+import { Button } from "@mui/material";
 import AddMember from "../main/AddMember";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
+import EditIcon from "@material-ui/icons/Edit";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
+import { ConstructionOutlined } from "@mui/icons-material";
+import Delete from "@mui/icons-material/Delete";
+import { ToRecyclebin } from "../main/DmTableToolbar";
 import { theme } from "../../Config";
 import { deleteWorkspace } from "../../api/workspaceApi";
 
@@ -60,8 +64,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -195,30 +197,41 @@ const EnhancedTableToolbar = (props) => {
       }}
     >
       {numSelected > 0 && (
-        <Typography
+        <Box
           sx={{ flex: "1 1 100%" }}
           color="inherit"
           variant="subtitle1"
           component="div"
         >
-          <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
-            {/**09.06 dmtable과 선택 시 나타나는 문구 맞춤 */}
-            {numSelected}
-          </span>
-          개가 선택되었습니다
-        </Typography>
-      )}
-      {numSelected > 0 && (
-        <Tooltip title="Delete">
-          <IconButton
-            onClick={() => {
-              deleteAllWorkspaceUser(getUser().userNo, selected, setWorkspace);
-              setSelected([]);
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
           >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+            <Typography>
+              <span style={{ fontSize: "1.1rem", fontWeight: "bold" }}>
+                {numSelected}
+              </span>
+              개가 선택되었습니다
+            </Typography>
+            <ToRecyclebin
+              variant="contained"
+              startIcon={<Delete />}
+              onClick={() => {
+                deleteAllWorkspaceUser(
+                  getUser().userNo,
+                  selected,
+                  setWorkspace
+                );
+                setSelected([]);
+              }}
+            >
+              삭제
+            </ToRecyclebin>
+          </div>
+        </Box>
       )}
     </Toolbar>
   );

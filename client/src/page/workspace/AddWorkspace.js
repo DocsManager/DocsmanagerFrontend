@@ -1,25 +1,17 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import {
-  IconButton,
-  InputBase,
-  OutlinedInput,
-  SvgIcon,
-  TextField,
-  ThemeProvider,
-} from "@mui/material";
+import { Box, Button, Typography, Modal } from "@mui/material";
+import { SvgIcon, TextField, ThemeProvider } from "@mui/material";
 import ShareUser from "../main/ShareUser";
 import { addWorkspace } from "../../api/workspaceApi";
 import { getUser } from "../../component/getUser/getUser";
 import { worksapcepublish } from "../../api/noticeApi";
 import { styled } from "@mui/material/styles";
-import { Add, LaptopChromebook } from "@mui/icons-material";
+import {
+  LaptopChromebook,
+  AddBoxOutlined,
+  CloseOutlined,
+} from "@mui/icons-material";
 import { theme } from "../../Config";
-import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const style = {
   position: "absolute",
@@ -56,8 +48,53 @@ export default function AddWorkspace({ open, setOpen }) {
   };
   //워크스페이스 번호를 알림 파라미터로 넘겨주기 위해 생성
   const [newWorkspace, setNewWorkspace] = useState();
+  const [loading, setLoading] = useState(false);
   const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
-  console.log(newWorkspaceNo);
+  const [title, setTitle] = useState("");
+  const [clickHandler, setClickHandler] = useState(false);
+  // 제목 없을 때 뜨는 textinput
+  const fillTitle = () => {
+    if (clickHandler === false || title) {
+      return (
+        <TextField
+          id="workspaceTitle"
+          InputProps={{
+            startAdornment: (
+              <ModalIcon position="start">
+                <LaptopChromebook />
+              </ModalIcon>
+            ),
+          }}
+          variant="outlined"
+          label="워크스페이스명"
+          margin="normal"
+        />
+      );
+    }
+    if (clickHandler === true && !title) {
+      return (
+        <TextField
+          id="workspaceTitle"
+          InputProps={{
+            startAdornment: (
+              <ModalIcon
+                position="start"
+                sx={{ color: title ? "#3781f8" : "#d32f2f" }}
+              >
+                <LaptopChromebook />
+              </ModalIcon>
+            ),
+          }}
+          variant="outlined"
+          label="워크스페이스명"
+          margin="normal"
+          error
+          helperText="워크스페이스명은 필수 입력 사항입니다!"
+        />
+      );
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -80,20 +117,7 @@ export default function AddWorkspace({ open, setOpen }) {
               <Typography component="h3" mt={1}>
                 워크스페이스명
               </Typography>
-
-              <TextField
-                id="workspaceTitle"
-                InputProps={{
-                  startAdornment: (
-                    <ModalIcon position="start">
-                      <LaptopChromebook />
-                    </ModalIcon>
-                  ),
-                }}
-                variant="outlined"
-                label="워크스페이스명"
-                margin="normal"
-              />
+              {fillTitle()}
             </React.Fragment>
 
             <ShareUser
@@ -112,27 +136,33 @@ export default function AddWorkspace({ open, setOpen }) {
                 variant="contained"
                 onClick={() => {
                   const title = document.getElementById("workspaceTitle").value;
+                  setTitle(title);
                   if (title) {
                     const workspace = {
                       title: title,
                       master: getUser(),
                       userList: searchList,
                     };
-                    addWorkspace(workspace, setOpen, setNewWorkspace);
-                    worksapcepublish(searchList, newWorkspaceNo);
-                    {
-                      /**함수 파라미터 변경 */
-                    }
+                    addWorkspace(
+                      workspace,
+                      setOpen,
+                      setNewWorkspace,
+                      setLoading
+                    );
+                    newWorkspace &&
+                      worksapcepublish(searchList, newWorkspaceNo, setLoading);
                     setSearchList([]);
+                    setTitle();
                   }
+                  title ? setClickHandler(false) : setClickHandler(true);
                 }}
               >
                 생성
-                <AddBoxOutlinedIcon />
+                <AddBoxOutlined />
               </WorkspaceButton>
               <WorkspaceButton variant="contained" onClick={handleClose}>
                 취소
-                <CloseOutlinedIcon />
+                <CloseOutlined />
               </WorkspaceButton>
             </Box>
           </Box>

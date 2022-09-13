@@ -29,6 +29,7 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import UploadModal from "../modal/UploadModal";
+import FormHelperText from "@mui/material/FormHelperText";
 
 const style = {
   position: "absolute",
@@ -168,10 +169,27 @@ const WriteModal = (props) => {
                 파일 설명
               </Box>
 
-              <InputBox type="text" id="fileContent" />
+              <TextField
+                type="text"
+                variant="outlined"
+                id="fileContent"
+                inputProps={{ maxLength: 100 }}
+                helperText="100자 제한"
+                sx={{
+                  "& legend": {
+                    display: "none",
+                  },
+                }}
+              />
             </Stack>
 
-            <Typography>
+            <Typography
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+              }}
+              mt={2}
+            >
               <WorkspaceButton
                 variant="contained"
                 onClick={() => {

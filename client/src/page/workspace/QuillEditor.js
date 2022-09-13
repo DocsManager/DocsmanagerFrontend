@@ -51,7 +51,7 @@ const QuillEditor = ({
   return (
     // 임시저장, 저장, 워크스페이스 목록으로 이동 버튼 전반적인 css 수정
     <ThemeProvider theme={theme}>
-      <div style={{ height: "650px" }}>
+      <div>
         <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
           <Box>
             {workspace.master && workspace.master.userNo === user.userNo ? (

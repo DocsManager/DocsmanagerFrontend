@@ -34,12 +34,29 @@ const SucessModal = (props) => {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={{ ...style, width: 500 }}>
-            <Box id="modal-modal-description">{props.children}</Box>
+          <Box sx={{ ...style, width: 350 }}>
+            <Box
+              id="modal-modal-description"
+              sx={{ display: "flex", justifyContent: "center" }}
+            >
+              {props.children}
+            </Box>
             {close ? (
-              <WorkspaceButton variant="contained" onClick={close}>
-                확인 <CloseOutlinedIcon />
-              </WorkspaceButton>
+              <Typography
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+                mt={2}
+              >
+                <WorkspaceButton
+                  sx={{ display: "flex", justifyContent: "center" }}
+                  variant="contained"
+                  onClick={close}
+                >
+                  확인
+                </WorkspaceButton>
+              </Typography>
             ) : (
               <></>
             )}

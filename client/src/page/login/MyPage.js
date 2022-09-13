@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { logout, mypage } from "../../api/userApi";
+import { mypage } from "../../api/userApi";
 import { styled } from "@mui/material/styles";
-import Badge from "@mui/material/Badge";
 import Avatar from "@mui/material/Avatar";
-import { Box, Button, Card, CardContent, CardHeader } from "@mui/material";
-import { deleteUser } from "../../component/getUser/getUser";
+import { Box, Button, Card, CardContent } from "@mui/material";
 import "./Mypage.css";
 import Pwupdate from "./Pwupdate";
 import Table from "@mui/material/Table";
@@ -12,7 +10,6 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import EditIcon from "@mui/icons-material/Edit";
-import Header from "../main/Header";
 import { Container } from "@mui/system";
 
 //아바타 프로필
@@ -33,9 +30,10 @@ const style = {
   width: 600,
   height: 450,
   bgcolor: "background.paper",
-  border: "2px solid #8bc7ff",
+  // border: "2px solid #3791f8",
   boxShadow: 24,
   p: 4,
+  margin: "0 auto",
 };
 
 function MyPage() {
@@ -54,40 +52,43 @@ function MyPage() {
   const showRegdate = info.registerDate;
 
   return (
-    <div style={{ background: "#f5f5f5", height: "100vh" }}>
-      <Header />
-      <Container className="mypagecontainer">
+    <div style={{ height: "100vh" }}>
+      <div style={{ display: "grid", gridTemplateRows: "0.2fr  1fr" }}>
+        <h2
+          style={{
+            textAlign: "left",
+            padding: "15px",
+            borderBottom: "1px solid #d9d9d9",
+            paddingLeft: "30px",
+          }}
+        >
+          {info && info.name}님의 정보
+        </h2>
+      </div>
+      <Container>
         <Box
           sx={{
-            marginTop: "4%",
+            marginTop: "1%",
             maxWidth: "lg",
             display: "flex",
             justifyContent: "center",
             alignContent: "center",
           }}
         >
-          <Card display="flex" flexDirection="column">
-            <CardHeader title="마이페이지" />
-
+          <Card>
             <CardContent sx={{ display: "flex" }}>
-              <Badge
-                overlap="circular"
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-                badgeContent={
-                  <EditIcon
-                    onClick={() => {
-                      logout();
-                      deleteUser();
-                    }}
-                  />
-                }
-              >
-                <ProfileAvatar alt="프로필" src={info.profile} />
-              </Badge>
-
+              <div>
+                <Button component="label">
+                  프로필 이미지 수정
+                  <EditIcon sx={{ float: "left", margin: "5px" }} />
+                  <input hidden accept="image/*" multiple type="file" />
+                </Button>
+                <ProfileAvatar
+                  alt="프로필"
+                  src={info.profile}
+                  className="mypageavatar"
+                />
+              </div>
               <Table sx={{ minWidth: 500 }}>
                 <TableBody
                   sx={{

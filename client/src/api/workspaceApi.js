@@ -38,7 +38,7 @@ export function deleteWorkspace(workspaceNo, setCheck, check) {
   axios.delete(url).then(() => setCheck(!check));
 }
 
-export function addWorkspace(workspace, setOpen, setNewWorkspace) {
+export function addWorkspace(workspace, setOpen, setNewWorkspace, setLoading) {
   axios
     .post(baseUrl, workspace)
     .then((res) => {
