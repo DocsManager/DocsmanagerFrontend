@@ -26,10 +26,9 @@ function Login() {
       text: user.name + "님 환영합니다",
       icon: "success",
       confirmButtonColor: "#3791f8",
-    });
-    setTimeout(function() {
+    }).then((result) => {
       window.location.href = "main";
-    }, 1000);
+    });
   }
   useEffect(() => {
     allUser(setUserList);

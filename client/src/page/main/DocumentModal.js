@@ -4,6 +4,7 @@ import SucessModal from "./SucessModal";
 import "./Modal.css";
 import {
   deleteFile,
+  fileDownload,
   masterDeleteFile,
   restoreFile,
   updateRecycleBinFile,
@@ -22,6 +23,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 
+import { WorkspaceButton } from "../workspace/AddWorkspace";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -39,11 +43,11 @@ const style = {
 const openSuccessModal = (modalOpen, infoModalOpen, check, setCheckHandler) => {
   modalOpen(false);
   infoModalOpen(false);
-  check ? setCheckHandler(false) : setCheckHandler(true);
+  setCheckHandler(!check);
 };
 
 const DocumentModal = (props) => {
-  const { open, document, infoModalOpen } = props;
+  const { open, document, infoModalOpen, page, setPage, dtoList } = props;
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [deleteSuccessModalOpen, setDeleteSuccessModalOpen] = useState(false);
@@ -89,14 +93,21 @@ const DocumentModal = (props) => {
                 default:
                   return (
                     <span>
-                      <a
+                      {/* <a
                         href={document.documentNo.filePath}
                         download={document.documentNo.originalName}
+                      > */}
+                      <Button
+                        onClick={() =>
+                          fileDownload(
+                            document.documentNo.filePath,
+                            document.documentNo.originalName
+                          )
+                        }
                       >
-                        <Button>
-                          <FileDownloadIcon />
-                        </Button>
-                      </a>
+                        <FileDownloadIcon />
+                      </Button>
+                      {/* </a> */}
                       {document.authority !== "READ" ? (
                         <Button onClick={() => setUpdateModalOpen(true)}>
                           <EditIcon />
@@ -137,7 +148,14 @@ const DocumentModal = (props) => {
               ? document.documentNo.content
               : "내용이 없습니다."}
           </Typography>
-          <Button onClick={() => infoModalOpen(false)}>닫기</Button>
+
+          <WorkspaceButton
+            variant="contained"
+            onClick={() => infoModalOpen(false)}
+          >
+            닫기
+            <CloseOutlinedIcon />
+          </WorkspaceButton>
         </Box>
       </Modal>
 
@@ -195,6 +213,7 @@ const DocumentModal = (props) => {
                   setConfirmModalOpen(false);
                   setSuccessModalOpen(true);
                   infoModalOpen(false);
+                  // dtoList === 0 ? setPage(page - 1) : setPage(page);
                 }}
               >
                 <main>
@@ -237,7 +256,7 @@ const DocumentModal = (props) => {
                   }
                 >
                   <main>
-                    <div>삭제 완료</div>
+                    <div>영구 삭제 완료</div>
                   </main>
                 </SucessModal>
               </div>
@@ -246,14 +265,16 @@ const DocumentModal = (props) => {
             return (
               <SucessModal
                 open={successModalOpen}
-                close={() =>
+                close={() => {
                   openSuccessModal(
                     setSuccessModalOpen,
                     infoModalOpen,
                     check,
                     setCheckHandler
-                  )
-                }
+                  );
+
+                  // dtoList === 0 ? setPage(page - 1) : setPage(page);
+                }}
               >
                 <main>
                   <div>삭제 완료</div>

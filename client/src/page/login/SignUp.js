@@ -6,6 +6,7 @@ import { signUp } from "../../api/userApi";
 import { Link } from "react-router-dom";
 import "./SignUp.css";
 import { sendMail, verifyMail } from "../../api/mailApi";
+import { checkId } from "../../api/userApi";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -32,7 +33,7 @@ function SignUp() {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
   const password = useRef(null);
@@ -55,22 +56,22 @@ function SignUp() {
       };
       signUp(newUser);
       console.log(newUser);
+      console.log(data.password);
       Swal.fire({
         title: "회원가입 성공",
         icon: "success",
         confirmButtonColor: "#3791f8",
+      }).then((result) => {
+        window.location.href = "/successsignup";
       });
     } else {
       Swal.fire({
         title: "회원가입 실패",
+        text: "이메일검증을 확인해주세요",
         icon: "error",
         confirmButtonColor: "#3791f8",
       });
     }
-
-    setTimeout(function() {
-      window.location.href = "/successsignup";
-    }, 1000);
   };
 
   return (
@@ -105,9 +106,7 @@ function SignUp() {
             >
               <div className="profilediv">
                 <Button component="label" sx={{ background: "#ffffff" }}>
-                  <ProfileAvatar
-                    sx={{ background: "rgba(139, 199, 255, 1)" }}
-                  />
+                  <ProfileAvatar sx={{ background: "#3791f8" }} />
                   <input hidden accept="image/*" multiple type="file" />
                 </Button>
               </div>
@@ -126,6 +125,22 @@ function SignUp() {
               {errors.newId && errors.newId.type === "maxLength" && (
                 <p className="signupptag">id는 최대 10자까지로 구성해주세요.</p>
               )}
+              <Button
+                style={{ margin: 0 }}
+                className="mailbtn"
+                type="button"
+                // disabled={isSubmitting}
+                name="idbtn"
+                onClick={() => {
+                  const params = {
+                    id: document.getElementById("newId").value,
+                  };
+                  checkId(params);
+                }}
+                variant="contained"
+              >
+                ID 중복 검사
+              </Button>
               <TextField
                 style={{ marginLeft: 0 }}
                 helperText="이름을 입력하세요"
@@ -164,6 +179,8 @@ function SignUp() {
               <Button
                 style={{ margin: 0 }}
                 type="button"
+                // disabled={isSubmitting}
+                name="mailbtn"
                 className="mailbtn"
                 onClick={() => {
                   const params = {

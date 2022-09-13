@@ -4,33 +4,28 @@ const baseUrl = "/mail/";
 
 export function sendMail(params, setConfirmVerifyCode) {
   const url = baseUrl + "send";
-  axios
-    .get("/api/mail/send", { params })
-    .then((response) => {
-      if (response.data && params) {
-        setConfirmVerifyCode(response.data);
-      } else if (params == null) {
+  if (params.email === "") {
+    Swal.fire({
+      text: "메일주소를 입력하여주세요.",
+      icon: "question",
+      confirmButtonColor: "#3791f8",
+    });
+  } else {
+    axios
+      .get("/api/mail/send", { params })
+      .then((response) => {
+        if (response.data) {
+          setConfirmVerifyCode(response.data);
+        }
+      })
+      .then(
         Swal.fire({
-          text: "메일 전송에 실패하였습니다 다시 시도해주세요",
-          icon: "warning",
+          text: "메일이 전송되었습니다.",
+          icon: "success",
           confirmButtonColor: "#3791f8",
-        });
-      }
-    })
-    .then(
-      Swal.fire({
-        text: "메일이 전송되었습니다.",
-        icon: "success",
-        confirmButtonColor: "#3791f8",
-      })
-    )
-    .catch((err) =>
-      Swal.fire({
-        text: "메일주소를 입력하여주세요.",
-        icon: "error",
-        confirmButtonColor: "#3791f8",
-      })
-    );
+        })
+      );
+  }
 }
 
 export function verifyMail(params, setVerifyResult) {
@@ -39,7 +34,6 @@ export function verifyMail(params, setVerifyResult) {
     .then((response) => {
       if (response.data) {
         setVerifyResult(response.data);
-        console.log(setVerifyResult);
         Swal.fire({
           text: "검증이 완료되었습니다. 로그인을 계속 진행하여주세요",
           icon: "success",
@@ -48,7 +42,7 @@ export function verifyMail(params, setVerifyResult) {
       } else {
         Swal.fire({
           text: "인증코드를 다시 확인하여주세요",
-          icon: "error",
+          icon: "warning",
           confirmButtonColor: "#3791f8",
         });
       }
@@ -79,7 +73,7 @@ export function findId(params) {
     .catch((err) =>
       Swal.fire({
         text: "해당 데이터로 조회된 아이디가 없습니다",
-        icon: "warning",
+        icon: "error",
         confirmButtonColor: "#3791f8",
       })
     );
@@ -88,17 +82,19 @@ export function findId(params) {
 export function findPw(params) {
   axios.get("api/mail/findpassword", { params }).then((response) => {
     if (response.data.check) {
-      axios.get("api/mail/sendpw", { params }).then(
-        Swal.fire({
-          title: "비밀번호 변경 성공",
-          text: "해당 이메일 주소로 임시 비밀번호가 발송되었습니다.",
-          icon: "info",
-          confirmButtonColor: "#3791f8",
-        })
-      );
-      setTimeout(function() {
-        window.location.href = "/";
-      }, 1000);
+      axios
+        .get("api/mail/sendpw", { params })
+        .then(
+          Swal.fire({
+            title: "비밀번호 변경 성공",
+            text: "해당 이메일 주소로 임시 비밀번호가 발송되었습니다.",
+            icon: "info",
+            confirmButtonColor: "#3791f8",
+          })
+        )
+        .then((result) => {
+          window.location.href = "/";
+        });
     } else {
       Swal.fire({
         text: "일치하는 정보가 없습니다",

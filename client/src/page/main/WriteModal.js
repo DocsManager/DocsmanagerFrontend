@@ -25,6 +25,10 @@ import {
 } from "@mui/material";
 import { theme } from "../../Config";
 import { TextFieldsOutlined } from "@mui/icons-material";
+import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { WorkspaceButton } from "../workspace/AddWorkspace";
+
 
 const style = {
   position: "absolute",
@@ -171,14 +175,26 @@ const WriteModal = (props) => {
                 파일 설명
               </Box>
 
-              <InputBox
-                type="text"
-                id="fileContent"
-              />
+              <InputBox type="text" id="fileContent" />
             </Stack>
 
             <Typography>
-              <Button
+              <WorkspaceButton
+                variant="contained"
+                onClick={() => {
+                  const contentElem = document.getElementById("fileContent")
+                    .value;
+                  setText(contentElem);
+                  file
+                    ? setWriteConfirm(true)
+                    : openNoFileConfirm(fileNull, setFileNull);
+                }}
+              >
+                저장
+                <AddBoxOutlinedIcon />
+              </WorkspaceButton>
+              <WorkspaceButton
+                variant="contained"
                 onClick={() => {
                   setSearchList([]);
                   setWriteModal(false);
@@ -189,18 +205,8 @@ const WriteModal = (props) => {
                 }}
               >
                 닫기
-              </Button>
-              <Button
-                onClick={() => {
-                  const contentElem = document.getElementById("fileContent").value;
-                  setText(contentElem);
-                  file
-                    ? setWriteConfirm(true)
-                    : openNoFileConfirm(fileNull, setFileNull);
-                }}
-              >
-                저장
-              </Button>
+                <CloseOutlinedIcon />
+              </WorkspaceButton>
             </Typography>
           </Box>
         </Modal>
@@ -223,50 +229,50 @@ const WriteModal = (props) => {
           <Typography>등록 하시겠습니까?</Typography>
         </ConfirmModal>
         <SucessModal open={loading}>
-        <Box sx={{ width: "100%" }}>
-          <LinearProgress />
-          <Typography>업로드 중입니다...</Typography>
-        </Box>
-      </SucessModal>
+          <Box sx={{ width: "100%" }}>
+            <LinearProgress />
+            <Typography>업로드 중입니다...</Typography>
+          </Box>
+        </SucessModal>
         {sizeCheck === 1 ? (
-        <SucessModal
-          open={writeSuccessConfirm}
-          close={() =>
-            successWrite(
-              setWriteModal,
-              setWriteSuccessConfirm,
-              setWriteConfirm,
-              check,
-              setCheckHandler,
-              setFile,
-              setSizeCheck,
-              setLoading
-            )
-          }
-        >
-          <Typography>작성 완료</Typography>
-        </SucessModal>
-      ) : sizeCheck === 0 ? (
-        <SucessModal
-          open={writeSuccessConfirm}
-          close={() =>
-            successWrite(
-              setWriteModal,
-              setWriteSuccessConfirm,
-              setWriteConfirm,
-              check,
-              setCheckHandler,
-              setFile,
-              setSizeCheck,
-              setLoading
-            )
-          }
-        >
-          <Typography>용량 초과</Typography>
-        </SucessModal>
-      ) : (
-        <></>
-      )}
+          <SucessModal
+            open={writeSuccessConfirm}
+            close={() =>
+              successWrite(
+                setWriteModal,
+                setWriteSuccessConfirm,
+                setWriteConfirm,
+                check,
+                setCheckHandler,
+                setFile,
+                setSizeCheck,
+                setLoading
+              )
+            }
+          >
+            <Typography>작성 완료</Typography>
+          </SucessModal>
+        ) : sizeCheck === 0 ? (
+          <SucessModal
+            open={writeSuccessConfirm}
+            close={() =>
+              successWrite(
+                setWriteModal,
+                setWriteSuccessConfirm,
+                setWriteConfirm,
+                check,
+                setCheckHandler,
+                setFile,
+                setSizeCheck,
+                setLoading
+              )
+            }
+          >
+            <Typography>용량 초과</Typography>
+          </SucessModal>
+        ) : (
+          <></>
+        )}
         {
           <SucessModal
             open={fileNull}

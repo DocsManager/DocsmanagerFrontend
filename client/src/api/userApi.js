@@ -13,7 +13,7 @@ export function signUp(newUser) {
     .catch((err) =>
       Swal.fire({
         text: "오류가 발생했습니다 다시 시도해주세요",
-        icon: "warning",
+        icon: "error",
         confirmButtonColor: "#3791f8",
       })
     );
@@ -31,12 +31,18 @@ export function login(userInfo, setUser) {
         Swal.fire({
           title: "로그인실패",
           text: "아이디 또는 비밀번호를 잘못 입력했습니다.",
-          icon: "error",
+          icon: "warning",
           confirmButtonColor: "#3791f8",
         });
       }
     })
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      Swal.file({
+        title: "잘못된 접근시도",
+        icon: "error",
+        confirmButtonColor: "#3791f8",
+      })
+    );
 }
 
 export function allUser(setUserList) {
@@ -86,6 +92,7 @@ export function logout() {
       })
     )
     .then(
+      //바로 then(result)=> /로 보내면 세션, 쿠키 삭제 전에 실행되서 main으로 넘어감
       setTimeout(function() {
         window.location.href = "/";
       }, 1000)
@@ -118,4 +125,33 @@ export const changepw = async (params) => {
       });
     }
   });
+};
+
+export const checkId = async (params) => {
+  const url = baseUrl + "checkuser";
+  if (params.id === "") {
+    Swal.fire({
+      text: "값입력하셈",
+      icon: "error",
+      confirmButtonColor: "#3791f8",
+    });
+  } else {
+    await axios.get(url, { params }).then((response) => {
+      if (response.data.check) {
+        Swal.fire({
+          title: "가입이 가능합니다",
+          icon: "success",
+          confirmButtonColor: "#3791f8",
+        });
+        console.log(params);
+        // } else if (!response.data.check) {
+      } else if ((params.value = undefined)) {
+        Swal.fire({
+          title: "이미 가입된 아이디가 있습니다",
+          icon: "warning",
+          confirmButtonColor: "#3791f8",
+        });
+      }
+    });
+  }
 };
