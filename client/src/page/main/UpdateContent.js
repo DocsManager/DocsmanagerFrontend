@@ -7,7 +7,7 @@ import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { MyContext } from "../Main";
 import { InputBox } from "./WriteModal";
-import { Typography } from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -50,38 +50,53 @@ const UpdateContent = (props) => {
               <Typography component="h3" mt={1} mb={2} align="center">
                 내용 수정
               </Typography>
-              <InputBox
+              <TextField
                 mt={1}
-                sx={{ width: "340px" }}
+                sx={{
+                  width: "340px",
+                  "& legend": {
+                    display: "none",
+                  },
+                }}
+                inputProps={{ maxLength: 100 }}
+                helperText="100자 제한"
                 type="text"
                 defaultValue={document.content}
                 onChange={(e) => setContent(e.target.value)}
+                variant="outlined"
               />
             </main>
           </div>
-
-          <WorkspaceButton
-            variant="contained"
-            onClick={() => {
-              infoModalOpen(false);
-              setContentUpdateModal(true);
-              updateContent(document.documentNo, content);
-              check ? setCheckHandler(false) : setCheckHandler(true);
-              setOpen(false);
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
             }}
+            mt={2}
           >
-            확인
-            <AddBoxOutlinedIcon />
-          </WorkspaceButton>
-          <WorkspaceButton
-            variant="contained"
-            onClick={() => {
-              setOpen(false);
-            }}
-          >
-            취소
-            <CloseOutlinedIcon />
-          </WorkspaceButton>
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                infoModalOpen(false);
+                setContentUpdateModal(true);
+                updateContent(document.documentNo, content);
+                check ? setCheckHandler(false) : setCheckHandler(true);
+                setOpen(false);
+              }}
+            >
+              확인
+              <AddBoxOutlinedIcon />
+            </WorkspaceButton>
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              취소
+              <CloseOutlinedIcon />
+            </WorkspaceButton>
+          </Typography>
         </Box>
       </Modal>
       <SucessModal

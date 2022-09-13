@@ -17,6 +17,7 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import EditIcon from "@mui/icons-material/Edit";
 import RestorePageIcon from "@mui/icons-material/RestorePage";
+import { fileCategoryIcon } from "./DmTable";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -73,9 +74,17 @@ const DocumentModal = (props) => {
             </Typography>
             <Box> */}
         <Box sx={{ ...style, width: 500 }}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            id="modal-modal-title"
+            variant="h6"
+            component="h4"
+            sx={{
+              display: "flex",
+              justifyContent: "right",
+            }}
+            mt={2}
+          >
             {console.log(document)}
-            {document.documentNo.originalName}
             {(() => {
               switch (window.location.href.split("/main")[1]) {
                 case "/trashcan":
@@ -143,19 +152,32 @@ const DocumentModal = (props) => {
             {/* </Box>
           </Box> */}
           </Typography>
+
+          <Typography variant="h6" component="h2">
+            {fileCategoryIcon(document.documentNo.fileCategory)}
+            {document.documentNo.originalName}
+          </Typography>
+
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {document.documentNo.content
               ? document.documentNo.content
               : "내용이 없습니다."}
           </Typography>
-
-          <WorkspaceButton
-            variant="contained"
-            onClick={() => infoModalOpen(false)}
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "right",
+            }}
+            mt={2}
           >
-            닫기
-            <CloseOutlinedIcon />
-          </WorkspaceButton>
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => infoModalOpen(false)}
+            >
+              닫기
+              <CloseOutlinedIcon />
+            </WorkspaceButton>
+          </Typography>
         </Box>
       </Modal>
 
