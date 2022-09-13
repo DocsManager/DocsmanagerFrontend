@@ -25,6 +25,8 @@ const style = {
 export default function SaveWorksapce({ open, setOpen }) {
   const [searchList, setSearchList] = useState([]);
   const user = getUser();
+  const [title, setTitle] = useState();
+  const [clickHandler, setClickHandler] = useState(false);
 
   return (
     <div>
@@ -43,11 +45,22 @@ export default function SaveWorksapce({ open, setOpen }) {
             문서 등록
           </Typography>
           <hr />
-          <TextField
-            id="newDocumentTitle"
-            label="문서 이름"
-            variant="outlined"
-          />
+          {/* 문서 이름 등록 안했을때 나오는 textinput */}
+          {clickHandler === false || title ? (
+            <TextField
+              id="newDocumentTitle"
+              label="문서 이름"
+              variant="outlined"
+            />
+          ) : (
+            <TextField
+              id="newDocumentTitle"
+              label="문서 이름"
+              variant="outlined"
+              error
+              helperText="문서 제목은 필수 사항입니다!"
+            />
+          )}
           <ShareUser
             searchList={searchList}
             setSearchList={setSearchList}
@@ -62,10 +75,12 @@ export default function SaveWorksapce({ open, setOpen }) {
             <Button
               onClick={() => {
                 const title = document.getElementById("newDocumentTitle").value;
+                setTitle(title);
                 const content = document.getElementById("newDocumentContent")
                   .value;
                 const newDocument = { user: user, content: content };
                 onHtmlPng(title, newDocument);
+                title ? setClickHandler(false) : setClickHandler(true);
               }}
             >
               저장
