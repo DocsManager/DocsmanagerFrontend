@@ -1,5 +1,5 @@
 import ReactQuill, { Quill } from "react-quill";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import ImageResize from "quill-image-resize";
 import { updateWorkspace } from "../../api/workspaceApi";
@@ -16,6 +16,7 @@ import {
 import SaveWorksapce from "../modal/SaveWorksapce";
 import { Link } from "react-router-dom";
 import { theme } from "../../Config";
+import { getUser } from "../../component/getUser/getUser";
 Quill.register("modules/ImageResize", ImageResize);
 
 const modules = {
@@ -45,28 +46,36 @@ const QuillEditor = ({
 }) => {
   const [open, setOpen] = useState(false);
   const editor = useRef();
+  const user = getUser();
+
   return (
     // 임시저장, 저장, 워크스페이스 목록으로 이동 버튼 전반적인 css 수정
     <ThemeProvider theme={theme}>
       <div style={{ height: "650px" }}>
         <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
           <Box>
-            <Button
-              startIcon={<SaveAs />}
-              sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-              onClick={() => {
-                updateWorkspace(message, workspace);
-              }}
-            >
-              임시 저장
-            </Button>
-            <Button
-              startIcon={<Save />}
-              sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-              onClick={() => setOpen(true)}
-            >
-              저장
-            </Button>
+            {workspace.master && workspace.master.userNo === user.userNo ? (
+              <>
+                <Button
+                  startIcon={<SaveAs />}
+                  sx={{ fontSize: "1.2rem", color: "#3791f8" }}
+                  onClick={() => {
+                    updateWorkspace(message, workspace);
+                  }}
+                >
+                  임시 저장
+                </Button>
+                <Button
+                  startIcon={<Save />}
+                  sx={{ fontSize: "1.2rem", color: "#3791f8" }}
+                  onClick={() => setOpen(true)}
+                >
+                  저장
+                </Button>
+              </>
+            ) : (
+              <></>
+            )}
           </Box>
           <a href="/main/workspace">
             <Button

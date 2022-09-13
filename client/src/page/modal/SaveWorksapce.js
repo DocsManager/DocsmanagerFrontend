@@ -5,10 +5,13 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { TextField } from "@material-ui/core";
 import { IconButton } from "@mui/material";
-import { minHeight } from "@mui/system";
+import { border, minHeight } from "@mui/system";
 import ShareUser from "../main/ShareUser";
 import { onHtmlPng } from "../../component/editor/pdfSave";
 import { getUser } from "../../component/getUser/getUser";
+import ConfirmModal from "../main/ConfirmModal";
+import UploadModal from "./UploadModal";
+import { notipublish } from "../../api/noticeApi";
 
 const style = {
   position: "absolute",
@@ -24,6 +27,38 @@ const style = {
 
 export default function SaveWorksapce({ open, setOpen }) {
   const [searchList, setSearchList] = useState([]);
+  const [sizeCheck, setSizeCheck] = useState(2);
+  const [writeConfirm, setWriteConfirm] = useState(false);
+  const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const successWrite = () => {
+    notipublish(searchList);
+    setOpen(false);
+    setWriteSuccessConfirm(false);
+    setWriteConfirm(false);
+    setSearchList([]);
+    setSizeCheck(2);
+    setLoading(false);
+  };
+  const openSuccessWriteModal = (writeFile) => {
+    const title = document.getElementById("newDocumentTitle").value;
+    const content = document.getElementById("newDocumentContent").value;
+    const newDocument = { user: user, content: content };
+    const shareList = [];
+    searchList.map((search) =>
+      shareList.push({
+        authority: search.authority,
+        userNo: search,
+      })
+    );
+    shareList.push({ authority: "MASTER", userNo: user });
+    writeFile(newDocument, shareList, setSizeCheck, title);
+    setWriteConfirm(false);
+    setWriteSuccessConfirm(true);
+    setOpen(false);
+    setLoading(true);
+  };
+
   const user = getUser();
 
   return (
@@ -61,19 +96,35 @@ export default function SaveWorksapce({ open, setOpen }) {
           <div>
             <Button
               onClick={() => {
-                const title = document.getElementById("newDocumentTitle").value;
-                const content = document.getElementById("newDocumentContent")
-                  .value;
-                const newDocument = { user: user, content: content };
-                onHtmlPng(title, newDocument);
+                // 예영아 부탁해
+                const title = document.getElementById("newDocumentTitle");
+                title.value && setWriteConfirm(true);
               }}
             >
               저장
             </Button>
-            <Button onClick={() => setOpen(false)}>취소</Button>
+            <Button
+              onClick={() => {
+                setOpen(false);
+                setSearchList([]);
+              }}
+            >
+              취소
+            </Button>
           </div>
         </Box>
+        {/* <ConfirmModal open={}><Typography>등록 하시겠습니까?</Typography></ConfirmModal> */}
       </Modal>
+      <UploadModal
+        sizeCheck={sizeCheck}
+        writeSuccessConfirm={writeSuccessConfirm}
+        successWrite={successWrite}
+        openSuccessWriteModal={openSuccessWriteModal}
+        loading={loading}
+        writeFile={onHtmlPng}
+        writeConfirm={writeConfirm}
+        setWriteConfirm={setWriteConfirm}
+      />
     </div>
   );
 }

@@ -137,6 +137,7 @@ export default function DmTable(props) {
   // const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
+    console.log("======================");
     getList(
       setList,
       page ? page : page + 1,
@@ -145,7 +146,7 @@ export default function DmTable(props) {
     // fileSize(getUser().userNo, setSize);
     // setPage(0);
   }, [check, page]);
-  console.log(page);
+  console.log(check);
   // {
   //   console.log(pageList.dtoList && pageList.dtoList.length);
   // }

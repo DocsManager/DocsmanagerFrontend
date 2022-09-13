@@ -141,14 +141,14 @@ wsServer.on("request", function (request) {
               ? [
                   ...roomActivity.get(room),
                   {
-                    message: `${sender}님이 퇴장하셨습니다.`,
+                    message: `${sender.name}님이 퇴장하셨습니다.`,
                     sender: userID,
                     time: `${today.getHours()} : ${today.getMinutes()}`,
                   },
                 ]
               : [
                   {
-                    message: `${sender}님이 퇴장하셨습니다.`,
+                    message: `${sender.name}님이 퇴장하셨습니다.`,
                     sender: userID,
                     time: `${today.getHours()} : ${today.getMinutes()}`,
                   },
@@ -205,15 +205,15 @@ function msgSender(message, room, userID) {
                 ? [
                     ...roomActivity.get(room),
                     {
-                      message: `${dataFromClient.user}님이 입장하셨습니다.`,
-                      sender: userID,
+                      message: `${dataFromClient.user.name}님이 입장하셨습니다.`,
+                      sender: user,
                       time: `${today.getHours()} : ${today.getMinutes()}`,
                     },
                   ]
                 : [
                     {
-                      message: `${dataFromClient.user}님이 입장하셨습니다.`,
-                      sender: userID,
+                      message: `${dataFromClient.user.name}님이 입장하셨습니다.`,
+                      sender: user,
                       time: `${today.getHours()} : ${today.getMinutes()}`,
                     },
                   ]
@@ -224,8 +224,8 @@ function msgSender(message, room, userID) {
           } else if (dataFromClient.type === typesDef.CHAT) {
             roomActivity.get(room).push({
               message: dataFromClient.chat,
-              sender: userID,
-              username: dataFromClient.user,
+              sender: dataFromClient.user,
+              username: dataFromClient.user.name,
               time: `${today.getHours()} : ${today.getMinutes()}`,
             });
             // roomActivity.set(room,)
@@ -235,7 +235,7 @@ function msgSender(message, room, userID) {
             users: user.get(room),
             editorContent,
             senderID: userID,
-            senderName: dataFromClient.user,
+            senderName: dataFromClient.user.name,
             userActivity: roomActivity.get(room),
             prevData: roomContent.get(room) ? roomContent.get(room) : null,
             room,

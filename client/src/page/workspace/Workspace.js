@@ -8,6 +8,7 @@ import "medium-editor/dist/css/medium-editor.css";
 import "medium-editor/dist/css/themes/default.css";
 import "../../App.css";
 import { getTempContent, getWorkspace } from "../../api/workspaceApi";
+import { workspaceMember } from "../../api/workspaceUserApi";
 import Header from "../main/Header";
 import {
   Avatar,
@@ -30,15 +31,31 @@ function Workspace() {
   const [myId, setMyId] = useState("");
   const [users, setUsers] = useState({});
   const [workspace, setWorkspace] = useState({});
+  const [userList, setUserList] = useState([]);
   const URLSearch = new URLSearchParams(window.location.search);
   const workspaceNo = URLSearch.get("room");
   const user = getUser();
+
+  useEffect(() => {
+    workspaceMember(workspaceNo, setUserList);
+  }, []);
+
+  useEffect(() => {
+    getWorkspace(workspaceNo, setWorkspace);
+    if (workspace.workspaceNo) {
+      setClient(
+        new w3cwebsocket(
+          "ws://localhost:8000/document" + window.location.search
+        ) /**소켓 통신 확인하려고 localhost로 변경했음 */
+      );
+    }
+  }, [workspace.workspaceNo]);
 
   const sendChat = (chat) => {
     client.send(
       JSON.stringify({
         type: "chat",
-        user: user.name,
+        user: user,
         chat: chat,
       })
     );
@@ -50,7 +67,7 @@ function Workspace() {
       client.send(
         JSON.stringify({
           type: "contentchange",
-          user: user.name,
+          user: user,
           content: message,
           len: textList.length - index,
         })
@@ -89,23 +106,11 @@ function Workspace() {
     padding: "0px !important",
   };
 
-  useEffect(() => {
-    getWorkspace(workspaceNo, setWorkspace);
-    if (workspace.workspaceNo) {
-      setClient(
-        new w3cwebsocket(
-          "ws://localhost:8000/document" + window.location.search
-        ) /**소켓 통신 확인하려고 localhost로 변경했음 */
-      );
-    }
-  }, [workspace.workspaceNo]);
-
-  console.log(window.location.search);
   if (client) {
     client.onopen = () => {
       client.send(
         JSON.stringify({
-          user: user.name,
+          user: user,
           type: "userevent",
         })
       );
@@ -150,6 +155,7 @@ function Workspace() {
       chatMessage.focus();
     }
   };
+  console.log(users);
   return (
     <ThemeProvider theme={theme}>
       <Box>
@@ -166,24 +172,28 @@ function Workspace() {
           >
             {users.users &&
               users.users.map((user, index) => {
-                let username = "";
+                console.log(user);
                 for (let key in user) {
-                  username = user[key].user;
+                  user = user[key].user;
                 }
                 return (
-                  <Box key={username + index}>
+                  <Box key={user.userNo}>
                     <Avatar
-                      alt={username}
-                      src="/static/images/avatar/1.jpg"
-                      id={username}
+                      alt={user.name}
+                      src={
+                        user.profile
+                          ? user.profile
+                          : "/static/images/avatar/1.jpg"
+                      }
+                      id={user.name}
                       className="userInfo"
-                      key={username}
+                      key={user.name}
                       sizes="50px"
                       sx={{ marginLeft: "-8px" }}
                     />
 
-                    <UncontrolledTooltip placement="top" target={username}>
-                      {username}
+                    <UncontrolledTooltip placement="top" target={user.name}>
+                      {user.name}
                     </UncontrolledTooltip>
                   </Box>
                 );
@@ -213,10 +223,10 @@ function Workspace() {
                 <Box sx={{ height: "90%", width: "100%" }}>
                   {users.userActivity &&
                     users.userActivity.map((activity, index) => {
-                      // console.log(activity);
+                      console.log(activity);
                       if (activity.username) {
                         // console.log(myId);
-                        if (activity.sender === myId) {
+                        if (activity.sender.userNo === user.userNo) {
                           return (
                             //내가 보낸 채팅
                             <Box>
@@ -248,7 +258,7 @@ function Workspace() {
                                 alignItems: "center",
                               }}
                             >
-                              <Avatar />
+                              <Avatar src={activity.sender.profile} />
                               <Box
                                 sx={{
                                   display: "flex",

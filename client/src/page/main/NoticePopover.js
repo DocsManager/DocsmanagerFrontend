@@ -179,10 +179,11 @@ export function NoticePopover({
             </div>
             <Box>
               {tabContent().length > 0 ? (
-                tabContent().map((notice) => {
+                tabContent().map((notice, index) => {
+                  console.log(notice);
                   return (
                     <div
-                      key={notice.noticeNo}
+                      key={index}
                       style={{
                         color: noticeColor[notice.isRead],
                         margin: 0,

@@ -109,7 +109,6 @@ export function writeFile(
   fileName
     ? fd.append("file", file, `${fileName}.pdf`)
     : fd.append("file", file);
-  console.log(documentUser);
   fd.append(
     "documentUser",
     new Blob([JSON.stringify(documentUser)], { type: "application/json" })

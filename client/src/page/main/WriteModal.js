@@ -28,7 +28,7 @@ import { TextFieldsOutlined } from "@mui/icons-material";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
-
+import UploadModal from "../modal/UploadModal";
 
 const style = {
   position: "absolute",
@@ -59,30 +59,6 @@ const openNoFileConfirm = (fileNull, setFileNull) => {
   fileNull ? setFileNull(false) : setFileNull(true);
 };
 
-const openSuccessWriteModal = (setWriteConfirm, setWriteSuccessConfirm) => {
-  setWriteConfirm(false);
-  setWriteSuccessConfirm(true);
-};
-
-const successWrite = (
-  setWriteModal,
-  setWriteSuccessConfirm,
-  setWriteConfirm,
-  check,
-  setCheckHandler,
-  setFile,
-  setSizeCheck,
-  setLoading
-) => {
-  setWriteModal(false);
-  setWriteSuccessConfirm(false);
-  setWriteConfirm(false);
-  check ? setCheckHandler(false) : setCheckHandler(true);
-  setFile("");
-  setSizeCheck(2);
-  setLoading(false);
-};
-
 const WriteModal = (props) => {
   const [text, setText] = useState("");
   const [file, setFile] = useState("");
@@ -93,6 +69,7 @@ const WriteModal = (props) => {
   const [loading, setLoading] = useState(false);
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
+  const { check, setCheckHandler } = useContext(MyContext);
 
   const user = getUser();
   const documentDTO = {
@@ -102,10 +79,26 @@ const WriteModal = (props) => {
   const documentUser = searchList.map(
     (search) => (search = { authority: search.authority, userNo: search })
   );
+  const successWrite = () => {
+    notipublish(searchList);
+    setWriteModal(false);
+    setWriteSuccessConfirm(false);
+    setWriteConfirm(false);
+    setCheckHandler(!check);
+    setFile("");
+    setSearchList([]);
+    setSizeCheck(2);
+    setLoading(false);
+  };
+  const openSuccessWriteModal = (writeFile) => {
+    writeFile(file, documentDTO, documentUser, setSizeCheck);
+    setWriteConfirm(false);
+    setWriteSuccessConfirm(true);
+    setWriteModal(false);
+    setLoading(true);
+  };
 
   documentUser.push({ userNo: user, authority: "MASTER" });
-
-  const { check, setCheckHandler } = useContext(MyContext);
 
   return (
     <ThemeProvider theme={theme}>
@@ -210,18 +203,26 @@ const WriteModal = (props) => {
             </Typography>
           </Box>
         </Modal>
-
-        <ConfirmModal
+        <UploadModal
+          sizeCheck={sizeCheck}
+          writeSuccessConfirm={writeSuccessConfirm}
+          successWrite={successWrite}
+          openSuccessWriteModal={openSuccessWriteModal}
+          loading={loading}
+          writeFile={writeFile}
+          writeConfirm={writeConfirm}
+          setWriteConfirm={setWriteConfirm}
+        />
+        {/* <ConfirmModal
           open={writeConfirm}
           setOpen={setWriteConfirm}
           act={() => {
             {
               writeFile(file, documentDTO, documentUser, setSizeCheck);
-              setSearchList([]);
-              openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
-              notipublish(searchList);
-              setWriteModal(false);
-              setLoading(true);
+              openSuccessWriteModal();
+              // openSuccessWriteModal(setWriteConfirm, setWriteSuccessConfirm);
+              // setWriteModal(false);
+              // setLoading(true);
               // check ? setCheckHandler(false) : setCheckHandler(true);
             }
           }}
@@ -237,17 +238,18 @@ const WriteModal = (props) => {
         {sizeCheck === 1 ? (
           <SucessModal
             open={writeSuccessConfirm}
-            close={() =>
-              successWrite(
-                setWriteModal,
-                setWriteSuccessConfirm,
-                setWriteConfirm,
-                check,
-                setCheckHandler,
-                setFile,
-                setSizeCheck,
-                setLoading
-              )
+            close={
+              // successWrite(
+              //   setWriteModal,
+              //   setWriteSuccessConfirm,
+              //   setWriteConfirm,
+              //   check,
+              //   setCheckHandler,
+              //   setFile,
+              //   setSizeCheck,
+              //   setLoading
+              // )
+              successWrite
             }
           >
             <Typography>작성 완료</Typography>
@@ -255,24 +257,25 @@ const WriteModal = (props) => {
         ) : sizeCheck === 0 ? (
           <SucessModal
             open={writeSuccessConfirm}
-            close={() =>
-              successWrite(
-                setWriteModal,
-                setWriteSuccessConfirm,
-                setWriteConfirm,
-                check,
-                setCheckHandler,
-                setFile,
-                setSizeCheck,
-                setLoading
-              )
+            close={
+              // successWrite(
+              //   setWriteModal,
+              //   setWriteSuccessConfirm,
+              //   setWriteConfirm,
+              //   check,
+              //   setCheckHandler,
+              //   setFile,
+              //   setSizeCheck,
+              //   setLoading
+              // )
+              successWrite
             }
           >
             <Typography>용량 초과</Typography>
           </SucessModal>
         ) : (
           <></>
-        )}
+        )} */}
         {
           <SucessModal
             open={fileNull}

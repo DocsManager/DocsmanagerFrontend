@@ -125,7 +125,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
               !checkDuplication(searchList, users)
             ) {
               return (
-                <Typography key={users.userNo} sx={{ display: "flex" }}>
+                <Box key={users.userNo} sx={{ display: "flex" }}>
                   <Checkbox
                     onChange={(e) => {
                       if (e.target.checked) {
@@ -150,7 +150,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
                     <span>{users.dept.deptName + "팀"}</span>
                     <span>{users.name}</span>
                   </Box>
-                </Typography>
+                </Box>
               );
             }
           })}
