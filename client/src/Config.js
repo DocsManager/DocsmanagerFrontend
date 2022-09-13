@@ -160,5 +160,12 @@ export const theme = createTheme({
         },
       },
     },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          fontSize: "15px",
+        },
+      },
+    },
   },
 });

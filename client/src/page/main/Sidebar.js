@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -29,7 +30,7 @@ const sidebarLinkStyle = {
 const SidebarSideLink = styled(ListItemButton)`
   font-size: 30px;
   padding: 5px 10px 5px 10px;
-  margin: 10px 10px 10px 0;
+  margin: 5px 10px 0px 5px;
   height: 60px;
   display: flex;
   justify-content: space-between;
@@ -37,6 +38,36 @@ const SidebarSideLink = styled(ListItemButton)`
   font-weight: bolder;
   list-style: none;
   text-decoration: none;
+  border-radius: 30px 0px 0px 30px;
+
+  &:hover {
+    background: white;
+    border-left: 3px solid #3791f8;
+    cursor: pointer;
+    text-decoration-line: none;
+    color: #3791f8;
+    font-weight: bold;
+  }
+`;
+
+const SidebarSideLinkPage = styled(ListItemButton)`
+  font-size: 30px;
+  padding: 5px 10px 5px 10px;
+  margin: 5px 10px 0px 5px;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bolder;
+  list-style: none;
+  text-decoration: none;
+  background: white;
+  border-left: 3px solid #3791f8;
+  cursor: pointer;
+  text-decoration-line: none;
+  color: #3791f8;
+  font-weight: bold;
+  border-radius: 30px 0px 0px 30px;
   &:hover {
     background: white;
     border-left: 3px solid #3791f8;
@@ -109,6 +140,8 @@ const Storage = styled(Box)({
   fontSize: "1.2rem",
 });
 export default function Sidebar() {
+  const pathName = useLocation().pathname;
+
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState(0);
   const classes = useStyles();
@@ -122,7 +155,7 @@ export default function Sidebar() {
   useEffect(() => {
     fileSize(getUser().userNo, setSize);
   }, [check]);
-
+  console.log(pathName);
   return (
     <Box>
       <Box className="sidebar-nav">
@@ -133,31 +166,65 @@ export default function Sidebar() {
         </div>
 
         <List style={sidebarLinkStyle}>
-          {SidebarData.map((item, index) => (
-            <SidebarSideLink to={item.path} key={index} onClick={clickHandler}>
-              <Tooltip
-                title={item.tooltip}
-                classes={{ tooltip: classes.tooltip }}
-                placement="bottom-end" //툴팁 위치 변경됨 08.31
+          {SidebarData.map((item, index) =>
+            pathName === item.path ? (
+              <SidebarSideLinkPage
+                to={item.path}
+                key={index}
+                onClick={clickHandler}
               >
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: "0.25fr 0.5fr",
-                    width: "250px",
-                  }}
+                <Tooltip
+                  title={item.tooltip}
+                  classes={{ tooltip: classes.tooltip }}
+                  placement="bottom-end" //툴팁 위치 변경됨 08.31
                 >
-                  <p style={{ margin: "0 auto" }}>{item.icon}</p>
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "0.25fr 0.5fr",
+                      width: "250px",
+                    }}
+                  >
+                    <p style={{ margin: "0 auto" }}>{item.icon}</p>
 
-                  <ListItemText
-                    primary={
-                      <Typography style={style}>{item.title}</Typography>
-                    }
-                  />
-                </Box>
-              </Tooltip>
-            </SidebarSideLink>
-          ))}
+                    <ListItemText
+                      primary={
+                        <Typography style={style}>{item.title}</Typography>
+                      }
+                    />
+                  </Box>
+                </Tooltip>
+              </SidebarSideLinkPage>
+            ) : (
+              <SidebarSideLink
+                to={item.path}
+                key={index}
+                onClick={clickHandler}
+              >
+                <Tooltip
+                  title={item.tooltip}
+                  classes={{ tooltip: classes.tooltip }}
+                  placement="bottom-end" //툴팁 위치 변경됨 08.31
+                >
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns: "0.25fr 0.5fr",
+                      width: "250px",
+                    }}
+                  >
+                    <p style={{ margin: "0 auto" }}>{item.icon}</p>
+
+                    <ListItemText
+                      primary={
+                        <Typography style={style}>{item.title}</Typography>
+                      }
+                    />
+                  </Box>
+                </Tooltip>
+              </SidebarSideLink>
+            )
+          )}
         </List>
         {/* 08.31 드라이브 용량 표시 변경 코드 */}
         <Storage>

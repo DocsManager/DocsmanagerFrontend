@@ -35,15 +35,28 @@ const ConfirmModal = (props) => {
         aria-describedby="child-modal-description"
       >
         <Box sx={{ ...style, width: 350 }}>
-          <Box id="child-modal-description">{props.children}</Box>
-          <WorkspaceButton variant="contained" onClick={act}>
-            확인
-            <AddBoxOutlinedIcon />
-          </WorkspaceButton>
-          <WorkspaceButton variant="contained" onClick={() => setOpen(false)}>
-            취소
-            <CloseOutlinedIcon />
-          </WorkspaceButton>
+          <Box
+            id="child-modal-description"
+            sx={{ display: "flex", justifyContent: "center" }}
+          >
+            {props.children}
+          </Box>
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+            mt={2}
+          >
+            <WorkspaceButton variant="contained" onClick={act}>
+              확인
+              <AddBoxOutlinedIcon />
+            </WorkspaceButton>
+            <WorkspaceButton variant="contained" onClick={() => setOpen(false)}>
+              취소
+              <CloseOutlinedIcon />
+            </WorkspaceButton>
+          </Typography>
         </Box>
       </Modal>
     </React.Fragment>

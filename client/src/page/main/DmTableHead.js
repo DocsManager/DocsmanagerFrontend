@@ -85,17 +85,19 @@ function DmTableHead(props) {
   const checkAll = (rowCount, page, rowsPerPage, numSelected) => {
     if (numSelected === rowCount) {
       return true;
-    }
-    if (
-      page === totalPage &&
-      numSelected < rowsPerPage &&
-      numSelected === (rowCount % (page * rowsPerPage)) % 10 &&
-      numSelected !== 0
-    ) {
-      return true;
     } else {
       return false;
     }
+    // if (
+    //   page === totalPage &&
+    //   numSelected < rowsPerPage &&
+    //   numSelected === (rowCount % (page * rowsPerPage)) % 10 &&
+    //   numSelected !== 0
+    // ) {
+    //   return true;
+    // } else {
+    //   return false;
+    // }
   };
 
   return (
