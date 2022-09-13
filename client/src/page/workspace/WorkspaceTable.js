@@ -25,6 +25,7 @@ import {
 import { getUser } from "../../component/getUser/getUser";
 import { Button } from "@mui/material";
 import AddMember from "../main/AddMember";
+import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import EditIcon from "@material-ui/icons/Edit";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
@@ -63,8 +64,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// This method is created for cross-browser compatibility, if you don't
-// need to support IE11, you can use Array.prototype.sort() directly
 function stableSort(array, comparator) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {

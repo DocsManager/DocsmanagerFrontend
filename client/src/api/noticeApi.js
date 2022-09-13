@@ -87,27 +87,24 @@ export const wsDocsSubscribe = (setNewNotice, setNoticeList, noticeList) => {
       const dataFromServer = JSON.parse(body);
       console.log(dataFromServer);
       setNewNotice(dataFromServer);
-      setNoticeList((noticeList) => [...noticeList, dataFromServer]);
+      getNoticeList(setNoticeList);
     });
     client.subscribe(`/queue/workspace/${getUser().id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       setNewNotice(dataFromServer);
-      setNoticeList(
-        noticeList.length === 0
-          ? [dataFromServer]
-          : [...noticeList, dataFromServer]
-      );
+      getNoticeList(setNoticeList);
+      // setNoticeList(
+      //   noticeList.length === 0
+      //     ? [dataFromServer]
+      //     : [...noticeList, dataFromServer]
+      // );
     });
 
     client.subscribe(`/queue/workspace/member/${getUser().id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       console.log(dataFromServer);
       setNewNotice(dataFromServer);
-      setNoticeList(
-        noticeList.length === 0
-          ? [dataFromServer]
-          : [...noticeList, dataFromServer]
-      );
+      getNoticeList(setNoticeList);
     });
   };
 

@@ -50,6 +50,50 @@ export default function AddWorkspace({ open, setOpen }) {
   const [newWorkspace, setNewWorkspace] = useState();
   const [loading, setLoading] = useState(false);
   const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
+  const [title, setTitle] = useState("");
+  const [clickHandler, setClickHandler] = useState(false);
+  // 제목 없을 때 뜨는 textinput
+  const fillTitle = () => {
+    if (clickHandler === false || title) {
+      return (
+        <TextField
+          id="workspaceTitle"
+          InputProps={{
+            startAdornment: (
+              <ModalIcon position="start">
+                <LaptopChromebook />
+              </ModalIcon>
+            ),
+          }}
+          variant="outlined"
+          label="워크스페이스명"
+          margin="normal"
+        />
+      );
+    }
+    if (clickHandler === true && !title) {
+      return (
+        <TextField
+          id="workspaceTitle"
+          InputProps={{
+            startAdornment: (
+              <ModalIcon
+                position="start"
+                sx={{ color: title ? "#3781f8" : "#d32f2f" }}
+              >
+                <LaptopChromebook />
+              </ModalIcon>
+            ),
+          }}
+          variant="outlined"
+          label="워크스페이스명"
+          margin="normal"
+          error
+          helperText="워크스페이스명은 필수 입력 사항입니다!"
+        />
+      );
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,20 +117,7 @@ export default function AddWorkspace({ open, setOpen }) {
               <Typography component="h3" mt={1}>
                 워크스페이스명
               </Typography>
-
-              <TextField
-                id="workspaceTitle"
-                InputProps={{
-                  startAdornment: (
-                    <ModalIcon position="start">
-                      <LaptopChromebook />
-                    </ModalIcon>
-                  ),
-                }}
-                variant="outlined"
-                label="워크스페이스명"
-                margin="normal"
-              />
+              {fillTitle()}
             </React.Fragment>
 
             <ShareUser
@@ -105,6 +136,7 @@ export default function AddWorkspace({ open, setOpen }) {
                 variant="contained"
                 onClick={() => {
                   const title = document.getElementById("workspaceTitle").value;
+                  setTitle(title);
                   if (title) {
                     const workspace = {
                       title: title,
@@ -120,7 +152,9 @@ export default function AddWorkspace({ open, setOpen }) {
                     newWorkspace &&
                       worksapcepublish(searchList, newWorkspaceNo, setLoading);
                     setSearchList([]);
+                    setTitle();
                   }
+                  title ? setClickHandler(false) : setClickHandler(true);
                 }}
               >
                 생성
