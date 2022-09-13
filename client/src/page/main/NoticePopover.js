@@ -238,7 +238,6 @@ export function NoticePopover({
             <Box>
               {tabContent().length > 0 ? (
                 tabContent().map((notice) => {
-                  console.log(notice.noticeNo);
                   return (
                     <div
                       key={notice.noticeNo}

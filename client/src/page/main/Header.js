@@ -18,6 +18,7 @@ import { Box } from "@mui/system";
 import { styled, ThemeProvider } from "@mui/material/styles";
 import { AccountBox, Logout } from "@mui/icons-material";
 import { theme } from "../../Config";
+import { MyContext } from "../Main";
 import { logout } from "../../api/userApi";
 import { Link } from "react-router-dom";
 
@@ -42,14 +43,21 @@ export default function Header() {
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
   const setIsReadHandler = (isRead) => setIsRead(isRead);
-  const [check, setCheck] = useState(false);
-
+  const [headerCheck, setHeaderCheck] = useState(false);
+  const { check, setCheckHandler } = useContext(MyContext);
   useEffect(() => {
     getNoticeList(setNoticeList);
-    wsDocsSubscribe(setNewNotice, setNoticeList, noticeList);
     // return () => wsDisconnect();
-  }, [isRead, newNotice, check]);
-  console.log(noticeList);
+  }, [isRead, newNotice, headerCheck]);
+  useEffect(() => {
+    wsDocsSubscribe(
+      setNewNotice,
+      setNoticeList,
+      noticeList,
+      setCheckHandler,
+      0
+    );
+  }, []);
 
   //Toast message 띄워주는 함수
   const showNotice = (newNotice) => {
@@ -141,7 +149,7 @@ export default function Header() {
                   noticeList={noticeList}
                   setNoticeList={setNoticeList}
                   newNotice={newNotice}
-                  setCheck={setCheck}
+                  setCheck={setHeaderCheck}
                 />
               </NoticeContext.Provider>
               <div className="header-profile" />

@@ -9,6 +9,7 @@ const baseUrl = "/api/";
 export function getNoticeList(setNoticeList) {
   const url = baseUrl + "notice/receiver/" + getUser().userNo;
   axios.get(url).then((res) => {
+    console.log(res.data);
     setNoticeList(res.data);
   });
 }
@@ -79,14 +80,23 @@ const client = new StompJs.Client({
   heartbeatOutgoing: 4000,
 });
 
-export const wsDocsSubscribe = (setNewNotice, setNoticeList, noticeList) => {
+export const wsDocsSubscribe = (
+  setNewNotice,
+  setNoticeList,
+  noticeList,
+  setCheck,
+  count
+) => {
   client.onConnect = () => {
     console.log("연결됨");
 
     client.subscribe(`/queue/sharedocs/${getUser().id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       console.log(dataFromServer);
+      count += 1;
       setNewNotice(dataFromServer);
+      setNoticeList((noticeList) => [...noticeList, dataFromServer]);
+      setCheck(count % 2 === 1 ? true : false);
       getNoticeList(setNoticeList);
     });
     client.subscribe(`/queue/workspace/${getUser().id}`, ({ body }) => {
@@ -103,7 +113,14 @@ export const wsDocsSubscribe = (setNewNotice, setNoticeList, noticeList) => {
     client.subscribe(`/queue/workspace/member/${getUser().id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       console.log(dataFromServer);
+      count += 1;
       setNewNotice(dataFromServer);
+      setNoticeList(
+        noticeList.length === 0
+          ? [dataFromServer]
+          : [...noticeList, dataFromServer]
+      );
+      setCheck(count % 2 === 1 ? true : false);
       getNoticeList(setNoticeList);
     });
   };
