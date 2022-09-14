@@ -1,4 +1,5 @@
 import axios from "axios";
+import { worksapcepublish } from "./noticeApi";
 
 const baseUrl = "/api/workspace";
 
@@ -38,13 +39,17 @@ export function deleteWorkspace(workspaceNo, setCheck, check) {
   axios.delete(url).then(() => setCheck(!check));
 }
 
-export function addWorkspace(workspace, setOpen, setNewWorkspace, setLoading) {
+export function addWorkspace(workspace, searchList, setLoading, closeHandler) {
   axios
     .post(baseUrl, workspace)
     .then((res) => {
-      console.log(res.data);
-      setNewWorkspace(res.data.at(-1)); //workspace 받아오기 위한 용도
-      setOpen(false);
+      // setNewWorkspace(res.data.at(-1)); //workspace 받아오기 위한 용도
+      worksapcepublish(
+        searchList,
+        res.data.at(-1).workspaceNo.workspaceNo,
+        setLoading
+      );
+      closeHandler();
     })
     .catch((err) => console.log(err));
 }

@@ -67,7 +67,7 @@ export default function Header() {
   };
 
   //프로필 사진 변경, 로그아웃 popover를 위한 코드
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -119,6 +119,7 @@ export default function Header() {
                   justifyContent: "space-around",
                 }}
               >
+                
                 <Link to="/main/mypage">
                   <PopoverBtn variant="contained" endIcon={<AccountBox />}>
                     마이페이지
@@ -136,7 +137,24 @@ export default function Header() {
                 </PopoverBtn>
                 {/* <PopoverBtn variant="contained">로그아웃</PopoverBtn> */}
               </Box>
-            </Popover>
+              </Popover>
+            </div>
+            <p className="header-user-text">
+              <span>{name}</span>님 환영합니다
+            </p>
+            {newNotice && showNotice(newNotice)}
+            <div className="header-alert">
+              <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
+                <NoticePopover
+                  noticeList={noticeList}
+                  setNoticeList={setNoticeList}
+                  newNotice={newNotice}
+                  setCheck={setHeaderCheck}
+                  check={headerCheck}
+                />
+              </NoticeContext.Provider>
+              <div className="header-profile" />
+            </div>
           </div>
           <p className="header-user-text">
             <span>{name}</span>님 환영합니다
@@ -153,7 +171,6 @@ export default function Header() {
             </NoticeContext.Provider>
             <div className="header-profile" />
           </div>
-        </div>
       </Navbar>
     </div>
   );

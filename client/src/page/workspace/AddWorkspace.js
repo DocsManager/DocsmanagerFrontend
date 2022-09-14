@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Button, Typography, Modal } from "@mui/material";
 import { SvgIcon, TextField, ThemeProvider } from "@mui/material";
 import ShareUser from "../main/ShareUser";
@@ -12,6 +12,7 @@ import {
   CloseOutlined,
 } from "@mui/icons-material";
 import { theme } from "../../Config";
+import { MyContext } from "../Main";
 
 const style = {
   position: "absolute",
@@ -47,11 +48,12 @@ export default function AddWorkspace({ open, setOpen }) {
     setSearchList([]);
   };
   //워크스페이스 번호를 알림 파라미터로 넘겨주기 위해 생성
-  const [newWorkspace, setNewWorkspace] = useState();
+  // const [newWorkspace, setNewWorkspace] = useState();
   const [loading, setLoading] = useState(false);
-  const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
+  // const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
   const [title, setTitle] = useState("");
   const [clickHandler, setClickHandler] = useState(false);
+  const { check, setCheckHandler } = useContext(MyContext);
   // 제목 없을 때 뜨는 textinput
   const fillTitle = () => {
     if (clickHandler === false || title) {
@@ -93,6 +95,11 @@ export default function AddWorkspace({ open, setOpen }) {
         />
       );
     }
+  };
+
+  const closeHandler = () => {
+    setOpen(false);
+    setCheckHandler(!check);
   };
 
   return (
@@ -142,13 +149,20 @@ export default function AddWorkspace({ open, setOpen }) {
                     master: getUser(),
                     userList: searchList,
                   };
-                  addWorkspace(workspace, setOpen, setNewWorkspace, setLoading);
-                  newWorkspace &&
-                    worksapcepublish(searchList, newWorkspaceNo, setLoading);
+                  addWorkspace(
+                    workspace,
+                    searchList,
+                    setLoading,
+                    closeHandler
+                  );
+                  // console.log(newWorkspace);
+                  // newWorkspace &&
+                  // worksapcepublish(searchList, newWorkspaceNo, setLoading);
                   setSearchList([]);
                   setTitle();
                 }
                 title ? setClickHandler(false) : setClickHandler(true);
+                setCheckHandler(!check);
               }}
             >
               생성
@@ -158,8 +172,8 @@ export default function AddWorkspace({ open, setOpen }) {
               취소
               <CloseOutlined />
             </WorkspaceButton>
+            </Box>
           </Box>
-        </Box>
       </Modal>
     </div>
   );
