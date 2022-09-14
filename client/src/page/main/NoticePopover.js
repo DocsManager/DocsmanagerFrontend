@@ -28,6 +28,7 @@ export function NoticePopover({
   setNoticeList,
   newNotice,
   setCheck,
+  check,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { isRead, setIsReadHandler } = useContext(NoticeContext);
@@ -99,6 +100,7 @@ export function NoticePopover({
               onClick={() => {
                 deleteAllNotice(setNoticeList);
                 setCheck(true);
+                handleClose();
               }}
             >
               전체 알림 삭제
@@ -282,7 +284,10 @@ export function NoticePopover({
                           }}
                           onClick={() => {
                             deleteNotice(notice.noticeNo);
-                            setCheck(true);
+                            setCheck(!check);
+                            if (tabContent().length === 1) {
+                              handleClose();
+                            }
                           }}
                         />
                         <span

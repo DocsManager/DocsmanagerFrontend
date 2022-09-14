@@ -67,7 +67,7 @@ export default function Header() {
   };
 
   //프로필 사진 변경, 로그아웃 popover를 위한 코드
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -150,6 +150,7 @@ export default function Header() {
                   setNoticeList={setNoticeList}
                   newNotice={newNotice}
                   setCheck={setHeaderCheck}
+                  check={headerCheck}
                 />
               </NoticeContext.Provider>
               <div className="header-profile" />

@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   deleteUserWorkspace,
   getUserWorkspace,
 } from "../../api/workspaceUserApi";
 import { getUser } from "../../component/getUser/getUser";
 import WorkspaceTable from "./WorkspaceTable";
+import { MyContext } from "../Main";
 
 function WorkspaceList() {
   const [workspaces, setWorkspace] = useState([]);
-  const [check, setCheck] = useState(false);
+  // const [check, setCheck] = useState(false);
+  const { check, setCheckHandler } = useContext(MyContext);
   const user = getUser();
   useEffect(() => {
     getUserWorkspace(user.userNo, setWorkspace);
@@ -31,7 +33,7 @@ function WorkspaceList() {
         setWorkspace={setWorkspace}
         user={user}
         check={check}
-        setCheck={setCheck}
+        setCheck={setCheckHandler}
       />
     </div>
   );
