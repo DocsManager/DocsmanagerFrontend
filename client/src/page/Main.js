@@ -15,23 +15,21 @@ function Main() {
   console.log(check);
 
   return (
-    <ThemeProvider theme={theme}>
       <Box>
         <MyContext.Provider value={{ check, setCheckHandler }}>
           <Header />
           <Box
             style={{
               display: "grid",
-              gridTemplateColumns: "350px 2fr", //09.01 바뀜
+              gridTemplateColumns:window.location.href.split("main")[1].includes("/document")?"100% 0%":"350px 2fr", //09.01 바뀜
               width: "100%",
             }}
           >
-            <Sidebar />
+            {window.location.href.split("main")[1].includes("/document")?<></>:<Sidebar/>}
             <Outlet />
           </Box>
         </MyContext.Provider>
       </Box>
-    </ThemeProvider>
   );
 }
 

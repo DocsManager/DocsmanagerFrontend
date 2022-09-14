@@ -9,6 +9,8 @@ import "medium-editor/dist/css/themes/default.css";
 import "../../App.css";
 import { getTempContent, getWorkspace } from "../../api/workspaceApi";
 import { workspaceMember } from "../../api/workspaceUserApi";
+import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
+import LaptopMacOutlinedIcon from '@mui/icons-material/LaptopMacOutlined';
 import Header from "../main/Header";
 import {
   Avatar,
@@ -35,7 +37,9 @@ function Workspace() {
   const URLSearch = new URLSearchParams(window.location.search);
   const workspaceNo = URLSearch.get("room");
   const user = getUser();
-
+  const scrollRef = useRef();
+  console.log(scrollRef.current); // ChatWrapper 출력
+  console.log(scrollRef.current&&scrollRef.current.scrollTop,scrollRef.current&& scrollRef.current.scrollHeight)
   useEffect(() => {
     workspaceMember(workspaceNo, setUserList);
   }, []);
@@ -50,6 +54,10 @@ function Workspace() {
       );
     }
   }, [workspace.workspaceNo]);
+
+  useEffect(()=>{
+    scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+  })
 
   const sendChat = (chat) => {
     client.send(
@@ -79,9 +87,10 @@ function Workspace() {
     "&::-webkit-scrollbar": {
       width: "0.4em",
     },
-    maxHeight: "78vh",
-    minHeight: "78vh",
+    maxHeight: "82vh",
+    minHeight: "82vh",
     overflowY: "scroll",
+    marginTop:"50px"
   };
 
   //inputBox style
@@ -157,13 +166,18 @@ function Workspace() {
   };
   console.log(users);
   return (
-    <Box>
+    <Box >
       {/**워크스페이스에 헤더만 나타나게 하려고 index.js에서 분리해서 Header 첨부함 */}
-      <Header />
+      {/* <Header /> */}
       {/* 프로필 그룹으로 띄워주도록 */}
-      <div className="container-fluid" style={{ marginLeft: "20px" }}>
+      <div className="container-fluid" style={{ marginLeft: "20px", display:"grid", gridTemplateColumns:"80% 20%"}}>
+        <Box
+        >
+          <Box  sx={{display:"flex"}}>
+          <Box sx={{display:"flex", alignItems:"center"}}><LaptopMacOutlinedIcon sx={{marginRight:"10px", fontSize:"70px", color:"#3791f8"}}/> <Typography>{workspace.title}</Typography></Box>
         <AvatarGroup
           sx={{
+            marginLeft:"30px",
             justifyContent: "flex-end",
             alignItems: "center",
           }}
@@ -173,6 +187,8 @@ function Workspace() {
             users.users.map((user, index) => {
               console.log(user);
               for (let key in user) {
+
+                
                 user = user[key].user;
               }
               return (
@@ -198,28 +214,26 @@ function Workspace() {
               );
             })}
         </AvatarGroup>
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "80% 20%",
-            height: "100%",
-          }}
-        >
+        </Box>
           <QuillEditor
             onEditorStateChange={onEditorStateChange}
             setMessage={setMessage}
             message={message}
             workspace={workspace}
           />
-          <Box
+          
+        </Box>
+        <Box
             sx={{
               padding: "10px",
               marginLeft: "10px",
               height: "100vh",
             }}
+            
           >
-            <Box sx={style}>
-              <Box sx={{ height: "90%", width: "100%" }}>
+            
+            <Box sx={style} id="chatBox" ref={scrollRef}>
+              <Box sx={{ height: "90%", width: "100%" }} id="chatRoom">
                 {users.userActivity &&
                   users.userActivity.map((activity, index) => {
                     console.log(activity);
@@ -228,7 +242,7 @@ function Workspace() {
                       if (activity.sender.userNo === user.userNo) {
                         return (
                           //내가 보낸 채팅
-                          <Box>
+                          <Box key={`activity-${index}`}>
                             <Box
                               key={`activity-${index}`}
                               className="myChat"
@@ -255,6 +269,7 @@ function Workspace() {
                             sx={{
                               display: "flex",
                               alignItems: "center",
+                              marginLeft:"10px"
                             }}
                           >
                             <Avatar src={activity.sender.profile} />
@@ -301,8 +316,8 @@ function Workspace() {
               </Box>
             </Box>
             {/* 대화 입력창 */}
-            <div>
-              <TextField
+            <div style={{display:"flex", justifyContent:"space-evenly", padding:"10px"}}>
+              <InputBox
                 id="chat"
                 placeholder="메시지를 입력하세요"
                 onKeyPress={onKeyPress}
@@ -320,8 +335,9 @@ function Workspace() {
               </Button>
             </div>
           </Box>
-        </Box>
-      </div>
+        </div>
+        
+      
     </Box>
   );
 }

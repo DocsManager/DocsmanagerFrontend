@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, Button, Modal, TextField, Typography } from "@mui/material";
 import { updateTitleWorkspace } from "../../api/workspaceApi";
+import { WorkspaceButton } from "./AddWorkspace";
+import { CloseOutlined, Edit } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -12,6 +14,7 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  border:"none !important"
 };
 
 function EditTitle({ open, setOpen, row, setList }) {
@@ -34,8 +37,10 @@ function EditTitle({ open, setOpen, row, setList }) {
               variant="outlined"
             />
           </div>
-
-          <Button
+          <Box sx={{marginTop:"20px", display:"flex", justifyContent:"space-evenly"}}>
+            <WorkspaceButton variant="contained"
+            endIcon={<Edit/>}
+            // sx={{marginRight:"10px"}}
             onClick={() => {
               const newTitle = document.getElementById("newWorksapceTitle")
                 .value;
@@ -53,8 +58,9 @@ function EditTitle({ open, setOpen, row, setList }) {
             }}
           >
             수정
-          </Button>
-          <Button onClick={() => setOpen(false)}>취소</Button>
+          </WorkspaceButton>
+          <WorkspaceButton variant="contained" onClick={() => setOpen(false)} endIcon={<CloseOutlined />}>취소</WorkspaceButton></Box>
+          
         </Box>
       </Modal>
     </div>

@@ -183,5 +183,14 @@ export const theme = createTheme({
         },
       },
     },
+    
+    MuiTabs:{
+      styleOverrides:{
+        indicator:{
+          backgroundColor:"#3791f8"
+        }
+      }
+    }
+
   },
 });

@@ -3,26 +3,17 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TextField,
-  Typography,
-  ThemeProvider,
   Pagination,
 } from "@mui/material";
-import { Box, TablePagination, TableRow, LinearProgress } from "@mui/material";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import { Table, Button } from "@mui/material";
+import { Box, TableRow,Table, Paper, Checkbox } from "@mui/material";
 import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
 import { getUser } from "../../component/getUser/getUser";
 import { MyContext } from "../Main";
 import {
-  fileSize,
   getList,
   importantFile,
-  searchDocument,
-  removeImportantFile,
 } from "../../api/documentApi";
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
@@ -89,11 +80,6 @@ export function fileCategoryIcon(fileCategory) {
       return <img src="https://img.icons8.com/color/30/000000/file.png" />;
   }
 }
-
-// export const MyContext = createContext({
-//   check: "",
-//   setCheckHandler: (check) => {},
-// });
 
 export default function DmTable(props) {
   const [order, setOrder] = useState("desc");
@@ -225,15 +211,13 @@ export default function DmTable(props) {
   };
   const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
 
-  const emptyRows =
+  const emptyRows = //emptyRows 수정 09.14
     page >= 0
       ? Math.max(
           0,
-          (1 + page) * rowsPerPage - (list.dtoList && list.dtoList.length)
+          rowsPerPage - (list.dtoList && list.dtoList.length)
         )
       : 0;
-  console.log(page, rowsPerPage, list.dtoList && list.dtoList.length);
-  console.log(emptyRows);
   return (
     <React.Fragment>
       {list.dtoList ? (
@@ -384,7 +368,7 @@ export default function DmTable(props) {
                       0 /**>=0이면 애매하게 칸이 생겨서 >0으로 바꿈 */ && (
                       <TableRow
                         style={{
-                          height: 45 * emptyRows,
+                          height: 77.422 * emptyRows,
                         }}
                       >
                         <TableCell colSpan={10} />
@@ -393,15 +377,6 @@ export default function DmTable(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* <TablePagination
-              rowsPerPageOptions={[10]}
-              component="div"
-              count={list.length * 2}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            /> */}
             </Paper>
             <Pagination
               style={{
@@ -422,47 +397,6 @@ export default function DmTable(props) {
                 dtoList={list.dtoList.length}
               />
             )}
-            {/* <div>
-            <button
-              className="pageButton"
-              onClick={() =>
-                setPages(
-                  pageList.start - pageList.size >= 1
-                    ? pageList.start - pageList.size
-                    : pages
-                )
-              }
-            >
-              이전
-            </button>
-
-            {pageList &&
-              pageList.pageList.map((page) => {
-                return (
-                  <span
-                    className={pages === page ? "pageNum" : "pageOut"}
-                    onClick={() => {
-                      setPages(page);
-                    }}
-                    key={page}
-                  >
-                    {page}
-                  </span>
-                );
-              })}
-            <button
-              className="pageButton"
-              onClick={() =>
-                setPages(
-                  pageList.start + pageList.size > pageList.totalPage
-                    ? pages
-                    : pageList.start + pageList.size
-                )
-              }
-            >
-              다음
-            </button>
-          </div> */}
           </Box>
         )
       ) : (

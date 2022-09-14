@@ -9,6 +9,7 @@ import ShareUser from "./ShareUser";
 import { notipublish } from "../../api/noticeApi";
 import CircularProgress from "@mui/material/CircularProgress";
 import LinearProgress from "@mui/material/LinearProgress";
+import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -27,7 +28,7 @@ import { theme } from "../../Config";
 import { TextFieldsOutlined } from "@mui/icons-material";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { WorkspaceButton } from "../workspace/AddWorkspace";
+import { ModalIcon, WorkspaceButton } from "../workspace/AddWorkspace";
 import UploadModal from "../modal/UploadModal";
 import FormHelperText from "@mui/material/FormHelperText";
 
@@ -122,30 +123,26 @@ const WriteModal = (props) => {
             새로운 문서 등록
           </Typography>
 
-          <Box mt={1}>{props.children}</Box>
+          <Box mt={1} mb={2}>{props.children}</Box>
           {/* 09.03 모달창 수정 */}
-          <Box>
-            <Stack direction="row" spacing={2}>
-              <Button
-                sx={{ fontSize: "1.3em" }}
-                component="label"
-                htmlFor="fileUpload"
-                startIcon={
-                  <DriveFolderUploadOutlinedIcon sx={{ fontSize: "1.3em" }} />
-                }
-              >
-                업로드
-              </Button>
-
-              <input
+          <Box sx={{display:"flex", alignItems:"center"}}>
+            <input
                 type="file"
                 id="fileUpload"
                 onChange={(e) => setFile(e.target.files[0])}
                 style={{ display: "none" }}
               />
-              <InputBox
+             
+              <TextField
+                mt={1}
                 className="upload-name"
-                placeholder="파일 선택"
+                InputProps={{
+                  startAdornment: (
+                    <ModalIcon position="start">
+                      <AttachFileOutlinedIcon/>
+                    </ModalIcon>
+                  ),
+                }}
                 value={
                   file
                     ? file.name.length > 17
@@ -153,9 +150,20 @@ const WriteModal = (props) => {
                       : file.name
                     : ""
                 }
-                disabled
-              />
-            </Stack>
+                label="파일명"
+                />
+              <Button
+                sx={{ fontSize: "1.1em", marginLeft:"10px" }}
+                component="label"
+                htmlFor="fileUpload"
+                endIcon={
+                  <DriveFolderUploadOutlinedIcon sx={{ fontSize: "1.1em" }} />
+                }
+              >
+                업로드
+              </Button>
+
+
           </Box>
 
           <ShareUser

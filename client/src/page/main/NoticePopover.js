@@ -71,7 +71,7 @@ export function NoticePopover({
       fontWeight: "bold",
     },
     selected: {
-      color: "#3791F8",
+      color: "#3791F8 !important",
       fontWeight: "bolder",
     },
   })(Tab);
@@ -96,6 +96,7 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color:"rgba(0,0,0,0.7)"
               }}
               onClick={() => {
                 deleteAllNotice(setNoticeList);
@@ -109,6 +110,7 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color:"rgba(0,0,0,0.7)"
               }}
               onClick={() => {
                 updateAllNotce(noticeList, setNoticeList);
@@ -223,7 +225,7 @@ export function NoticePopover({
               <Tabs onChange={handleChange} value={selectedTab}>
                 {/* label이라는 객체의 값만으로 map을 돌림 */}
                 {Object.values(label).map((la) => {
-                  return <CustomTab label={la} key={la} />; //09.02 키 변경
+                  return <CustomTab label={la} key={la} sx={{color:"#3791f8"}} />; //09.02 키 변경
                 })}
               </Tabs>
             </Box>

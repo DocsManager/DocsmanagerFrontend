@@ -39,11 +39,11 @@ function App() {
               <Route path="share" element={<ShareBox />} />
               <Route path="important" element={<Important />} />
               <Route path="workspace" element={<WorkspaceList />} />
+              <Route path="document" element={<Workspace />} />
               <Route path="trashcan" element={<TrashCan />} />
               <Route path="mypage" element={<Mypage />} />
             </Route>
           </Route>
-          <Route path="document" element={<Workspace />} />
           {/* workspace에 사이드바 안 보이게 하려고 뺏는데 알림 토스트 메시지가 안 오는 부작용.. */}
           <Route path="*" element={<NotFound />} />
         </Routes>

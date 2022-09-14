@@ -104,15 +104,15 @@ function ShareUser({ searchList, setSearchList, type, member }) {
           label="사원 이름"
           margin="normal"
         />
-        <IconButton
-          size="large"
+        <Button
+           sx={{ fontSize: "1.1em", marginLeft:"10px"}}
           onClick={() => {
             const userName = document.getElementById("searchUserName").value;
             userName && findUser(userName, setUserList);
           }}
-        >
-          <Search sx={{ fontSize: "1.2em" }} />
-        </IconButton>
+          endIcon={<Search sx={{ fontSize: "1.1em" }} />}
+        >검색
+        </Button>
       </Box>
       <Typography component="h3" mt={1}>
         검색 결과

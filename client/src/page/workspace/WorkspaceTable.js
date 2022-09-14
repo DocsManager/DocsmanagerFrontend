@@ -14,8 +14,6 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Checkbox from "@mui/material/Checkbox";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { Link } from "react-router-dom";
 import {
@@ -26,12 +24,11 @@ import { getUser } from "../../component/getUser/getUser";
 import { Button } from "@mui/material";
 import AddMember from "../main/AddMember";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
-import EditIcon from "@material-ui/icons/Edit";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
-import { ConstructionOutlined } from "@mui/icons-material";
+import { ConstructionOutlined, Warning } from "@mui/icons-material";
 import Delete from "@mui/icons-material/Delete";
-import { ToRecyclebin } from "../main/DmTableToolbar";
+import { InfoFunctionBox, ToRecyclebin } from "../main/DmTableToolbar";
 import { theme } from "../../Config";
 import { deleteWorkspace } from "../../api/workspaceApi";
 
@@ -195,7 +192,7 @@ const EnhancedTableToolbar = (props) => {
             ),
         }),
       }}
-    >
+>
       {numSelected > 0 && (
         <Box
           sx={{ flex: "1 1 100%" }}
@@ -231,11 +228,8 @@ const EnhancedTableToolbar = (props) => {
               삭제
             </ToRecyclebin>
           </div>
-        </Box>
-      )}
-    </Toolbar>
-  );
-};
+        </Box>)}
+    </Toolbar>)};
 
 export default function WorkspaceTable(props) {
   const { user, workspace, setWorkspace, check, setCheck } = props;
@@ -317,7 +311,7 @@ export default function WorkspaceTable(props) {
       {rows.length == 0 ? (
         <NoneData />
       ) : (
-        <Box sx={{ width: "100%" }}>
+        <Box sx={{ width: "100%"}}>
           <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
             {/**테이블 너비 변경 */}
             <EnhancedTableToolbar
@@ -325,6 +319,7 @@ export default function WorkspaceTable(props) {
               selected={selected}
               setWorkspace={setWorkspace}
               setSelected={setSelected}
+              sx={{display:selected?"block":"none"}}
             />
             <TableContainer>
               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -373,7 +368,7 @@ export default function WorkspaceTable(props) {
                             <Link
                               to={`/document?room=${row.workspaceNo}`}
                               style={{
-                                marginRight: "30px",
+                                marginRight: "5px",
                                 textDecoration: "none",
                               }}
                             >
@@ -386,7 +381,7 @@ export default function WorkspaceTable(props) {
                                 setRow(row);
                               }}
                             >
-                              <CreateOutlinedIcon />
+                              <CreateOutlinedIcon  sx={{fontSize:"16px !important"}}/>
                             </IconButton>
                             {/* <Button
                               startIcon={<CreateOutlinedIcon />}

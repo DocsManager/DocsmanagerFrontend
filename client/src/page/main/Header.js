@@ -110,13 +110,14 @@ export default function Header() {
                 vertical: "top",
                 horizontal: "center",
               }}
+              sx={{width:"400px !important"}}
             >
               <Box
                 sx={{
                   p: 2,
-                  width: "350px",
                   display: "flex",
                   justifyContent: "space-around",
+                  
                 }}
               >
                 
@@ -139,23 +140,6 @@ export default function Header() {
               </Box>
               </Popover>
             </div>
-            <p className="header-user-text">
-              <span>{name}</span>님 환영합니다
-            </p>
-            {newNotice && showNotice(newNotice)}
-            <div className="header-alert">
-              <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
-                <NoticePopover
-                  noticeList={noticeList}
-                  setNoticeList={setNoticeList}
-                  newNotice={newNotice}
-                  setCheck={setHeaderCheck}
-                  check={headerCheck}
-                />
-              </NoticeContext.Provider>
-              <div className="header-profile" />
-            </div>
-          </div>
           <p className="header-user-text">
             <span>{name}</span>님 환영합니다
           </p>
@@ -167,10 +151,12 @@ export default function Header() {
                 setNoticeList={setNoticeList}
                 newNotice={newNotice}
                 setCheck={setHeaderCheck}
+                check={headerCheck}
               />
             </NoticeContext.Provider>
             <div className="header-profile" />
           </div>
+        </div>
       </Navbar>
     </div>
   );

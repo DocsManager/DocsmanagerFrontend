@@ -33,9 +33,9 @@ const EnrollBtn = styled(Button)({
   cursor: "pointer",
   fontSize: "1em",
 });
-const InfoFunctionBox = styled(Box)({
-  backgroundColor: "#3791f8",
-  color: "white",
+export const InfoFunctionBox = styled(Box)({
+  border: "1px solid #3791f8",
+  color: "#3781f8",
   padding: "10px",
   borderRadius: "5px",
 });
@@ -73,18 +73,19 @@ const handleToolbarBtn = (writeModalOpen, setWriteModalOpen) => {
 
     case "/trashcan":
       return (
-        <InfoFunctionBox variant="contained">
-          <Typography
-            sx={{
-              display: "flex",
-              justifyContent: "space-around",
-              width: "350px",
-            }}
-          >
-            휴지통에서 삭제되면 복원할 수 없습니다!
-            <Warning />
-          </Typography>
-        </InfoFunctionBox>
+        <></>
+        // <InfoFunctionBox variant="contained">
+        //   <Typography
+        //     sx={{
+        //       display: "flex",
+        //       justifyContent: "space-around",
+        //       width: "350px",
+        //     }}
+        //   >
+        //     휴지통에서 삭제되면 복원할 수 없습니다!
+        //     <Warning />
+        //   </Typography>
+        // </InfoFunctionBox>
       );
     default:
       return (
