@@ -155,7 +155,6 @@ export default function Sidebar() {
   useEffect(() => {
     fileSize(getUser().userNo, setSize);
   }, [check]);
-  console.log(pathName);
   return (
     <Box>
       <Box className="sidebar-nav">
@@ -230,7 +229,7 @@ export default function Sidebar() {
         <Storage>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <CloudOutlinedIcon sx={{ fontSize: "40px", marginRight: "15px" }} />
-            내 잔여 용량
+            잔여 저장 용량
           </Box>
           <LinearProgressWithLabel value={(size / 10485760) * 100} />
           {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
