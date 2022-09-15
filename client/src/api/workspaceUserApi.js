@@ -20,11 +20,16 @@ export function deleteUserWorkspace(userNo, workspaceNo, setWorkspace) {
     .catch((err) => console.log(err));
 }
 
-export function deleteAllWorkspaceUser(userNo, workspaceNoList, setWorkspace) {
+export function deleteAllWorkspaceUser(
+  userNo,
+  workspaceNoList,
+  setCheck,
+  check
+) {
   const url = baseUrl + `all/${userNo}`;
   axios
     .post(url, workspaceNoList)
-    .then((res) => setWorkspace(res.data))
+    .then(() => setCheck(!check))
     .catch((err) => console.log(err));
 }
 

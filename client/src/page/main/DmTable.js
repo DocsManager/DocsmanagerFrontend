@@ -91,6 +91,7 @@ export default function DmTable(props) {
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
+  const [searchCategory, setSearchCategory] = useState("originalName");
   const [searchData, setSearchData] = useState("");
   // const [size, setSize] = useState(0);
   const { check, setCheckHandler } = useContext(MyContext);
@@ -98,12 +99,20 @@ export default function DmTable(props) {
   // const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
-    console.log("======================");
-    getList(
-      setList,
-      page ? page : page + 1,
-      props.documentUrl ? props.documentUrl : ""
-    );
+    searchData
+      ? searchDocument(
+          getUser().userNo,
+          searchData,
+          props.documentUrl ? props.documentUrl : "",
+          setList,
+          page ? page : page + 1,
+          searchCategory
+        )
+      : getList(
+          setList,
+          page ? page : page + 1,
+          props.documentUrl ? props.documentUrl : ""
+        );
     // fileSize(getUser().userNo, setSize);
     // setPage(0);
   }, [check, page]);
@@ -112,11 +121,9 @@ export default function DmTable(props) {
   //   console.log(pageList.dtoList && pageList.dtoList.length);
   // }
   if (list.dtoList) {
-    console.log("2222222222222");
     console.log(page);
     console.log(list.dtoList);
     if (page !== 0 && list.totalPage === page - 1) {
-      console.log("1111111111111111111111");
       setPage(page - 1);
     }
   }
@@ -146,8 +153,6 @@ export default function DmTable(props) {
 
   //각 table row에 걸려있는 클릭 이벤트
   const handleClick = (event, li) => {
-    console.log(page);
-    console.log(rowsPerPage);
     if (event.target.checked) {
       setSelected(selected.length === 0 ? [li] : [...selected, li]);
     } else {
@@ -235,6 +240,10 @@ export default function DmTable(props) {
                   documentUrl={props.documentUrl}
                   setList={setList}
                   setSearchData={setSearchData}
+                  page={page}
+                  setPage={setPage}
+                  searchCategory={searchCategory}
+                  setSearchCategory={setSearchCategory}
                 />
               </MyContext.Provider>
               <NoSearchData />
@@ -251,6 +260,10 @@ export default function DmTable(props) {
                 documentUrl={props.documentUrl}
                 setList={setList}
                 setSearchData={setSearchData}
+                page={page}
+                setPage={setPage}
+                searchCategory={searchCategory}
+                setSearchCategory={setSearchCategory}
               />
               <TableContainer>
                 <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -323,10 +336,18 @@ export default function DmTable(props) {
                               )}
                             </TableCell>
                             <TableCell>
-                              {fileCategoryIcon(li.documentNo.fileCategory)}
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                {fileCategoryIcon(li.documentNo.fileCategory)}
+                              </Box>
                             </TableCell>
 
                             <TableCell
+                              sx={{ cursor: "pointer" }}
                               component="th"
                               id={labelId}
                               scope="row"
@@ -381,11 +402,16 @@ export default function DmTable(props) {
             <Pagination
               style={{
                 display: "flex",
-                justifyContent: "right",
+                justifyContent: "center",
               }}
               count={list.totalPage}
               page={page ? page : page + 1}
               onChange={handleChange}
+              color="primary"
+              shape="rounded"
+              variant="outlined"
+              size="large"
+              sx={{ margin: 2 }}
             />
             {documentInfo && (
               <DocumentModal

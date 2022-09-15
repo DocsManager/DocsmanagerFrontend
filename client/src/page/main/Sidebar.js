@@ -156,7 +156,6 @@ export default function Sidebar({urlPath}) {
   useEffect(() => {
     fileSize(getUser().userNo, setSize);
   }, [check]);
-  console.log(pathName);
   return (
     <>
     {urlPath===("/main/document")?<></>: <Box>
@@ -216,27 +215,26 @@ export default function Sidebar({urlPath}) {
                   }}
                 >
                   <p style={{ margin: "0 auto" }}>{item.icon}</p>
-
-                  <ListItemText
-                    primary={
-                      <Typography style={style}>{item.title}</Typography>
-                    }
-                  />
-                </Box>
-              </Tooltip>
-            </SidebarSideLink>
-          )
-        )}
-      </List>
-      {/* 08.31 드라이브 용량 표시 변경 코드 */}
-      <Storage>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <CloudOutlinedIcon sx={{ fontSize: "40px", marginRight: "15px" }} />
-          내 잔여 용량
-        </Box>
-        <LinearProgressWithLabel value={(size / 10485760) * 100} />
-        {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
-      </Storage>
+                    <ListItemText
+                      primary={
+                        <Typography style={style}>{item.title}</Typography>
+                      }
+                    />
+                  </Box>
+                </Tooltip>
+              </SidebarSideLink>
+            )
+          )}
+        </List>
+        {/* 08.31 드라이브 용량 표시 변경 코드 */}
+        <Storage>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <CloudOutlinedIcon sx={{ fontSize: "40px", marginRight: "15px" }} />
+            잔여 저장 용량
+          </Box>
+          <LinearProgressWithLabel value={(size / 10485760) * 100} />
+          {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
+        </Storage>
     </Box>
 
     <AddWorkspace open={open} setOpen={setOpen} />

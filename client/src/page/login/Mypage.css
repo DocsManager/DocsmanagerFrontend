@@ -16,3 +16,7 @@
 .mypageptag {
   color: #bf1650;
 }
+
+.swal2-container {
+  z-index: 20000 !important;
+}

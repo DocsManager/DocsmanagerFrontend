@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import "./Header.css";
-import { deleteUser, getUser } from "../../component/getUser/getUser";
+import { deleteUser } from "../../component/getUser/getUser";
 import {
   getNoticeList,
   wsDisconnect,
@@ -21,6 +21,7 @@ import { theme } from "../../Config";
 import { MyContext } from "../Main";
 import { logout } from "../../api/userApi";
 import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export const NoticeContext = createContext({
   isRead: "",
@@ -37,14 +38,13 @@ const PopoverBtn = styled(Button)({
 });
 
 export default function Header() {
-  const name = getUser().name;
-  const user = getUser();
   const [noticeList, setNoticeList] = useState([]);
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
   const setIsReadHandler = (isRead) => setIsRead(isRead);
   const [headerCheck, setHeaderCheck] = useState(false);
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
+  console.log(userInfo);
   useEffect(() => {
     getNoticeList(setNoticeList);
     // return () => wsDisconnect();
@@ -79,6 +79,11 @@ export default function Header() {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+  const deleteCookie = () => {
+    removeCookie(["accessToken"]);
+  };
 
   return (
     <div>
@@ -117,43 +122,41 @@ export default function Header() {
                   p: 2,
                   display: "flex",
                   justifyContent: "space-around",
-                  
-                }}
-              >
-                <Link to="/main/mypage">
-                  <PopoverBtn variant="contained" endIcon={<AccountBox />}>
-                    마이페이지
+                  <Link to="/main/mypage">
+                    <PopoverBtn variant="contained" endIcon={<AccountBox />}>
+                      마이페이지
+                    </PopoverBtn>
+                  </Link>
+                  <PopoverBtn
+                    variant="contained"
+                    endIcon={<Logout />}
+                    onClick={() => {
+                      deleteCookie();
+                      logout();
+                      deleteUser();
+                    }}
+                  >
+                    로그아웃
                   </PopoverBtn>
-                </Link>
-                <PopoverBtn
-                  variant="contained"
-                  endIcon={<Logout />}
-                  onClick={() => {
-                    logout();
-                    deleteUser();
-                  }}
-                >
-                  로그아웃
-                </PopoverBtn>
-                {/* <PopoverBtn variant="contained">로그아웃</PopoverBtn> */}
-              </Box>
+                </Box>
               </Popover>
             </div>
-          <p className="header-user-text">
-            <span>{name}</span>님 환영합니다
-          </p>
-          {newNotice && showNotice(newNotice)}
-          <div className="header-alert">
-            <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
-              <NoticePopover
-                noticeList={noticeList}
-                setNoticeList={setNoticeList}
-                newNotice={newNotice}
-                setCheck={setHeaderCheck}
-                check={headerCheck}
-              />
-            </NoticeContext.Provider>
-            <div className="header-profile" />
+            <p className="header-user-text">
+              <span>{userInfo.name}</span>님 환영합니다
+            </p>
+            {newNotice && showNotice(newNotice)}
+            <div className="header-alert">
+              <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
+                <NoticePopover
+                  noticeList={noticeList}
+                  setNoticeList={setNoticeList}
+                  newNotice={newNotice}
+                  setCheck={setHeaderCheck}
+                  check={headerCheck}
+                />
+              </NoticeContext.Provider>
+              <div className="header-profile" />
+            </div>
           </div>
         </div>
       </Navbar>
