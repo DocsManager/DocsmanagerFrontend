@@ -19,7 +19,9 @@ function SignUp() {
   const [verifyId, setVerifyId] = useState(false);
   const [confirmVerifyCode, setConfirmVerifyCode] = useState({});
   const [verifyResult, setVerifyResult] = useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = useState("");
+  const [profile, setProfile] = useState();
+  const [imageSrc, setImageSrc] = useState("");
 
   const ProfileAvatar = styled(Avatar)(({ theme }) => ({
     width: 300,
@@ -66,7 +68,6 @@ function SignUp() {
           document.getElementById("newPwd").value ===
           document.getElementById("confirmPwd").value
         ) {
-          {
             const newUser = {
               id: document.getElementById("newId").value,
               password: document.getElementById("newPwd").value,
@@ -76,7 +77,7 @@ function SignUp() {
                 deptNo: value,
               },
             };
-            signUp(newUser);
+            signUp(newUser,profile);
             Swal.fire({
               title: "회원가입 성공",
               icon: "success",
@@ -107,6 +108,17 @@ function SignUp() {
       });
     }
   };
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        resolve();
+      };
+    });
+  };
+  console.log(profile);
 
   return (
     <div className="maincontainer">
@@ -147,6 +159,7 @@ function SignUp() {
                     src={imageUrl ? imageUrl : "/img"}
                   />
                   <input
+                    id="newUserProfile"
                     hidden
                     accept="image/*"
                     multiple

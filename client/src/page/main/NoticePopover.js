@@ -28,6 +28,7 @@ export function NoticePopover({
   setNoticeList,
   newNotice,
   setCheck,
+  check,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { isRead, setIsReadHandler } = useContext(NoticeContext);
@@ -99,6 +100,7 @@ export function NoticePopover({
               onClick={() => {
                 deleteAllNotice(setNoticeList);
                 setCheck(true);
+                handleClose();
               }}
             >
               전체 알림 삭제
@@ -189,7 +191,11 @@ export function NoticePopover({
         overlap="circular"
       >
         <NotificationsOutlined
-          sx={{ color: "rgba(0,0,0,0.7);", fontSize: "35px" }}
+          sx={{
+            color: "rgba(0,0,0,0.7);",
+            fontSize: "35px",
+            cursor: noticeList.length > 0 ? "pointer" : "",
+          }}
         />
       </Badge>
       {noticeList.length > 0 ? (
@@ -282,7 +288,10 @@ export function NoticePopover({
                           }}
                           onClick={() => {
                             deleteNotice(notice.noticeNo);
-                            setCheck(true);
+                            setCheck(!check);
+                            if (tabContent().length === 1) {
+                              handleClose();
+                            }
                           }}
                         />
                         <span

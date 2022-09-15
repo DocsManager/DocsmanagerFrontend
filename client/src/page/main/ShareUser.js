@@ -79,6 +79,17 @@ function ShareUser({ searchList, setSearchList, type, member }) {
     console.log(searchList);
     setSearchList(searchList.filter((v) => v.userNo !== userNo));
   };
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
+
+  const handleClick = () => {
+    const userName = document.getElementById("searchUserName").value;
+    userName && findUser(userName, setUserList);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <React.Fragment>
@@ -104,12 +115,12 @@ function ShareUser({ searchList, setSearchList, type, member }) {
             variant="outlined"
             label="사원 이름"
             margin="normal"
+            onKeyPress={handleKeyPress}
           />
           <IconButton
             size="large"
             onClick={() => {
-              const userName = document.getElementById("searchUserName").value;
-              userName && findUser(userName, setUserList);
+              handleClick();
             }}
           >
             <Search sx={{ fontSize: "1.2em" }} />
@@ -203,6 +214,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
                     </IconButton>
                   )}
                 </TableCell>
+                {type === "workspace" ? <TableCell /> : <></>}
               </TableRow>
             ))}
           </TableBody>

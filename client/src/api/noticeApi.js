@@ -100,9 +100,12 @@ export const wsDocsSubscribe = (
       getNoticeList(setNoticeList);
     });
     client.subscribe(`/queue/workspace/${getUser().id}`, ({ body }) => {
+      console.log("----------------");
       const dataFromServer = JSON.parse(body);
       setNewNotice(dataFromServer);
       getNoticeList(setNoticeList);
+      count += 1;
+      setCheck(count % 2 === 1 ? true : false);
       // setNoticeList(
       //   noticeList.length === 0
       //     ? [dataFromServer]

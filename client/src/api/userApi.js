@@ -3,10 +3,16 @@ import { getUser, setSessionUser } from "../component/getUser/getUser";
 import Swal from "sweetalert2";
 
 const baseUrl = "/api/";
-export function signUp(newUser) {
+export function signUp(newUser, profile) {
   const url = baseUrl + "signup";
+  const fd = new FormData();
+  fd.append(
+    "user",
+    new Blob([JSON.stringify(newUser)], { type: "application/json" })
+  );
+  profile && fd.append("profile", profile);
   axios
-    .post(url, newUser)
+    .post(url, fd, { headers: { "Content-Type": "multipart/form-data" } })
     .then((res) => {
       console.log(res.data);
     })
@@ -106,6 +112,7 @@ export function logout() {
 export const mypage = async (setInfo) => {
   const url = baseUrl + "mypage";
   await axios.get(url).then((response) => {
+    console.log(response.data);
     setInfo(response.data);
   });
 };
@@ -160,3 +167,15 @@ export const checkId = async (params, setVerifyId) => {
     });
   }
 };
+
+export function updateProfile(userNo, profile, check, setCheck) {
+  const url = `${baseUrl}profile/${userNo}`;
+
+  console.log(url);
+  const fd = new FormData();
+  fd.append("profile", profile);
+
+  axios
+    .post(url, fd, { headers: { "Content-Type": "multipart/form-data" } })
+    .then(() => setCheck(!check));
+}

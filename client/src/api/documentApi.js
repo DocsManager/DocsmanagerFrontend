@@ -193,12 +193,34 @@ export function documentMember(documentNo, setMemberList) {
 }
 
 // 파일 검색
-export function searchDocument(userNo, originalName, documentUrl, setList) {
-  const url = `${baseUrl}document/${documentUrl}/${userNo}/${originalName}`;
+export function searchDocument(
+  userNo,
+  originalName,
+  documentUrl,
+  setList,
+  page,
+  type
+) {
+  // const url = `${baseUrl}document/${documentUrl}${userNo}/${originalName}?page=${page}`;
+  const url =
+    baseUrl +
+    "document/" +
+    documentUrl +
+    type +
+    "/" +
+    userNo +
+    "/" +
+    originalName +
+    "?page=" +
+    page;
   console.log(originalName);
   axios
     .get(url)
     .then((res) => {
+      res.data.dtoList.map((data, index) => {
+        data.id = index + 1;
+        data.userName = data.userNo.name;
+      });
       setList(res.data);
     })
     .catch((err) => console.log(err));

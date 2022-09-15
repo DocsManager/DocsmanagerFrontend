@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { mypage } from "../../api/userApi";
+import { mypage, updateProfile } from "../../api/userApi";
 import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import { Box, Button, Card, CardContent } from "@mui/material";
@@ -38,16 +38,16 @@ const style = {
 };
 
 function MyPage() {
-  const [info, setInfo] = useState([]);
-
-  const [open, setOpen] = React.useState(false);
+  const [info, setInfo] = useState({});
+  const [check, setCheck] = useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
 
   useEffect(() => {
     mypage(setInfo);
-  }, [setInfo]);
+  }, [check]);
 
   const showDept = info.dept;
   const showRegdate = info.registerDate;
@@ -63,7 +63,7 @@ function MyPage() {
             paddingLeft: "30px",
           }}
         >
-          {info && info.name}님의 정보
+          {info.name}님의 정보
         </h2>
       </div>
       <Container>
@@ -98,7 +98,14 @@ function MyPage() {
                     className="mypageavatar"
                     sx={{ background: "#3791f8" }}
                   />
-                  <input hidden accept="image/*" multiple type="file" />
+                  <input hidden accept="image/*" multiple type="file" onChange={(e) =>
+                      updateProfile(
+                        info.userNo,
+                        e.target.files[0],
+                        check,
+                        setCheck
+                      )
+                    } />
                 </Button>
               </div>
               <Table sx={{ minWidth: 500 }}>
@@ -111,13 +118,13 @@ function MyPage() {
                     <TableCell className="nameCell" align="center">
                       이름
                     </TableCell>
-                    <TableCell>{info && info.name}</TableCell>
+                    <TableCell>{info.name}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="nameCell" align="center">
                       아이디
                     </TableCell>
-                    <TableCell>{info && info.id}</TableCell>
+                    <TableCell>{info.id}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="nameCell" align="center">
@@ -140,7 +147,7 @@ function MyPage() {
                     <TableCell className="nameCell" align="center">
                       이메일
                     </TableCell>
-                    <TableCell>{info && info.email}</TableCell>
+                    <TableCell>{info.email}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="nameCell" align="center">

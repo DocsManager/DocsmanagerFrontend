@@ -18,7 +18,7 @@ export default function AuthoritySelect({ search }) {
   }, []);
 
   return (
-    <Box sx={{ minWidth: 80, maxHeight: 40 }}>
+    <Box sx={{ minWidth: 80, maxHeight: 40, marginBottom: 1.5 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">권한</InputLabel>
         <Select

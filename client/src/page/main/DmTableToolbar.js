@@ -22,6 +22,11 @@ import SucessModal from "./SucessModal";
 import { MyContext } from "../Main";
 import WriteModal from "./WriteModal";
 import { getUser } from "../../component/getUser/getUser";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import NativeSelect from "@mui/material/NativeSelect";
 
 //문서 등록, 중요 문서 안내 버튼 styled 컴포넌트로
 const EnrollBtn = styled(Button)({
@@ -136,14 +141,45 @@ const DmTableToolbar = ({
   documentUrl,
   setList,
   setSearchData,
+  page,
+  setPage,
+  searchCategory,
+  setSearchCategory,
   // documentInfo,
 }) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
   const [writeModalOpen, setWriteModalOpen] = useState(false);
+  // const [searchCategory, setSearchCategory] = useState("");
 
   const { check, setCheckHandler } = useContext(MyContext);
+
+  const handleChange = (event) => {
+    setSearchCategory(event.target.value);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
+
+  const handleClick = () => {
+    const searchName = document.getElementById("searchDocumentName").value;
+    if (searchName) {
+      searchDocument(
+        getUser().userNo,
+        searchName,
+        documentUrl ? documentUrl : "",
+        setList,
+        page ? page : page + 1,
+        searchCategory
+      );
+      setPage(0);
+      setSearchData(searchName);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -205,29 +241,36 @@ const DmTableToolbar = ({
                 marginTop: "12px",
               }} /*영훈이가 거슬려했던 Toolbar와 table head 너비차이 조절 */
             >
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">유형</InputLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={searchCategory}
+                    label="유형"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={"originalName"}>제목</MenuItem>
+                    <MenuItem value={"content"}>내용</MenuItem>
+                    <MenuItem value={"userName"}>작성자</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+
               <TextField
                 id="searchDocumentName"
                 label="파일 검색"
-                sx={{ marginRight: "20px" }}
+                sx={{ margin: "0px 20px 0px 10px" }}
+                onKeyPress={handleKeyPress}
               />
               <Button
                 variant="outlined"
                 sx={{ fontSize: "1rem" }}
                 endIcon={<SearchOutlined />}
                 onClick={() => {
-                  const searchName = document.getElementById(
-                    "searchDocumentName"
-                  ).value;
-                  if (searchName) {
-                    searchDocument(
-                      getUser().userNo,
-                      searchName,
-                      documentUrl ? documentUrl : "",
-                      setList
-                    );
-                    setSearchData(searchName);
-                  }
-                  console.log(searchName);
+                  handleClick();
                 }}
               >
                 검색
