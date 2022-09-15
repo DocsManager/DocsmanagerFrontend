@@ -5,19 +5,17 @@ import {
   TableContainer,
   Pagination,
 } from "@mui/material";
-import { Box, TableRow,Table, Paper, Checkbox } from "@mui/material";
+import { Box, TableRow, Table, Paper, Checkbox } from "@mui/material";
 import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
 import { getUser } from "../../component/getUser/getUser";
 import { MyContext } from "../Main";
-import {
-  getList,
-  importantFile,
-} from "../../api/documentApi";
+import { getList, importantFile } from "../../api/documentApi";
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
 import Sidebar from "./Sidebar";
+import { searchDocument } from "../../api/documentApi";
 import { NoSearchData } from "./NoSearchData";
 
 function descendingComparator(a, b, orderBy) {
@@ -218,10 +216,7 @@ export default function DmTable(props) {
 
   const emptyRows = //emptyRows 수정 09.14
     page >= 0
-      ? Math.max(
-          0,
-          rowsPerPage - (list.dtoList && list.dtoList.length)
-        )
+      ? Math.max(0, rowsPerPage - (list.dtoList && list.dtoList.length))
       : 0;
   return (
     <React.Fragment>

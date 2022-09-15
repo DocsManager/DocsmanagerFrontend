@@ -47,7 +47,6 @@ export default function Header() {
   console.log(userInfo);
   useEffect(() => {
     getNoticeList(setNoticeList, userInfo);
-    // return () => wsDisconnect();
   }, [isRead, newNotice, headerCheck]);
   useEffect(() => {
     wsDocsSubscribe(
@@ -101,7 +100,7 @@ export default function Header() {
             <Avatar
               onClick={handleClick}
               sx={{ bgcolor: "#3791F8" }}
-              src={user.profile}
+              src={userInfo.profile}
             />
             <Popover
               id={id}
@@ -116,48 +115,49 @@ export default function Header() {
                 vertical: "top",
                 horizontal: "center",
               }}
-              sx={{width:"400px !important"}}
+              sx={{ width: "400px !important" }}
             >
               <Box
                 sx={{
                   p: 2,
                   display: "flex",
                   justifyContent: "space-around",
-                  <Link to="/main/mypage">
-                    <PopoverBtn variant="contained" endIcon={<AccountBox />}>
-                      마이페이지
-                    </PopoverBtn>
-                  </Link>
-                  <PopoverBtn
-                    variant="contained"
-                    endIcon={<Logout />}
-                    onClick={() => {
-                      deleteCookie();
-                      logout();
-                      deleteUser();
-                    }}
-                  >
-                    로그아웃
+                }}
+              >
+                <Link to="/main/mypage">
+                  <PopoverBtn variant="contained" endIcon={<AccountBox />}>
+                    마이페이지
                   </PopoverBtn>
-                </Box>
-              </Popover>
-            </div>
-            <p className="header-user-text">
-              <span>{userInfo.name}</span>님 환영합니다
-            </p>
-            {newNotice && showNotice(newNotice)}
-            <div className="header-alert">
-              <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
-                <NoticePopover
-                  noticeList={noticeList}
-                  setNoticeList={setNoticeList}
-                  newNotice={newNotice}
-                  setCheck={setHeaderCheck}
-                  check={headerCheck}
-                />
-              </NoticeContext.Provider>
-              <div className="header-profile" />
-            </div>
+                </Link>
+                <PopoverBtn
+                  variant="contained"
+                  endIcon={<Logout />}
+                  onClick={() => {
+                    deleteCookie();
+                    logout();
+                    deleteUser();
+                  }}
+                >
+                  로그아웃
+                </PopoverBtn>
+              </Box>
+            </Popover>
+          </div>
+          <p className="header-user-text">
+            <span>{userInfo.name}</span>님 환영합니다
+          </p>
+          {newNotice && showNotice(newNotice)}
+          <div className="header-alert">
+            <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
+              <NoticePopover
+                noticeList={noticeList}
+                setNoticeList={setNoticeList}
+                newNotice={newNotice}
+                setCheck={setHeaderCheck}
+                check={headerCheck}
+              />
+            </NoticeContext.Provider>
+            <div className="header-profile" />
           </div>
         </div>
       </Navbar>
