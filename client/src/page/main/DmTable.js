@@ -226,20 +226,18 @@ export default function DmTable(props) {
           // 검색하는 창 살리려고 NoSearchData를 테이블 틀로 감쌌음!
           <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-              <MyContext.Provider value={{ check, setCheckHandler }}>
-                <DmTableToolbar
-                  numSelected={selected.length}
-                  newSelected={selected}
-                  setSelected={setSelected}
-                  documentUrl={props.documentUrl}
-                  setList={setList}
-                  setSearchData={setSearchData}
-                  page={page}
-                  setPage={setPage}
-                  searchCategory={searchCategory}
-                  setSearchCategory={setSearchCategory}
-                />
-              </MyContext.Provider>
+              <DmTableToolbar
+                numSelected={selected.length}
+                newSelected={selected}
+                setSelected={setSelected}
+                documentUrl={props.documentUrl}
+                setList={setList}
+                setSearchData={setSearchData}
+                page={page}
+                setPage={setPage}
+                searchCategory={searchCategory}
+                setSearchCategory={setSearchCategory}
+              />
               <NoSearchData />
             </Paper>
           </Box>

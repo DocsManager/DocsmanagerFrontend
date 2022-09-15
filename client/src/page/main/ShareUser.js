@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import React, { useContext, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { findUser } from "../../api/userApi";
 import AuthoritySelect from "./AuthoritySelect";
 import { Search } from "@mui/icons-material";
@@ -57,7 +57,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
       setSearchList(member);
     }
   }, [member.length]);
-  function checkDuplication(arr, userInfo) {
+  const checkDuplication = (arr, userInfo) => {
     let check = false;
     arr.map((element) => {
       if (element.userNo === userInfo.userNo) {
@@ -66,7 +66,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
       return element;
     });
     return check;
-  }
+  };
   const deleteHandler = (userNo) => {
     setSearchList(searchList.filter((v) => v.userNo !== userNo));
   };
@@ -122,7 +122,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
         검색 결과
       </Typography>
       <Card variant="outlined" sx={{ minHeight: 275 }}>
-        {userList.map((users) => {
+        {userList.map((users, index) => {
           if (
             users.userNo !== userInfo.userNo &&
             !checkDuplication(searchList, users)
@@ -156,7 +156,7 @@ function ShareUser({ searchList, setSearchList, type, member }) {
               </Box>
             );
           } else {
-            return <></>;
+            return <Fragment key={index} />;
           }
         })}
       </Card>
