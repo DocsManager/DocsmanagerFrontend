@@ -8,6 +8,13 @@
   text-align: center;
 }
 
+/* 미안 이거 회원가입에 로고랑 이름똑같이했더라 구래서 수정 */
+.successlogo {
+  margin-top: 30px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .D {
   font-size: 40px;
   color: rgba(55, 145, 248, 1);
