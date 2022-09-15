@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import "./Header.css";
-import { deleteUser, getUser } from "../../component/getUser/getUser";
+import { deleteUser } from "../../component/getUser/getUser";
 import {
   getNoticeList,
   wsDisconnect,
@@ -38,14 +38,13 @@ const PopoverBtn = styled(Button)({
 });
 
 export default function Header() {
-  const name = getUser().name;
-  const user = getUser();
   const [noticeList, setNoticeList] = useState([]);
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
   const setIsReadHandler = (isRead) => setIsRead(isRead);
   const [headerCheck, setHeaderCheck] = useState(false);
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
+  console.log(userInfo);
   useEffect(() => {
     getNoticeList(setNoticeList);
     // return () => wsDisconnect();
@@ -101,8 +100,8 @@ export default function Header() {
             <div className="header-user-icon">
               <Avatar
                 onClick={handleClick}
-                sx={{ bgcolor: "#3791F8", cursor: "pointer" }}
-                src={user.profile}
+                sx={{ bgcolor: "#3791F8" }}
+                src={userInfo.profile}
               />
               <Popover
                 id={id}
@@ -147,7 +146,7 @@ export default function Header() {
               </Popover>
             </div>
             <p className="header-user-text">
-              <span>{name}</span>님 환영합니다
+              <span>{userInfo.name}</span>님 환영합니다
             </p>
             {newNotice && showNotice(newNotice)}
             <div className="header-alert">

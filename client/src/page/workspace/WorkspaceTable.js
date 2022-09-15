@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useContext, useState } from "react";
 import { alpha, ThemeProvider } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
@@ -23,7 +23,7 @@ import {
   deleteUserWorkspace,
 } from "../../api/workspaceUserApi";
 import { getUser } from "../../component/getUser/getUser";
-import { Button } from "@mui/material";
+import { Button, Pagination } from "@mui/material";
 import AddMember from "../main/AddMember";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import EditIcon from "@material-ui/icons/Edit";
@@ -34,6 +34,7 @@ import Delete from "@mui/icons-material/Delete";
 import { ToRecyclebin } from "../main/DmTableToolbar";
 import { theme } from "../../Config";
 import { deleteWorkspace } from "../../api/workspaceApi";
+import { MyContext } from "../Main";
 
 function createData(
   title,
@@ -129,7 +130,7 @@ function EnhancedTableHead(props) {
       return true;
     }
     if (
-      page + 1 === totalPageCount &&
+      page === totalPageCount &&
       numSelected < 5 &&
       numSelected === (rowCount % ((page + 1) * 5)) % 5 &&
       numSelected !== 0
@@ -181,6 +182,7 @@ function EnhancedTableHead(props) {
 
 const EnhancedTableToolbar = (props) => {
   const { numSelected, selected, setWorkspace, setSelected } = props;
+  const { check, setCheckHandler } = useContext(MyContext);
 
   return (
     <Toolbar
@@ -223,7 +225,8 @@ const EnhancedTableToolbar = (props) => {
                 deleteAllWorkspaceUser(
                   getUser().userNo,
                   selected,
-                  setWorkspace
+                  setCheckHandler,
+                  check
                 );
                 setSelected([]);
               }}
@@ -242,7 +245,7 @@ export default function WorkspaceTable(props) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("registerDate");
   const [selected, setSelected] = useState([]);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   // const [open, setOpen] = useState({ member: false, edit: false });
   const [editOpen, setEditOpen] = useState(false);
   const [memberOpen, setMemberOpen] = useState(false);
@@ -272,15 +275,15 @@ export default function WorkspaceTable(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows
-        .slice(page * 5, (page + 1) * 5)
-        .map((n) => n.workspaceNo);
+      const newSelected = stableSort(rows, getComparator(order, orderBy)).slice(
+        (page - 1) * 5,
+        page * 5
+      );
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
-
   const handleClick = (event, workspaceNo) => {
     const selectedIndex = selected.indexOf(workspaceNo);
     let newSelected = [];
@@ -306,11 +309,19 @@ export default function WorkspaceTable(props) {
     setSelected([]);
   };
 
-  const isSelected = (name) => selected.indexOf(name) !== -1;
-  console.log(rows);
+  const isSelected = (workspaceNo) => {
+    let check = false;
+    selected.map((v) => {
+      if (v.workspaceNo === workspaceNo) {
+        check = true;
+      }
+    });
+    return check;
+  };
+  console.log(selected);
 
   // 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07
-  const emptyRows = page >= 0 ? Math.max(0, (1 + page) * 5 - rows.length) : 0;
+  const emptyRows = page >= 0 ? Math.max(0, page * 5 - rows.length) : 0;
   // console.log(rows);
   return (
     <ThemeProvider theme={theme}>
@@ -340,7 +351,7 @@ export default function WorkspaceTable(props) {
                   />
                   <TableBody>
                     {stableSort(rows, getComparator(order, orderBy))
-                      .slice(page * 5, page * 5 + 5)
+                      .slice((page - 1) * 5, page * 5)
                       .map((row, index) => {
                         const isItemSelected = isSelected(row.workspaceNo);
                         const labelId = `enhanced-table-checkbox-${index}`;
@@ -463,13 +474,14 @@ export default function WorkspaceTable(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[10]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={5}
+              <Pagination
+                style={{
+                  display: "flex",
+                  justifyContent: "right",
+                }}
+                count={Math.ceil(rows.length / 5)}
                 page={page}
-                onPageChange={handleChangePage}
+                onChange={handleChangePage}
               />
             </Paper>
             {row.workspaceNo && (

@@ -163,7 +163,6 @@ export default function Sidebar() {
             워크스페이스 생성
           </SidebarBtn>
         </div>
-
         <List style={sidebarLinkStyle}>
           {SidebarData.map((item, index) =>
             pathName === item.path ? (
