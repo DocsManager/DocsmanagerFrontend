@@ -118,7 +118,6 @@ export default function DmTable(props) {
   // const setCheckHandler = (check) => setCheck(check);
 
   useEffect(() => {
-    console.log("======================");
     getList(
       setList,
       page ? page : page + 1,

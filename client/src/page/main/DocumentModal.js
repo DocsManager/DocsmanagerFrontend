@@ -153,10 +153,12 @@ const DocumentModal = (props) => {
           </Box> */}
           </Typography>
 
-          <Typography variant="h6" component="h2">
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             {fileCategoryIcon(document.documentNo.fileCategory)}
-            {document.documentNo.originalName}
-          </Typography>
+            <Typography variant="h6" component="h2">
+              {document.documentNo.originalName}
+            </Typography>
+          </Box>
 
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {document.documentNo.content
