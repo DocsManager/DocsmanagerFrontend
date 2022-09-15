@@ -6,10 +6,9 @@ import "../page/Toast.css";
 
 const baseUrl = "/api/";
 
-export function getNoticeList(setNoticeList) {
-  const url = baseUrl + "notice/receiver/" + getUser().userNo;
+export function getNoticeList(setNoticeList, user) {
+  const url = baseUrl + "notice/receiver/" + user.userNo;
   axios.get(url).then((res) => {
-    console.log(res.data);
     setNoticeList(res.data);
   });
 }
@@ -43,8 +42,8 @@ export function updateNotice(
 }
 
 //전체 알림 읽음 처리
-export function updateAllNotce(noticeList, setNoticeList) {
-  const url = baseUrl + `notice/receiver/${getUser().userNo}/all`;
+export function updateAllNotce(noticeList, user) {
+  const url = baseUrl + `notice/receiver/${user.userNo}/all`;
   let arr = [];
   const unRead = noticeList.filter((notice) => notice.isRead != 1);
   const read = noticeList.filter((notice) => notice.isRead == 1);
@@ -85,22 +84,21 @@ export const wsDocsSubscribe = (
   setNoticeList,
   noticeList,
   setCheck,
-  count
+  count,
+  user
 ) => {
   client.onConnect = () => {
     console.log("연결됨");
 
-    client.subscribe(`/queue/sharedocs/${getUser().id}`, ({ body }) => {
+    client.subscribe(`/queue/sharedocs/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
-      console.log(dataFromServer);
       count += 1;
       setNewNotice(dataFromServer);
       setNoticeList((noticeList) => [...noticeList, dataFromServer]);
       setCheck(count % 2 === 1 ? true : false);
       getNoticeList(setNoticeList);
     });
-    client.subscribe(`/queue/workspace/${getUser().id}`, ({ body }) => {
-      console.log("----------------");
+    client.subscribe(`/queue/workspace/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       setNewNotice(dataFromServer);
       getNoticeList(setNoticeList);
@@ -113,9 +111,8 @@ export const wsDocsSubscribe = (
       // );
     });
 
-    client.subscribe(`/queue/workspace/member/${getUser().id}`, ({ body }) => {
+    client.subscribe(`/queue/workspace/member/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
-      console.log(dataFromServer);
       count += 1;
       setNewNotice(dataFromServer);
       setNoticeList(
@@ -139,7 +136,7 @@ export const wsDisconnect = () => {
   client.deactivate();
 };
 
-export const notipublish = (searchList) => {
+export const notipublish = (searchList, user) => {
   if (!client.connected) {
     return;
   }
@@ -147,9 +144,9 @@ export const notipublish = (searchList) => {
     return client.publish({
       destination: `/send/sharedocs`,
       body: JSON.stringify({
-        sender: getUser(),
+        sender: user,
         receiver: element,
-        content: `${getUser().name}님이 문서를 공유했습니다`,
+        content: `${user.name}님이 문서를 공유했습니다`,
         isRead: 0,
         urlParams: "/main/share",
       }),
@@ -157,7 +154,12 @@ export const notipublish = (searchList) => {
   });
 };
 
-export const worksapcepublish = (searchList, newWorkspaceNo, setLoading) => {
+export const worksapcepublish = (
+  searchList,
+  newWorkspaceNo,
+  setLoading,
+  user
+) => {
   if (!client.connected) {
     return;
   }
@@ -166,9 +168,9 @@ export const worksapcepublish = (searchList, newWorkspaceNo, setLoading) => {
     return client.publish({
       destination: `/send/workspace`,
       body: JSON.stringify({
-        sender: getUser(),
+        sender: user,
         receiver: element,
-        content: `${getUser().name}님이 워크스페이스에 초대했습니다`,
+        content: `${user.name}님이 워크스페이스에 초대했습니다`,
         isRead: 0,
         urlParams: `/document?room=${newWorkspaceNo + 1}`,
         // urlParams: `/document?room=${workspace.workspaceNo.workspaceNo}`,
@@ -182,7 +184,8 @@ export const workspaceMemberAddPublish = (
   memberList,
   searchList,
   type,
-  row
+  row,
+  user
 ) => {
   if (!client.connected) {
     return;
@@ -194,9 +197,9 @@ export const workspaceMemberAddPublish = (
       return client.publish({
         destination: `/send/workspace/add`,
         body: JSON.stringify({
-          sender: getUser(),
+          sender: user,
           receiver: element,
-          content: `${getUser().name}님이 공유 문서 멤버로 추가했습니다!`,
+          content: `${user.name}님이 공유 문서 멤버로 추가했습니다!`,
           isRead: 0,
           urlParams: "/main/share",
         }),
@@ -207,9 +210,9 @@ export const workspaceMemberAddPublish = (
       return client.publish({
         destination: `/send/workspace/add`,
         body: JSON.stringify({
-          sender: getUser(),
+          sender: user,
           receiver: element,
-          content: `${getUser().name}님이 워크스페이스 멤버로 추가했습니다!`,
+          content: `${user.name}님이 워크스페이스 멤버로 추가했습니다!`,
           isRead: 0,
           urlParams: "/document?room=" + row.workspaceNo,
         }),
@@ -225,19 +228,19 @@ export const deleteNotice = (noticeNo) => {
 };
 
 //전체 알림 삭제
-export const deleteAllNotice = (setNoticeList) => {
-  const url = baseUrl + `notice/receiver/${getUser().userNo}/all`;
+export const deleteAllNotice = (setNoticeList, user) => {
+  const url = baseUrl + `notice/receiver/${user.userNo}/all`;
   axios.delete(url).then((res) => setNoticeList([]));
 };
 
 // 읽지 않은 알림 전체 삭제
-export const deleteAllUnreadNotice = (setNoticeList) => {
-  const url = baseUrl + `notice/receiver/${getUser().userNo}/unread`;
+export const deleteAllUnreadNotice = (setNoticeList, user) => {
+  const url = baseUrl + `notice/receiver/${user.userNo}/unread`;
   axios.delete(url).then((res) => setNoticeList(res.data));
 };
 
 //읽은 알림 전체 삭제
-export const deleteAllReadNotice = (setNoticeList) => {
-  const url = baseUrl + `notice/receiver/${getUser().userNo}/read`;
+export const deleteAllReadNotice = (setNoticeList, user) => {
+  const url = baseUrl + `notice/receiver/${user.userNo}/read`;
   axios.delete(url).then((res) => setNoticeList(res.data));
 };

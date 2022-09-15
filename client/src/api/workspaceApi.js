@@ -39,7 +39,13 @@ export function deleteWorkspace(workspaceNo, setCheck, check) {
   axios.delete(url).then(() => setCheck(!check));
 }
 
-export function addWorkspace(workspace, searchList, setLoading, closeHandler) {
+export function addWorkspace(
+  workspace,
+  searchList,
+  setLoading,
+  closeHandler,
+  user
+) {
   axios
     .post(baseUrl, workspace)
     .then((res) => {
@@ -47,7 +53,8 @@ export function addWorkspace(workspace, searchList, setLoading, closeHandler) {
       worksapcepublish(
         searchList,
         res.data.at(-1).workspaceNo.workspaceNo,
-        setLoading
+        setLoading,
+        user
       );
       closeHandler();
     })

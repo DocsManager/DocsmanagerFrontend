@@ -16,6 +16,7 @@ import Toastify from "../Toast";
 import { NoticeContext } from "./Header";
 import { withStyles } from "@material-ui/styles";
 import { Link } from "react-router-dom";
+import { MyContext } from "../Main";
 
 //notice.isRead가 1이 되면 글자색이 lightgray가 됨
 const noticeColor = {
@@ -32,6 +33,7 @@ export function NoticePopover({
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { isRead, setIsReadHandler } = useContext(NoticeContext);
+  const { userInfo } = useContext(MyContext);
 
   //읽은 알림은 전체 알림 개수에서 제외하는 것
   const unRead =
@@ -98,7 +100,7 @@ export function NoticePopover({
                 textAlign: "center",
               }}
               onClick={() => {
-                deleteAllNotice(setNoticeList);
+                deleteAllNotice(setNoticeList, userInfo);
                 setCheck(true);
                 handleClose();
               }}
@@ -111,7 +113,7 @@ export function NoticePopover({
                 textAlign: "center",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList);
+                updateAllNotce(noticeList, setNoticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >
@@ -128,7 +130,7 @@ export function NoticePopover({
                 textAlign: "center",
               }}
               onClick={() => {
-                deleteAllUnreadNotice(setNoticeList);
+                deleteAllUnreadNotice(setNoticeList, userInfo);
                 setCheck(true);
               }}
             >
@@ -144,7 +146,7 @@ export function NoticePopover({
                 textAlign: "center",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList);
+                updateAllNotce(noticeList, setNoticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >
@@ -164,7 +166,7 @@ export function NoticePopover({
               textAlign: "center",
             }}
             onClick={() => {
-              deleteAllReadNotice(setNoticeList);
+              deleteAllReadNotice(setNoticeList, userInfo);
               setCheck(true);
             }}
           >

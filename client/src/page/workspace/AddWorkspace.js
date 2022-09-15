@@ -53,7 +53,7 @@ export default function AddWorkspace({ open, setOpen }) {
   // const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
   const [title, setTitle] = useState("");
   const [clickHandler, setClickHandler] = useState(false);
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
   // 제목 없을 때 뜨는 textinput
   const fillTitle = () => {
     if (clickHandler === false || title) {
@@ -154,7 +154,8 @@ export default function AddWorkspace({ open, setOpen }) {
                       workspace,
                       searchList,
                       setLoading,
-                      closeHandler
+                      closeHandler,
+                      userInfo
                     );
                     // console.log(newWorkspace);
                     // newWorkspace &&

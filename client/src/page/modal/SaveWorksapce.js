@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { TextField } from "@material-ui/core";
-import { IconButton } from "@mui/material";
-import { border, minHeight } from "@mui/system";
 import ShareUser from "../main/ShareUser";
 import { onHtmlPng } from "../../component/editor/pdfSave";
 import { getUser } from "../../component/getUser/getUser";
-import ConfirmModal from "../main/ConfirmModal";
 import UploadModal from "./UploadModal";
 import { notipublish } from "../../api/noticeApi";
+import { MyContext } from "../Main";
 
 const style = {
   position: "absolute",
@@ -31,8 +29,9 @@ export default function SaveWorksapce({ open, setOpen }) {
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { userInfo } = useContext(MyContext);
   const successWrite = () => {
-    notipublish(searchList);
+    notipublish(searchList, userInfo);
     setOpen(false);
     setWriteSuccessConfirm(false);
     setWriteConfirm(false);

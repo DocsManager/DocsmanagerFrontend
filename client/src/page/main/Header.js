@@ -46,7 +46,7 @@ export default function Header() {
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
   console.log(userInfo);
   useEffect(() => {
-    getNoticeList(setNoticeList);
+    getNoticeList(setNoticeList, userInfo);
     // return () => wsDisconnect();
   }, [isRead, newNotice, headerCheck]);
   useEffect(() => {
@@ -55,7 +55,8 @@ export default function Header() {
       setNoticeList,
       noticeList,
       setCheckHandler,
-      0
+      0,
+      userInfo
     );
   }, []);
 

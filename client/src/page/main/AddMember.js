@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import ShareUser from "./ShareUser";
 import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
@@ -7,6 +7,7 @@ import { workspaceMemberAddPublish } from "../../api/noticeApi";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { MyContext } from "../Main";
 const style = {
   position: "absolute",
   top: "50%",
@@ -38,6 +39,7 @@ export default function AddMember(props) {
   } = props;
   const [searchList, setSearchList] = useState([]);
   const [memberList, setMemberList] = useState([]);
+  const { userInfo } = useContext(MyContext);
 
   useEffect(() => {
     if (type === "workspace") {
@@ -46,7 +48,6 @@ export default function AddMember(props) {
       documentMember(number, setMemberList);
     }
   }, []);
-  console.log(row);
   return (
     <div>
       <Modal
@@ -79,7 +80,13 @@ export default function AddMember(props) {
                   infoModalOpen(false);
                 }
                 setOpen(false);
-                workspaceMemberAddPublish(memberList, searchList, type, row);
+                workspaceMemberAddPublish(
+                  memberList,
+                  searchList,
+                  type,
+                  row,
+                  userInfo
+                );
                 {
                   /**type에 따른 메시지 내용 구분 */
                 }

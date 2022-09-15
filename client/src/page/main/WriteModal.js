@@ -70,7 +70,7 @@ const WriteModal = (props) => {
   const [loading, setLoading] = useState(false);
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
 
   const user = getUser();
   const documentDTO = {
@@ -81,7 +81,7 @@ const WriteModal = (props) => {
     (search) => (search = { authority: search.authority, userNo: search })
   );
   const successWrite = () => {
-    notipublish(searchList);
+    notipublish(searchList, userInfo);
     setWriteModal(false);
     setWriteSuccessConfirm(false);
     setWriteConfirm(false);

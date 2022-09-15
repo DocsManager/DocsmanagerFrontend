@@ -68,24 +68,23 @@ function SignUp() {
           document.getElementById("newPwd").value ===
           document.getElementById("confirmPwd").value
         ) {
-            const newUser = {
-              id: document.getElementById("newId").value,
-              password: document.getElementById("newPwd").value,
-              name: document.getElementById("newName").value,
-              email: document.getElementById("newEmail").value,
-              dept: {
-                deptNo: value,
-              },
-            };
-            signUp(newUser,profile);
-            Swal.fire({
-              title: "회원가입 성공",
-              icon: "success",
-              confirmButtonColor: "#3791f8",
-            }).then((result) => {
-              window.location.href = "/";
-            });
-          }
+          const newUser = {
+            id: document.getElementById("newId").value,
+            password: document.getElementById("newPwd").value,
+            name: document.getElementById("newName").value,
+            email: document.getElementById("newEmail").value,
+            dept: {
+              deptNo: value,
+            },
+          };
+          signUp(newUser, profile);
+          Swal.fire({
+            title: "회원가입 성공",
+            icon: "success",
+            confirmButtonColor: "#3791f8",
+          }).then((result) => {
+            window.location.href = "/";
+          });
         } else {
           Swal.fire({
             text: "비밀번호값이 동일하지 않습니다",
