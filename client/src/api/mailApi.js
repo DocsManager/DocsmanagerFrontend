@@ -1,6 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
-const baseUrl = "/mail/";
+const baseUrl = "/api/mail/";
 
 export function sendMail(params, setConfirmVerifyCode) {
   const url = baseUrl + "send";
@@ -13,7 +13,7 @@ export function sendMail(params, setConfirmVerifyCode) {
     });
   } else {
     axios
-      .get("/api/mail/send", { params })
+      .get(url, { params })
       .then((response) => {
         if (response.data) {
           setConfirmVerifyCode(response.data);
@@ -30,8 +30,9 @@ export function sendMail(params, setConfirmVerifyCode) {
 }
 
 export function verifyMail(params, setVerifyResult) {
+  const url = baseUrl + "verify";
   axios
-    .get("/api/mail/verify", { params })
+    .get(url, { params })
     .then((response) => {
       if (response.data) {
         setVerifyResult(response.data);
@@ -54,10 +55,10 @@ export function verifyMail(params, setVerifyResult) {
 export function findId(params) {
   const url = baseUrl + "finduser";
   axios
-    .get("api/mail/finduser", { params })
+    .get(url, { params })
     .then((response) => {
       const result = response.data[0];
-      if (params.name && result.name == params.name) {
+      if (params.name && result.name === params.name) {
         Swal.fire({
           text: "회원님의 아이디는" + result.id + "입니다",
           icon: "info",
@@ -81,7 +82,8 @@ export function findId(params) {
 }
 
 export function findPw(params) {
-  axios.get("api/mail/findpassword", { params }).then((response) => {
+  const url = baseUrl + "findpassword";
+  axios.get(url, { params }).then((response) => {
     if (response.data.check) {
       axios
         .get("api/mail/sendpw", { params })
@@ -93,7 +95,7 @@ export function findPw(params) {
             confirmButtonColor: "#3791f8",
           })
         )
-        .then((result) => {
+        .then(() => {
           window.location.href = "/";
         });
     } else {
@@ -107,8 +109,9 @@ export function findPw(params) {
 }
 
 export function checkMail(params, setConfirmVerifyCode) {
+  const url = baseUrl + "checkmail";
   axios
-    .get("api/mail/checkmail", { params, setConfirmVerifyCode })
+    .get(url, { params, setConfirmVerifyCode })
     .then((response) => {
       if (response.data.check) {
         Swal.fire({
@@ -136,7 +139,7 @@ export function checkMail(params, setConfirmVerifyCode) {
         });
       }
     })
-    .catch((err) =>
+    .catch(() =>
       Swal.fire({
         title: "잘못된 접근 시도",
         icon: "error",

@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
-import { changepw, logout, mypage } from "../../api/userApi";
-import { Button, TextField } from "@mui/material";
-import { deleteUser } from "../../component/getUser/getUser";
+import { changepw } from "../../api/userApi";
+import { Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import "./Mypage.css";
@@ -33,7 +32,6 @@ function Pwupdate({ open, style, setOpen }) {
         oldpw: document.getElementById("oldPassword").value,
         pw: document.getElementById("newPassword").value,
       };
-      console.log(params);
       changepw(params);
       setOpen(false);
     }

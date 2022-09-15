@@ -39,8 +39,8 @@ export const theme = createTheme({
             textDecoration: "none",
           },
         },
-        textPrimary:{
-          color:"#3791f8"
+        textPrimary: {
+          color: "#3791f8",
         },
         contained: {
           backgroundColor: "#3791f8",
@@ -120,8 +120,8 @@ export const theme = createTheme({
           paddingLeft: "10px",
           WebkitBoxShadow: "0 0 0 1000px white inset",
         },
+      },
     },
-  },
     MuiTypography: {
       styleOverrides: {
         body2: {
@@ -156,17 +156,15 @@ export const theme = createTheme({
         },
       },
     },
-    MuiTextField:{
-      styleOverrides:{
-        root:{
+    MuiTextField: {
+      styleOverrides: {
+        root: {
           "& .MuiOutlinedInput-root": {
             "&.Mui-focused fieldset": {
-              borderColor: "#3791f8"
+              borderColor: "#3791f8",
             },
-          },
-          "& .MuiOutlinedInput-root": {
             "&.Mui-error fieldset": {
-              borderColor: "#d32f2f"
+              borderColor: "#d32f2f",
             },
           },
           "& label.Mui-focused": {
@@ -174,10 +172,9 @@ export const theme = createTheme({
           },
           "& label.Mui-error": {
             color: "#d32f2f",
-          }
-            
           },
-      }
+        },
+      },
     },
     MuiChip: {
       styleOverrides: {
@@ -214,14 +211,13 @@ export const theme = createTheme({
         },
       },
     },
-    
-    MuiTabs:{
-      styleOverrides:{
-        indicator:{
-          backgroundColor:"#3791f8"
-        }
-      }
-    }
 
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: "#3791f8",
+        },
+      },
+    },
   },
 });

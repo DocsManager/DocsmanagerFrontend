@@ -19,13 +19,9 @@ export function pdfSend(pdf) {
     new Blob([JSON.stringify(documentDTO)], { type: "application/json" })
   );
 
-  axios
-    .post(url, fd, {
-      headers: {
-        "Content-Type": "multipart/form-data;",
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-    });
+  axios.post(url, fd, {
+    headers: {
+      "Content-Type": "multipart/form-data;",
+    },
+  });
 }

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getUser, setSessionUser } from "../component/getUser/getUser";
 import Swal from "sweetalert2";
 
 const baseUrl = "/api/";
@@ -10,12 +9,10 @@ export function signUp(newUser, profile) {
     "user",
     new Blob([JSON.stringify(newUser)], { type: "application/json" })
   );
-  profile && fd.append("profile", profile);
+  fd.append("profile", profile);
+  fd.append("profile", profile ? profile : new Blob());
   axios
     .post(url, fd, { headers: { "Content-Type": "multipart/form-data" } })
-    .then((res) => {
-      console.log(res.data);
-    })
     .catch((err) =>
       Swal.fire({
         text: "오류가 발생했습니다 다시 시도해주세요",
@@ -25,14 +22,13 @@ export function signUp(newUser, profile) {
     );
 }
 
-export function login(userInfo, setUser) {
+export function login(userInfo) {
   const url = baseUrl + "login";
   axios
     .post(url, userInfo)
     .then((res) => {
       if (res.data) {
-        setUser(res.data);
-        setSessionUser(res.data);
+        // setSessionUser(res.data);
         Swal.fire({
           title: "로그인 성공",
           icon: "success",
@@ -51,7 +47,7 @@ export function login(userInfo, setUser) {
         });
       }
     })
-    .catch((err) =>
+    .catch(() =>
       Swal.fire({
         title: "잘못된 접근시도",
         icon: "error",
@@ -65,7 +61,6 @@ export function allUser(setUserList) {
   axios
     .get(url)
     .then((res) => {
-      console.log(res.data);
       setUserList(res.data);
     })
     .catch(() => {
@@ -85,10 +80,10 @@ export function findUser(userName, setUserList) {
     });
 }
 
-export function findMember(memberList, setMemberList, setSearchList) {
+export function findMember(memberList, setMemberList, setSearchList, user) {
   const url = baseUrl + "user/member";
   axios.post(url, memberList).then((res) => {
-    let arr = res.data.filter((v) => v.userNo !== getUser().userNo);
+    let arr = res.data.filter((v) => v.userNo !== user.userNo);
     setMemberList(arr);
     setSearchList(arr);
   });
@@ -112,7 +107,6 @@ export function logout() {
 export const mypage = async (setInfo) => {
   const url = baseUrl + "mypage";
   await axios.get(url).then((response) => {
-    console.log(response.data);
     setInfo(response.data);
   });
 };
@@ -168,14 +162,13 @@ export const checkId = async (params, setVerifyId) => {
   }
 };
 
-export function updateProfile(userNo, profile, check, setCheck) {
+export function updateProfile(userNo, profile, setUserInfo) {
   const url = `${baseUrl}profile/${userNo}`;
 
-  console.log(url);
   const fd = new FormData();
-  fd.append("profile", profile);
+  fd.append("profile", profile ? profile : new Blob());
 
   axios
     .post(url, fd, { headers: { "Content-Type": "multipart/form-data" } })
-    .then(() => setCheck(!check));
+    .then(() => mypage(setUserInfo));
 }

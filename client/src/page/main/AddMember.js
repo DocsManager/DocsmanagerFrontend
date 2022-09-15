@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Modal, Typography } from "@mui/material";
 import ShareUser from "./ShareUser";
 import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
 import { documentAddUser, documentMember } from "../../api/documentApi";
@@ -86,10 +86,7 @@ export default function AddMember(props) {
                   row,
                   userInfo
                 );
-                {
-                  /**type에 따른 메시지 내용 구분 */
-                }
-
+                // type에 따른 메시지 내용 구분
                 setSearchList([]);
                 setOpen(false);
               }}

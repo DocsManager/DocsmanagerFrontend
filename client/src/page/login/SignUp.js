@@ -21,7 +21,8 @@ function SignUp() {
   const [verifyResult, setVerifyResult] = useState(false);
   const [value, setValue] = useState("");
   const [profile, setProfile] = useState();
-  const [imageSrc, setImageSrc] = useState("");
+  const [imageUrl, setImageUrl] = useState();
+  const imgRef = useRef();
 
   const ProfileAvatar = styled(Avatar)(({ theme }) => ({
     width: 300,
@@ -29,20 +30,24 @@ function SignUp() {
     marginTop: 30,
   }));
 
-  const [imageUrl, setImageUrl] = useState(null);
-  const imgRef = useRef();
-
   const onChangeImage = () => {
     const reader = new FileReader();
     const file = imgRef.current.files[0];
-    console.log(file);
-
     if (file) {
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        setImageUrl(reader.result);
-        console.log("이미지주소", reader.result);
-      };
+      if (file.type.split("/")[0] === "image") {
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setImageUrl(reader.result);
+          setProfile(file);
+        };
+      } else {
+        Swal.fire({
+          title: "이미지 파일이 아닙니다.",
+          icon: "error",
+          confirmButtonColor: "#3791f8",
+        });
+        imgRef.current.value = "";
+      }
     }
   };
 
@@ -107,17 +112,6 @@ function SignUp() {
       });
     }
   };
-  const encodeFileToBase64 = (fileBlob) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(fileBlob);
-    return new Promise((resolve) => {
-      reader.onload = () => {
-        setImageSrc(reader.result);
-        resolve();
-      };
-    });
-  };
-  console.log(profile);
 
   return (
     <div className="maincontainer">
@@ -168,7 +162,15 @@ function SignUp() {
                   />
                 </Button>
               </div>
-              <HighlightOffIcon fontSize="large" sx={{ float: "right" }} />
+              <HighlightOffIcon
+                fontSize="large"
+                sx={{ float: "right" }}
+                onClick={() => {
+                  setImageUrl();
+                  setProfile();
+                  imgRef.current.value = "";
+                }}
+              />
               <div />
               <TextField
                 style={{ marginLeft: 0 }}
@@ -197,15 +199,12 @@ function SignUp() {
                       title: "아이디 입력 양식을 준수해주세요.",
                       confirmButtonColor: "#3791f8",
                     });
-                    console.log(verifyId);
                   } else {
                     const params = {
                       id: document.getElementById("newId").value,
                     };
                     checkId(params, setVerifyId);
-                    console.log(verifyId);
                   }
-                  console.log(verifyId);
                 }}
                 variant="contained"
               >

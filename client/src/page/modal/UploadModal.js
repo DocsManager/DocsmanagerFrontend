@@ -20,11 +20,7 @@ function UploadModal(props) {
         open={writeConfirm}
         setOpen={setWriteConfirm}
         act={() => {
-          {
-            // writeFile(file, documentDTO, documentUser, setSizeCheck);
-            openSuccessWriteModal(writeFile);
-            // check ? setCheckHandler(false) : setCheckHandler(true);
-          }
+          openSuccessWriteModal(writeFile);
         }}
       >
         <Typography>등록 하시겠습니까?</Typography>

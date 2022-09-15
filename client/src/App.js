@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUp from "./page/login/SignUp";
 import Login from "./page/login/Login";
@@ -15,11 +15,10 @@ import FindIdAndPw from "./page/login/FindIdAndPw";
 import SuccessSignup from "./page/login/SuccessSignup";
 import PrivateRoute from "./page/login/PrivateRoute";
 import PublicRoute from "./page/login/PublicRoute";
-import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./Config";
 
 function App() {
-  const [isLogged, SetIsLogged] = useState(false);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

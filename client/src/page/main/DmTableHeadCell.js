@@ -1,6 +1,5 @@
 import React from "react";
-import { TableCell, TableSortLabel, Box, ThemeProvider } from "@mui/material";
-import { theme } from "../../Config";
+import { TableCell, TableSortLabel, Box } from "@mui/material";
 function DmTableHeadCell({
   headCell,
   orderBy,

@@ -6,7 +6,6 @@ import { TextField } from "@mui/material";
 import { Stack, ThemeProvider } from "@mui/material";
 import ShareUser from "../main/ShareUser";
 import { onHtmlPng } from "../../component/editor/pdfSave";
-import { getUser } from "../../component/getUser/getUser";
 import UploadModal from "./UploadModal";
 import { notipublish } from "../../api/noticeApi";
 import { MyContext } from "../Main";
@@ -52,7 +51,7 @@ export default function SaveWorksapce({ open, setOpen }) {
   const openSuccessWriteModal = (writeFile) => {
     const title = document.getElementById("newDocumentTitle").value;
     const content = document.getElementById("newDocumentContent").value;
-    const newDocument = { user: user, content: content };
+    const newDocument = { user: userInfo, content: content };
     const shareList = [];
     searchList.map((search) =>
       shareList.push({
@@ -60,15 +59,13 @@ export default function SaveWorksapce({ open, setOpen }) {
         userNo: search,
       })
     );
-    shareList.push({ authority: "MASTER", userNo: user });
+    shareList.push({ authority: "MASTER", userNo: userInfo });
     writeFile(newDocument, shareList, setSizeCheck, title);
     setWriteConfirm(false);
     setWriteSuccessConfirm(true);
     setOpen(false);
     setLoading(true);
   };
-
-  const user = getUser();
   const [title, setTitle] = useState();
   const [clickHandler, setClickHandler] = useState(false);
 
@@ -166,7 +163,7 @@ export default function SaveWorksapce({ open, setOpen }) {
                 setTitle(title);
                 const content = document.getElementById("newDocumentContent")
                   .value;
-                const newDocument = { user: user, content: content };
+                const newDocument = { user: userInfo, content: content };
                 onHtmlPng(title, newDocument);
                 title ? setClickHandler(false) : setClickHandler(true);
               }}

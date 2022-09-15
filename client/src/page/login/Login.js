@@ -1,7 +1,7 @@
 import { Box, Button, InputAdornment, TextField } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { allUser, login } from "../../api/userApi";
+import { login } from "../../api/userApi";
 import "./Login.css";
 import { loginMenu } from "./loginMenu";
 
@@ -12,22 +12,19 @@ function Login() {
         id: document.getElementById("userId").value,
         password: document.getElementById("userPwd").value,
       };
-      login(userInfo, setUser);
+      login(userInfo);
     }
   };
-
-  const [user, setUser] = useState({});
-  const [userList, setUserList] = useState([]);
-
-  useEffect(() => {
-    allUser(setUserList);
-  }, []);
 
   return (
     <div className="logincontainer">
       <div className="fontcontainer">
         <div>
-          <img src={`${process.env.PUBLIC_URL}/dmlogo.png`} className="logo" />
+          <img
+            src={`${process.env.PUBLIC_URL}/dmlogo.png`}
+            className="logo"
+            alt="logo"
+          />
           <div className="fonts">
             <p className="font1">문서를 세분화된 폴더로 관리해보세요!</p>
             <p className="font1">
@@ -37,7 +34,11 @@ function Login() {
         </div>
       </div>
       <div style={{ width: "50vw" }} className="login">
-        <img src={`${process.env.PUBLIC_URL}/logo.png`} className="dmlogo" />
+        <img
+          src={`${process.env.PUBLIC_URL}/logo.png`}
+          className="dmlogo"
+          alt="logo"
+        />
         <p className="font1">
           <span className="D">D</span> <span className="M">M</span>에 오신것을
           환영합니다.
@@ -88,7 +89,7 @@ function Login() {
                 id: document.getElementById("userId").value,
                 password: document.getElementById("userPwd").value,
               };
-              login(userInfo, setUser);
+              login(userInfo);
             }}
           >
             로그인

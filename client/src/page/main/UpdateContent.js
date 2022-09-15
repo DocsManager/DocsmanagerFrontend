@@ -3,15 +3,12 @@ import "./Modal.css";
 import { updateContent } from "../../api/documentApi";
 import SucessModal from "./SucessModal";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import { MyContext } from "../Main";
-import { InputBox } from "./WriteModal";
 import { TextField, Typography } from "@mui/material";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { AddBox } from "@mui/icons-material";
 const style = {
   position: "absolute",
   top: "50%",

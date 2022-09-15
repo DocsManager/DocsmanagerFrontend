@@ -13,20 +13,16 @@ import {
   deleteFile,
   restoreFile,
   updateRecycleBinFile,
-  writeFile,
-  masterDeleteFile,
   searchDocument,
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import { MyContext } from "../Main";
 import WriteModal from "./WriteModal";
-import { getUser } from "../../component/getUser/getUser";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
-import NativeSelect from "@mui/material/NativeSelect";
 
 //문서 등록, 중요 문서 안내 버튼 styled 컴포넌트로
 const EnrollBtn = styled(Button)({
@@ -119,7 +115,8 @@ const closeSuccessModal = (modalOpen, check, setCheckHandler, setSelected) => {
 const handleTrashcanBtn = (
   newSelected,
   setConfirmDeleteModalOpen,
-  setSuccessRestoreModalOpen
+  setSuccessRestoreModalOpen,
+  userInfo
 ) => {
   if (window.location.href.split("/main")[1] === "/trashcan") {
     return (
@@ -128,7 +125,7 @@ const handleTrashcanBtn = (
           variant="contained"
           endIcon={<Outbox />}
           onClick={() => {
-            restoreFile(newSelected);
+            restoreFile(newSelected, userInfo);
             setSuccessRestoreModalOpen(true);
           }}
           style={{ marginRight: "10px" }}
@@ -176,7 +173,7 @@ const DmTableToolbar = ({
   const [writeModalOpen, setWriteModalOpen] = useState(false);
   // const [searchCategory, setSearchCategory] = useState("");
 
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
 
   const handleChange = (event) => {
     setSearchCategory(event.target.value);
@@ -192,7 +189,7 @@ const DmTableToolbar = ({
     const searchName = document.getElementById("searchDocumentName").value;
     if (searchName) {
       searchDocument(
-        getUser().userNo,
+        userInfo.userNo,
         searchName,
         documentUrl ? documentUrl : "",
         setList,
@@ -250,7 +247,8 @@ const DmTableToolbar = ({
               {handleTrashcanBtn(
                 newSelected,
                 setConfirmDeleteModalOpen,
-                setSuccessRestoreModalOpen
+                setSuccessRestoreModalOpen,
+                userInfo
               )}
             </div>
           </Box>
@@ -333,7 +331,7 @@ const DmTableToolbar = ({
                 open={confirmDeleteModalOpen}
                 setOpen={setConfirmDeleteModalOpen}
                 act={() => {
-                  updateRecycleBinFile(newSelected);
+                  updateRecycleBinFile(newSelected, userInfo);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}

@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 
 export const NoSearchData = () => {
@@ -13,7 +13,7 @@ export const NoSearchData = () => {
     >
       <Box />
       <Box sx={{ margin: "0 auto" }}>
-        <img src={`${process.env.PUBLIC_URL}/016.png`} />
+        <img src={`${process.env.PUBLIC_URL}/016.png`} alt="noSearchData" />
       </Box>
       <Box sx={{ margin: "0 auto" }}>
         <Box>

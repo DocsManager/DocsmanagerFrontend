@@ -1,36 +1,21 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { writeFile } from "../../api/documentApi";
-import { getUser, setUser } from "../../component/getUser/getUser";
-import ConfirmModal from "./ConfirmModal";
 import "./Modal.css";
 import SucessModal from "./SucessModal";
 import { MyContext } from "../Main";
 import ShareUser from "./ShareUser";
 import { notipublish } from "../../api/noticeApi";
-import CircularProgress from "@mui/material/CircularProgress";
-import LinearProgress from "@mui/material/LinearProgress";
-import AttachFileOutlinedIcon from '@mui/icons-material/AttachFileOutlined';
-
+import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { height } from "@mui/system";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import {
-  OutlinedInput,
-  Stack,
-  styled,
-  TextField,
-  ThemeProvider,
-} from "@mui/material";
-import { theme } from "../../Config";
-import { TextFieldsOutlined } from "@mui/icons-material";
+import { OutlinedInput, Stack, styled, TextField } from "@mui/material";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { ModalIcon, WorkspaceButton } from "../workspace/AddWorkspace";
 import UploadModal from "../modal/UploadModal";
-import FormHelperText from "@mui/material/FormHelperText";
 
 const style = {
   position: "absolute",
@@ -72,10 +57,8 @@ const WriteModal = (props) => {
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
-
-  const user = getUser();
   const documentDTO = {
-    user: user,
+    user: userInfo,
     content: text,
   };
   const documentUser = searchList.map(
@@ -100,7 +83,7 @@ const WriteModal = (props) => {
     setLoading(true);
   };
 
-  documentUser.push({ userNo: user, authority: "MASTER" });
+  documentUser.push({ userNo: userInfo, authority: "MASTER" });
 
   return (
     // <ThemeProvider theme={theme}>
@@ -123,47 +106,47 @@ const WriteModal = (props) => {
             새로운 문서 등록
           </Typography>
 
-          <Box mt={1} mb={2}>{props.children}</Box>
+          <Box mt={1} mb={2}>
+            {props.children}
+          </Box>
           {/* 09.03 모달창 수정 */}
-          <Box sx={{display:"flex", alignItems:"center"}}>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             <input
-                type="file"
-                id="fileUpload"
-                onChange={(e) => setFile(e.target.files[0])}
-                style={{ display: "none" }}
-              />
-             
-              <TextField
-                mt={1}
-                className="upload-name"
-                InputProps={{
-                  startAdornment: (
-                    <ModalIcon position="start">
-                      <AttachFileOutlinedIcon/>
-                    </ModalIcon>
-                  ),
-                }}
-                value={
-                  file
-                    ? file.name.length > 17
-                      ? file.name.slice(0, 16) + "..."
-                      : file.name
-                    : ""
-                }
-                label="파일명"
-                />
-              <Button
-                sx={{ fontSize: "1.1em", marginLeft:"10px" }}
-                component="label"
-                htmlFor="fileUpload"
-                endIcon={
-                  <DriveFolderUploadOutlinedIcon sx={{ fontSize: "1.1em" }} />
-                }
-              >
-                업로드
-              </Button>
+              type="file"
+              id="fileUpload"
+              onChange={(e) => setFile(e.target.files[0])}
+              style={{ display: "none" }}
+            />
 
-
+            <TextField
+              mt={1}
+              className="upload-name"
+              InputProps={{
+                startAdornment: (
+                  <ModalIcon position="start">
+                    <AttachFileOutlinedIcon />
+                  </ModalIcon>
+                ),
+              }}
+              value={
+                file
+                  ? file.name.length > 17
+                    ? file.name.slice(0, 16) + "..."
+                    : file.name
+                  : ""
+              }
+              label="파일명"
+            />
+            <Button
+              sx={{ fontSize: "1.1em", marginLeft: "10px" }}
+              component="label"
+              htmlFor="fileUpload"
+              endIcon={
+                <DriveFolderUploadOutlinedIcon sx={{ fontSize: "1.1em" }} />
+              }
+            >
+              업로드
+            </Button>
           </Box>
 
           <ShareUser
@@ -218,9 +201,7 @@ const WriteModal = (props) => {
                 setSearchList([]);
                 setWriteModal(false);
                 setFile();
-                {
-                  /**닫기 버튼 누르면 input에 담긴 file내용 비워지게 */
-                }
+                // 닫기 버튼 누르면 input에 담긴 file내용 비워지게
               }}
             >
               닫기
