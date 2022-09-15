@@ -1,24 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Box, Button, Typography, Modal } from "@mui/material";
-import { SvgIcon, TextField, ThemeProvider } from "@mui/material";
+import { SvgIcon, TextField } from "@mui/material";
 import ShareUser from "../main/ShareUser";
 import { addWorkspace } from "../../api/workspaceApi";
-import { getUser } from "../../component/getUser/getUser";
-import { worksapcepublish } from "../../api/noticeApi";
 import { styled } from "@mui/material/styles";
 import {
   LaptopChromebook,
   AddBoxOutlined,
   CloseOutlined,
 } from "@mui/icons-material";
-import { theme } from "../../Config";
+import { MyContext } from "../Main";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 500,
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -47,11 +45,12 @@ export default function AddWorkspace({ open, setOpen }) {
     setSearchList([]);
   };
   //워크스페이스 번호를 알림 파라미터로 넘겨주기 위해 생성
-  const [newWorkspace, setNewWorkspace] = useState();
-  const [loading, setLoading] = useState(false);
-  const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
+  // const [newWorkspace, setNewWorkspace] = useState();
+
+  // const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
   const [title, setTitle] = useState("");
   const [clickHandler, setClickHandler] = useState(false);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
   // 제목 없을 때 뜨는 textinput
   const fillTitle = () => {
     if (clickHandler === false || title) {
@@ -79,7 +78,7 @@ export default function AddWorkspace({ open, setOpen }) {
             startAdornment: (
               <ModalIcon
                 position="start"
-                sx={{ color: title ? "#3781f8" : "#d32f2f" }}
+                sx={{ color: title ? "#3791f8" : "#d32f2f" }}
               >
                 <LaptopChromebook />
               </ModalIcon>
@@ -95,79 +94,76 @@ export default function AddWorkspace({ open, setOpen }) {
     }
   };
 
-  return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <Modal
-          open={open}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6" //텍스트의 크기 뿐만 아니라 HTML 태그 결정, <h6/>로 마크업 됨
-              component="h2" //variant prop과 상이한 HTML 태그를 사용해야 할 때는 component prop으로 태그명을 명시
-              align="center"
-              mb={2}
-            >
-              새로운 워크스페이스 {/**모달 이름 변경 */}
-            </Typography>
-            <React.Fragment>
-              <Typography component="h3" mt={1}>
-                워크스페이스명
-              </Typography>
-              {fillTitle()}
-            </React.Fragment>
+  const closeHandler = () => {
+    setOpen(false);
+    setCheckHandler(!check);
+  };
 
-            <ShareUser
-              searchList={searchList}
-              setSearchList={setSearchList}
-              type={"workspace"}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
+  return (
+    <div>
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-title"
+            variant="h6" //텍스트의 크기 뿐만 아니라 HTML 태그 결정, <h6/>로 마크업 됨
+            component="h2" //variant prop과 상이한 HTML 태그를 사용해야 할 때는 component prop으로 태그명을 명시
+            align="center"
+            mb={2}
+          >
+            새로운 워크스페이스 {/**모달 이름 변경 */}
+          </Typography>
+          <React.Fragment>
+            <Typography component="h3" mt={1}>
+              워크스페이스명
+            </Typography>
+            {fillTitle()}
+          </React.Fragment>
+
+          <ShareUser
+            searchList={searchList}
+            setSearchList={setSearchList}
+            type={"workspace"}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+            mt={2}
+          >
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                const title = document.getElementById("workspaceTitle").value;
+                setTitle(title);
+                if (title) {
+                  const workspace = {
+                    title: title,
+                    master: userInfo,
+                    userList: searchList,
+                  };
+                  addWorkspace(workspace, searchList, closeHandler, userInfo);
+                  setSearchList([]);
+                  setTitle();
+                }
+                title ? setClickHandler(false) : setClickHandler(true);
+                setCheckHandler(!check);
               }}
-              mt={2}
             >
-              <WorkspaceButton
-                variant="contained"
-                onClick={() => {
-                  const title = document.getElementById("workspaceTitle").value;
-                  setTitle(title);
-                  if (title) {
-                    const workspace = {
-                      title: title,
-                      master: getUser(),
-                      userList: searchList,
-                    };
-                    addWorkspace(
-                      workspace,
-                      setOpen,
-                      setNewWorkspace,
-                      setLoading
-                    );
-                    newWorkspace &&
-                      worksapcepublish(searchList, newWorkspaceNo, setLoading);
-                    setSearchList([]);
-                    setTitle();
-                  }
-                  title ? setClickHandler(false) : setClickHandler(true);
-                }}
-              >
-                생성
-                <AddBoxOutlined />
-              </WorkspaceButton>
-              <WorkspaceButton variant="contained" onClick={handleClose}>
-                취소
-                <CloseOutlined />
-              </WorkspaceButton>
-            </Box>
+              생성
+              <AddBoxOutlined />
+            </WorkspaceButton>
+            <WorkspaceButton variant="contained" onClick={handleClose}>
+              취소
+              <CloseOutlined />
+            </WorkspaceButton>
           </Box>
-        </Modal>
-      </div>
-    </ThemeProvider>
+        </Box>
+      </Modal>
+    </div>
   );
 }

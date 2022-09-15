@@ -20,11 +20,7 @@ function UploadModal(props) {
         open={writeConfirm}
         setOpen={setWriteConfirm}
         act={() => {
-          {
-            // writeFile(file, documentDTO, documentUser, setSizeCheck);
-            openSuccessWriteModal(writeFile);
-            // check ? setCheckHandler(false) : setCheckHandler(true);
-          }
+          openSuccessWriteModal(writeFile);
         }}
       >
         <Typography>등록 하시겠습니까?</Typography>
@@ -32,7 +28,7 @@ function UploadModal(props) {
       <SucessModal open={loading}>
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
-          <Typography>업로드 중입니다...</Typography>
+          <Typography sx={{ marginTop: "10px" }}>업로드 중입니다...</Typography>
         </Box>
       </SucessModal>
       {sizeCheck === 1 ? (

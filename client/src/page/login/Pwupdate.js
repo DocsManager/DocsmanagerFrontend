@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
-import { changepw, logout, mypage } from "../../api/userApi";
-import { Button, TextField } from "@mui/material";
-import { deleteUser } from "../../component/getUser/getUser";
+import { changepw } from "../../api/userApi";
+import { Button } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import "./Mypage.css";
@@ -33,7 +32,6 @@ function Pwupdate({ open, style, setOpen }) {
         oldpw: document.getElementById("oldPassword").value,
         pw: document.getElementById("newPassword").value,
       };
-      console.log(params);
       changepw(params);
       setOpen(false);
     }
@@ -74,10 +72,7 @@ function Pwupdate({ open, style, setOpen }) {
               fullWidth
               variant="outlined"
               sx={{
-                marginBottom:
-                  errors.newPassword && errors.newPassword.type === "required"
-                    ? "5px"
-                    : "42px",
+                marginBottom: "10px",
               }}
               {...register("oldPassword", { required: true })}
             />
@@ -95,10 +90,7 @@ function Pwupdate({ open, style, setOpen }) {
               fullWidth
               variant="outlined"
               sx={{
-                marginBottom:
-                  errors.newPassword && errors.newPassword.type === "required"
-                    ? "5px"
-                    : "42px",
+                marginBottom: "10px",
               }}
               {...register("newPassword", {
                 required: true,
@@ -141,10 +133,7 @@ function Pwupdate({ open, style, setOpen }) {
                 validate: (value) => value === checkPassword.current,
               })}
               sx={{
-                marginBottom:
-                  errors.newPassword && errors.newPassword.type === "required"
-                    ? "5px"
-                    : "42px",
+                marginBottom: "10px",
               }}
             />
 

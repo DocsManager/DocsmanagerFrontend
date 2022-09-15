@@ -1,31 +1,25 @@
 import axios from "axios";
-import { getUser } from "../component/getUser/getUser";
 
 const baseUrl = "/api/";
 const documentBaseUrl = baseUrl + "documents/user/";
 
 // 페이지별 리스트 출력
-export function getList(setList, pages, documentUrl) {
-  const url =
-    documentBaseUrl + documentUrl + getUser().userNo + "?page=" + pages;
+export function getList(setList, pages, documentUrl, user) {
+  const url = documentBaseUrl + documentUrl + user.userNo + "?page=" + pages;
   axios.get(url).then((res) => {
     res.data.dtoList.map((data, index) => {
       data.id = index + 1;
       data.userName = data.userNo.name;
+      return data;
     });
-    console.log(pages);
-    console.log(res.data);
     setList(res.data);
-    // console.log(res.data.dtoList);
-    // setPageList(res.data);
   });
 }
 
 // 휴지통 보내기
-export function updateRecycleBinFile(documentNo) {
-  const url = baseUrl + "documents/" + getUser().userNo;
+export function updateRecycleBinFile(documentNo, user) {
+  const url = baseUrl + "documents/" + user.userNo;
   let arr = [];
-  console.log(documentNo);
   documentNo.map((v) =>
     arr.push({
       documentNo: { documentNo: v.documentNo.documentNo },
@@ -36,9 +30,8 @@ export function updateRecycleBinFile(documentNo) {
 }
 
 // 영구 삭제
-export function deleteFile(newSelected) {
-  const url = baseUrl + "document/" + getUser().userNo;
-  console.log(newSelected);
+export function deleteFile(newSelected, user) {
+  const url = baseUrl + "document/" + user.userNo;
   axios
     .delete(url, {
       headers: {
@@ -52,7 +45,6 @@ export function deleteFile(newSelected) {
 // 마스터 영구 삭제
 export function masterDeleteFile(newSelected) {
   const url = baseUrl + "documents/";
-  console.log(newSelected);
   axios
     .delete(url, {
       headers: {
@@ -64,8 +56,8 @@ export function masterDeleteFile(newSelected) {
 }
 
 // 파일 복원
-export function restoreFile(documentNo) {
-  const url = baseUrl + "documents/" + getUser().userNo;
+export function restoreFile(documentNo, user) {
+  const url = baseUrl + "documents/" + user.userNo;
   let arr = [];
   documentNo.map((v) =>
     arr.push({
@@ -73,13 +65,12 @@ export function restoreFile(documentNo) {
       recycleBin: 0,
     })
   );
-  console.log(documentNo);
   axios.put(url, arr);
 }
 
 // 중요 표시
-export function importantFile(documentNo, important) {
-  const url = baseUrl + "documents/" + getUser().userNo;
+export function importantFile(documentNo, important, user) {
+  const url = baseUrl + "documents/" + user.userNo;
   axios
     .put(url, [
       {
@@ -126,7 +117,6 @@ export function writeFile(
     })
     .then((res) => {
       sizeCheck(res.data);
-      console.log(res.data);
     });
 }
 
@@ -146,15 +136,11 @@ export function updateFile(documentNo, file) {
 
   const fd = new FormData();
   fd.append("file", file);
-  axios
-    .post(url, fd, {
-      headers: {
-        "Content-Type": "multipart/form-data;",
-      },
-    })
-    .then((res) => {
-      console.log(res.data);
-    });
+  axios.post(url, fd, {
+    headers: {
+      "Content-Type": "multipart/form-data;",
+    },
+  });
 }
 
 // user 추가
@@ -168,10 +154,7 @@ export function documentAddUser(userList, row) {
         documentNo: row,
       })
   );
-  console.log(documentUser);
-  axios.post(url, documentUser).then((res) => {
-    console.log(res.data);
-  });
+  axios.post(url, documentUser);
 }
 
 // 멤버 검색
@@ -186,6 +169,7 @@ export function documentMember(documentNo, setMemberList) {
       documentList.map((v) => {
         v.userNo.authority = v.authority;
         memberList.push(v.userNo);
+        return v;
       });
       setMemberList(memberList);
     })
@@ -193,12 +177,34 @@ export function documentMember(documentNo, setMemberList) {
 }
 
 // 파일 검색
-export function searchDocument(userNo, originalName, documentUrl, setList) {
-  const url = `${baseUrl}document/${documentUrl}/${userNo}/${originalName}`;
-  console.log(originalName);
+export function searchDocument(
+  userNo,
+  originalName,
+  documentUrl,
+  setList,
+  page,
+  type
+) {
+  // const url = `${baseUrl}document/${documentUrl}${userNo}/${originalName}?page=${page}`;
+  const url =
+    baseUrl +
+    "document/" +
+    documentUrl +
+    type +
+    "/" +
+    userNo +
+    "/" +
+    originalName +
+    "?page=" +
+    page;
   axios
     .get(url)
     .then((res) => {
+      res.data.dtoList.map((data, index) => {
+        data.id = index + 1;
+        data.userName = data.userNo.name;
+        return data;
+      });
       setList(res.data);
     })
     .catch((err) => console.log(err));
@@ -211,7 +217,6 @@ export function fileSize(userNo, setSize) {
     .get(url)
     .then((res) => {
       setSize(res.data);
-      console.log(res.data);
     })
     .catch((err) => console.log(err));
 }

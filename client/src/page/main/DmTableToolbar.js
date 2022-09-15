@@ -13,15 +13,16 @@ import {
   deleteFile,
   restoreFile,
   updateRecycleBinFile,
-  writeFile,
-  masterDeleteFile,
   searchDocument,
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import { MyContext } from "../Main";
 import WriteModal from "./WriteModal";
-import { getUser } from "../../component/getUser/getUser";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
 
 //문서 등록, 중요 문서 안내 버튼 styled 컴포넌트로
 const EnrollBtn = styled(Button)({
@@ -33,7 +34,12 @@ const EnrollBtn = styled(Button)({
   cursor: "pointer",
   fontSize: "1em",
 });
-
+export const InfoFunctionBox = styled(Box)({
+  border: "1px solid #3791f8",
+  color: "#3781f8",
+  padding: "10px",
+  borderRadius: "5px",
+});
 const ToRecyclebin = styled(Button)({
   backgroundColor: "#FF6262",
   color: "white",
@@ -52,16 +58,34 @@ const handleToolbarBtn = (writeModalOpen, setWriteModalOpen) => {
   switch (window.location.href.split("/main")[1]) {
     case "/important":
       return (
-        <EnrollBtn variant="contained" endIcon={<FolderSpecial />}>
-          중요한 문서를 관리해보세요!
-        </EnrollBtn>
+        <InfoFunctionBox variant="contained">
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "250px",
+            }}
+          >
+            중요한 문서를 관리해보세요!
+            <FolderSpecial />
+          </Typography>
+        </InfoFunctionBox>
       );
 
     case "/trashcan":
       return (
-        <EnrollBtn variant="contained" endIcon={<Warning />}>
-          휴지통에서 삭제되면 복원할 수 없습니다!
-        </EnrollBtn>
+        <InfoFunctionBox variant="contained">
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "350px",
+            }}
+          >
+            휴지통에서 삭제되면 복원할 수 없습니다!
+            <Warning />
+          </Typography>
+        </InfoFunctionBox>
       );
     default:
       return (
@@ -91,7 +115,8 @@ const closeSuccessModal = (modalOpen, check, setCheckHandler, setSelected) => {
 const handleTrashcanBtn = (
   newSelected,
   setConfirmDeleteModalOpen,
-  setSuccessRestoreModalOpen
+  setSuccessRestoreModalOpen,
+  userInfo
 ) => {
   if (window.location.href.split("/main")[1] === "/trashcan") {
     return (
@@ -100,7 +125,7 @@ const handleTrashcanBtn = (
           variant="contained"
           endIcon={<Outbox />}
           onClick={() => {
-            restoreFile(newSelected);
+            restoreFile(newSelected, userInfo);
             setSuccessRestoreModalOpen(true);
           }}
           style={{ marginRight: "10px" }}
@@ -136,14 +161,45 @@ const DmTableToolbar = ({
   documentUrl,
   setList,
   setSearchData,
+  page,
+  setPage,
+  searchCategory,
+  setSearchCategory,
   // documentInfo,
 }) => {
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
   const [successDeleteModalOpen, setSuccessDeleteModalOpen] = useState(false);
   const [successRestoreModalOpen, setSuccessRestoreModalOpen] = useState(false);
   const [writeModalOpen, setWriteModalOpen] = useState(false);
+  // const [searchCategory, setSearchCategory] = useState("");
 
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
+
+  const handleChange = (event) => {
+    setSearchCategory(event.target.value);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
+
+  const handleClick = () => {
+    const searchName = document.getElementById("searchDocumentName").value;
+    if (searchName) {
+      searchDocument(
+        userInfo.userNo,
+        searchName,
+        documentUrl ? documentUrl : "",
+        setList,
+        page ? page : page + 1,
+        searchCategory
+      );
+      setPage(0);
+      setSearchData(searchName);
+    }
+  };
 
   return (
     <React.Fragment>
@@ -191,7 +247,8 @@ const DmTableToolbar = ({
               {handleTrashcanBtn(
                 newSelected,
                 setConfirmDeleteModalOpen,
-                setSuccessRestoreModalOpen
+                setSuccessRestoreModalOpen,
+                userInfo
               )}
             </div>
           </Box>
@@ -205,29 +262,36 @@ const DmTableToolbar = ({
                 marginTop: "12px",
               }} /*영훈이가 거슬려했던 Toolbar와 table head 너비차이 조절 */
             >
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">유형</InputLabel>
+
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={searchCategory}
+                    label="유형"
+                    onChange={handleChange}
+                  >
+                    <MenuItem value={"originalName"}>제목</MenuItem>
+                    <MenuItem value={"content"}>내용</MenuItem>
+                    <MenuItem value={"userName"}>작성자</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+
               <TextField
                 id="searchDocumentName"
                 label="파일 검색"
-                sx={{ marginRight: "20px" }}
+                sx={{ margin: "0px 20px 0px 10px" }}
+                onKeyPress={handleKeyPress}
               />
               <Button
                 variant="outlined"
                 sx={{ fontSize: "1rem" }}
                 endIcon={<SearchOutlined />}
                 onClick={() => {
-                  const searchName = document.getElementById(
-                    "searchDocumentName"
-                  ).value;
-                  if (searchName) {
-                    searchDocument(
-                      getUser().userNo,
-                      searchName,
-                      documentUrl ? documentUrl : "",
-                      setList
-                    );
-                    setSearchData(searchName);
-                  }
-                  console.log(searchName);
+                  handleClick();
                 }}
               >
                 검색
@@ -248,7 +312,7 @@ const DmTableToolbar = ({
                 open={confirmDeleteModalOpen}
                 setOpen={setConfirmDeleteModalOpen}
                 act={() => {
-                  deleteFile(newSelected);
+                  deleteFile(newSelected, userInfo);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}
@@ -267,7 +331,7 @@ const DmTableToolbar = ({
                 open={confirmDeleteModalOpen}
                 setOpen={setConfirmDeleteModalOpen}
                 act={() => {
-                  updateRecycleBinFile(newSelected);
+                  updateRecycleBinFile(newSelected, userInfo);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}

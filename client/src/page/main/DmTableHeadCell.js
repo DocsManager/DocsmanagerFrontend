@@ -1,6 +1,5 @@
 import React from "react";
-import { TableCell, TableSortLabel, Box, ThemeProvider } from "@mui/material";
-import { theme } from "../../Config";
+import { TableCell, TableSortLabel, Box } from "@mui/material";
 function DmTableHeadCell({
   headCell,
   orderBy,
@@ -9,7 +8,6 @@ function DmTableHeadCell({
   order,
 }) {
   return (
-    // <ThemeProvider theme={theme}>
     <TableCell
       key={headCell.id}
       align="center"
@@ -21,7 +19,7 @@ function DmTableHeadCell({
         active={orderBy === headCell.id} //orderBy와 headCell의 id가 일치해야 활성화됨
         direction={orderBy === headCell.id ? order : "asc"} //현재 정렬 방식은 orderBy와 headCell의 id가 일치하면 order(setOrder로 값은 계속 바뀜) 일치하지 않으면 오름차순 정렬
         onClick={createSortHandler(headCell.id)}
-        style={{ fontSize: "1.1em" }}
+        style={{ fontSize: "1.2rem" }}
       >
         {headCell.label}
 
@@ -32,7 +30,6 @@ function DmTableHeadCell({
         ) : null}
       </TableSortLabel>
     </TableCell>
-    // </ThemeProvider>
   );
 }
 export default DmTableHeadCell;

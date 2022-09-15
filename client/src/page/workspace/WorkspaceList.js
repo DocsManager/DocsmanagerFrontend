@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
-import {
-  deleteUserWorkspace,
-  getUserWorkspace,
-} from "../../api/workspaceUserApi";
-import { getUser } from "../../component/getUser/getUser";
+import React, { useContext, useEffect, useState } from "react";
+import { getUserWorkspace } from "../../api/workspaceUserApi";
 import WorkspaceTable from "./WorkspaceTable";
+import { MyContext } from "../Main";
 
 function WorkspaceList() {
   const [workspaces, setWorkspace] = useState([]);
-  const [check, setCheck] = useState(false);
-  const user = getUser();
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
   useEffect(() => {
-    getUserWorkspace(user.userNo, setWorkspace);
+    getUserWorkspace(userInfo.userNo, setWorkspace);
   }, [check]);
 
   return (
@@ -29,9 +25,9 @@ function WorkspaceList() {
       <WorkspaceTable
         workspace={workspaces}
         setWorkspace={setWorkspace}
-        user={user}
+        user={userInfo}
         check={check}
-        setCheck={setCheck}
+        setCheck={setCheckHandler}
       />
     </div>
   );

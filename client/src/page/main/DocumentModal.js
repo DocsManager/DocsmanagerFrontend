@@ -18,12 +18,10 @@ import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import EditIcon from "@mui/icons-material/Edit";
 import RestorePageIcon from "@mui/icons-material/RestorePage";
 import { fileCategoryIcon } from "./DmTable";
-
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
@@ -48,7 +46,7 @@ const openSuccessModal = (modalOpen, infoModalOpen, check, setCheckHandler) => {
 };
 
 const DocumentModal = (props) => {
-  const { open, document, infoModalOpen, page, setPage, dtoList } = props;
+  const { open, document, infoModalOpen } = props;
   const [confirmModalOpen, setConfirmModalOpen] = useState(false);
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [deleteSuccessModalOpen, setDeleteSuccessModalOpen] = useState(false);
@@ -56,7 +54,7 @@ const DocumentModal = (props) => {
   const [openShareAdd, setOpenShareAdd] = useState(false);
   const [documentShareModal, setDocumentShareModal] = useState(false);
 
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
 
   return (
     <div>
@@ -66,13 +64,6 @@ const DocumentModal = (props) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {/* <Box sx={{ ...style, minWidth: "700px", maxWidth: "800px" }}>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              {console.log(document)}
-              {document.documentNo.originalName}
-            </Typography>
-            <Box> */}
         <Box sx={{ ...style, width: 500 }}>
           <Typography
             id="modal-modal-title"
@@ -82,9 +73,7 @@ const DocumentModal = (props) => {
               display: "flex",
               justifyContent: "right",
             }}
-            mt={2}
           >
-            {console.log(document)}
             {(() => {
               switch (window.location.href.split("/main")[1]) {
                 case "/trashcan":
@@ -152,11 +141,17 @@ const DocumentModal = (props) => {
             {/* </Box>
           </Box> */}
           </Typography>
-
-          <Typography variant="h6" component="h2">
+          <Box sx={{ display: "flex", alignItems: "center" }}>
             {fileCategoryIcon(document.documentNo.fileCategory)}
-            {document.documentNo.originalName}
-          </Typography>
+            <Typography
+              variant="h6"
+              component="h2"
+              marginLeft={"10px"}
+              marginTop={"3px"}
+            >
+              {document.documentNo.originalName}
+            </Typography>
+          </Box>
 
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             {document.documentNo.content
@@ -231,7 +226,7 @@ const DocumentModal = (props) => {
                 open={confirmModalOpen}
                 setOpen={setConfirmModalOpen}
                 act={() => {
-                  updateRecycleBinFile([document]);
+                  updateRecycleBinFile([document], userInfo);
                   setConfirmModalOpen(false);
                   setSuccessModalOpen(true);
                   infoModalOpen(false);

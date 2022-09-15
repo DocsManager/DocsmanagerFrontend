@@ -1,12 +1,9 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import React from "react";
-import { FaIcons } from "react-icons/fa";
 import { toast, ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Toast.css";
 import { Link } from "react-router-dom";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import ScreenShareIcon from "@mui/icons-material/ScreenShare";
 
 export const notify = (newNotice) =>
   toast(
@@ -15,7 +12,10 @@ export const notify = (newNotice) =>
         <Typography style={{ fontWeight: "bold" }}>
           {newNotice.content}
         </Typography>
-        <Link to={newNotice.urlParams}>
+        <Link
+          to={newNotice.urlParams}
+          style={{ marginLeft: "80%", marginTop: "40px" }}
+        >
           <Button sx={{ fontSize: "1.1rem" }} variant="contained">
             이동하기
           </Button>

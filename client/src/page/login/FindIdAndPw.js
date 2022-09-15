@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import FindId from "./FindId";
 import FindPassword from "./FindPassword.js";
 import PropTypes from "prop-types";
@@ -10,6 +10,7 @@ import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { withStyles } from "@material-ui/styles";
+import { Link } from "react-router-dom";
 
 const CustomTab = withStyles({
   root: {
@@ -22,7 +23,7 @@ const CustomTab = withStyles({
   },
   selected: {
     color: "#ffffff",
-    background: "#8BC7FF",
+    background: "#3791f8",
     fontWeight: "bolder",
   },
 })(Tab);
@@ -94,12 +95,15 @@ export default function FullWidthTabs() {
             marginBottom: "35px",
           }}
         >
-          <img
-            src={`${process.env.PUBLIC_URL}/findidpwlogo.png`}
-            className="dmlogo"
-            width="600"
-            height="150"
-          />
+          <Link to="/">
+            <img
+              src={`${process.env.PUBLIC_URL}/findidpwlogo.png`}
+              alt="dmlogo"
+              className="dmlogo"
+              width="600"
+              height="150"
+            />
+          </Link>
         </Container>
         <Box>
           <AppBar position="static">
@@ -111,7 +115,7 @@ export default function FullWidthTabs() {
               onChange={handleChange}
               sx={{
                 "& button.Mui-selected": {
-                  background: "#8BC7FF",
+                  background: "#3791f8",
                   color: "#ffffff",
                 },
               }}

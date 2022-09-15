@@ -1,32 +1,19 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   TableBody,
   TableCell,
   TableContainer,
-  TextField,
-  Typography,
-  ThemeProvider,
   Pagination,
 } from "@mui/material";
-import { Box, TablePagination, TableRow, LinearProgress } from "@mui/material";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import { Table, Button } from "@mui/material";
+import { Box, TableRow, Table, Paper, Checkbox } from "@mui/material";
 import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
-import { getUser } from "../../component/getUser/getUser";
 import { MyContext } from "../Main";
-import {
-  fileSize,
-  getList,
-  importantFile,
-  searchDocument,
-  removeImportantFile,
-} from "../../api/documentApi";
+import { getList, importantFile } from "../../api/documentApi";
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
-import Sidebar from "./Sidebar";
+import { searchDocument } from "../../api/documentApi";
 import { NoSearchData } from "./NoSearchData";
 
 function descendingComparator(a, b, orderBy) {
@@ -61,39 +48,60 @@ export function fileCategoryIcon(fileCategory) {
   switch (true) {
     case fileCategory.includes("jpeg"):
     case fileCategory.includes("png"):
-      return <img src="https://img.icons8.com/fluency/30/000000/image.png" />;
+      return (
+        <img
+          src="https://img.icons8.com/fluency/30/000000/image.png"
+          alt="img"
+        />
+      );
     case fileCategory.includes("pdf"):
       return (
-        <img src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png" />
+        <img
+          src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png"
+          alt="pdf"
+        />
       );
     case fileCategory.includes("ppt"):
     case fileCategory.includes("powerpoint"):
     case fileCategory.includes("show"):
       return (
-        <img src="https://img.icons8.com/color/30/000000/powerpoint.png" />
+        <img
+          src="https://img.icons8.com/color/30/000000/powerpoint.png"
+          alt="ppt"
+        />
       );
     case fileCategory.includes("excel"):
     case fileCategory.includes("xls"):
     case fileCategory.includes("cell"):
-      return <img src="https://img.icons8.com/color/30/000000/xls.png" />;
+      return (
+        <img src="https://img.icons8.com/color/30/000000/xls.png" alt="excel" />
+      );
     case fileCategory.includes("docx"):
     case fileCategory.includes("hwp"):
     case fileCategory.includes("word"):
     case fileCategory.includes("hwdt"):
       return (
-        <img src="https://img.icons8.com/color/30/000000/google-docs--v1.png" />
+        <img
+          src="https://img.icons8.com/color/30/000000/google-docs--v1.png"
+          alt="hwp"
+        />
       );
     case fileCategory.includes("zip"):
-      return <img src="https://img.icons8.com/color/30/000000/archive.png" />;
+      return (
+        <img
+          src="https://img.icons8.com/color/30/000000/archive.png"
+          alt="zip"
+        />
+      );
     default:
-      return <img src="https://img.icons8.com/color/30/000000/file.png" />;
+      return (
+        <img
+          src="https://img.icons8.com/color/30/000000/file.png"
+          alt="default"
+        />
+      );
   }
 }
-
-// export const MyContext = createContext({
-//   check: "",
-//   setCheckHandler: (check) => {},
-// });
 
 export default function DmTable(props) {
   const [order, setOrder] = useState("desc");
@@ -101,58 +109,45 @@ export default function DmTable(props) {
   const [selected, setSelected] = useState([]);
   const [selectStar, setSelectStar] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
-
-  // const [pageList, setPageList] = useState({});
-
-  // const [pageNum, setPageNum] = useState(1);
-
-  // const [check, setCheck] = useState(false);
+  const [searchCategory, setSearchCategory] = useState("originalName");
   const [searchData, setSearchData] = useState("");
-  // const [size, setSize] = useState(0);
-  const { check, setCheckHandler } = useContext(MyContext);
-
-  // const setCheckHandler = (check) => setCheck(check);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
+  const rowsPerPage = 10;
 
   useEffect(() => {
-    console.log("======================");
-    getList(
-      setList,
-      page ? page : page + 1,
-      props.documentUrl ? props.documentUrl : ""
-    );
-    // fileSize(getUser().userNo, setSize);
-    // setPage(0);
+    searchData
+      ? searchDocument(
+          userInfo.userNo,
+          searchData,
+          props.documentUrl ? props.documentUrl : "",
+          setList,
+          page ? page : page + 1,
+          searchCategory
+        )
+      : getList(
+          setList,
+          page ? page : page + 1,
+          props.documentUrl ? props.documentUrl : "",
+          userInfo
+        );
   }, [check, page]);
-  console.log(check);
-  // {
-  //   console.log(pageList.dtoList && pageList.dtoList.length);
-  // }
   if (list.dtoList) {
-    console.log("2222222222222");
-    console.log(page);
-    console.log(list.dtoList);
     if (page !== 0 && list.totalPage === page - 1) {
-      console.log("1111111111111111111111");
       setPage(page - 1);
     }
   }
   let newSelected = [];
   const handleRequestSort = (event, property) => {
-    console.log(property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      console.log("--------------");
       //체크 표시할 시, 모든 documentNo를 담음
-      console.log(page);
-      console.log(rowsPerPage);
       newSelected = list.dtoList;
       // .slice(
       //   page * rowsPerPage,
@@ -166,8 +161,6 @@ export default function DmTable(props) {
 
   //각 table row에 걸려있는 클릭 이벤트
   const handleClick = (event, li) => {
-    console.log(page);
-    console.log(rowsPerPage);
     if (event.target.checked) {
       setSelected(selected.length === 0 ? [li] : [...selected, li]);
     } else {
@@ -186,7 +179,6 @@ export default function DmTable(props) {
   //행마다 별 클릭하는 이벤트
   const handleStarClick = (event, li) => {
     const selectedIndex = selectStar.indexOf(li.documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
-    // console.log(selectedIndex);
     let newSelected = [];
     if (selectedIndex === -1) {
       //-1이면 찾는 문자열이 배열에 없다는 뜻
@@ -203,29 +195,10 @@ export default function DmTable(props) {
       );
     }
     setSelectStar(newSelected);
-    // if (li.important) {
-    //   importantFile(li.documentNo.documentNo, 0);
-    //   check ? setCheckHandler(false) : setCheckHandler(true);
-    // } else {
-    //   importantFile(li.documentNo.documentNo, 1);
-    //   check ? setCheckHandler(false) : setCheckHandler(true);
-    // }
-
     importantFile(li.documentNo.documentNo, li.important ? 0 : 1);
     check ? setCheckHandler(false) : setCheckHandler(true);
 
     //렌더링 - 별 씹힘
-  };
-
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    setSelected([]);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    console.log(event.target.value, parseInt(event.target.value, 10));
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
   };
 
   const isSelected = (documentNo) => {
@@ -234,14 +207,16 @@ export default function DmTable(props) {
       if (select.documentNo.documentNo === documentNo) {
         check = true;
       }
+      return select;
     });
     return check;
   };
   const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
 
-  const emptyRows =
-    page >= 0 ? Math.max(0, (1 + page) * rowsPerPage - list.length) : 0;
-
+  const emptyRows = //emptyRows 수정 09.14
+    page >= 0
+      ? Math.max(0, rowsPerPage - (list.dtoList && list.dtoList.length))
+      : 0;
   return (
     <React.Fragment>
       {list.dtoList ? (
@@ -251,22 +226,23 @@ export default function DmTable(props) {
           // 검색하는 창 살리려고 NoSearchData를 테이블 틀로 감쌌음!
           <Box sx={{ width: "100%" }}>
             <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-              <MyContext.Provider value={{ check, setCheckHandler }}>
-                <DmTableToolbar
-                  numSelected={selected.length}
-                  newSelected={selected}
-                  setSelected={setSelected}
-                  documentUrl={props.documentUrl}
-                  setList={setList}
-                  setSearchData={setSearchData}
-                />
-              </MyContext.Provider>
+              <DmTableToolbar
+                numSelected={selected.length}
+                newSelected={selected}
+                setSelected={setSelected}
+                documentUrl={props.documentUrl}
+                setList={setList}
+                setSearchData={setSearchData}
+                page={page}
+                setPage={setPage}
+                searchCategory={searchCategory}
+                setSearchCategory={setSearchCategory}
+              />
               <NoSearchData />
             </Paper>
           </Box>
         ) : (
           <Box sx={{ width: "100%" }}>
-            {console.log(list.dtoList)}
             <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
               <DmTableToolbar
                 numSelected={selected.length}
@@ -275,6 +251,10 @@ export default function DmTable(props) {
                 documentUrl={props.documentUrl}
                 setList={setList}
                 setSearchData={setSearchData}
+                page={page}
+                setPage={setPage}
+                searchCategory={searchCategory}
+                setSearchCategory={setSearchCategory}
               />
               <TableContainer>
                 <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
@@ -287,7 +267,6 @@ export default function DmTable(props) {
                     rowCount={list.dtoList && list.dtoList.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    totalPage={list.totalPage}
                   />
                   <TableBody>
                     {stableSort(list.dtoList, getComparator(order, orderBy))
@@ -347,10 +326,18 @@ export default function DmTable(props) {
                               )}
                             </TableCell>
                             <TableCell>
-                              {fileCategoryIcon(li.documentNo.fileCategory)}
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                {fileCategoryIcon(li.documentNo.fileCategory)}
+                              </Box>
                             </TableCell>
 
                             <TableCell
+                              sx={{ cursor: "pointer" }}
                               component="th"
                               id={labelId}
                               scope="row"
@@ -392,7 +379,7 @@ export default function DmTable(props) {
                       0 /**>=0이면 애매하게 칸이 생겨서 >0으로 바꿈 */ && (
                       <TableRow
                         style={{
-                          height: 45 * emptyRows,
+                          height: 77.422 * emptyRows,
                         }}
                       >
                         <TableCell colSpan={10} />
@@ -401,76 +388,28 @@ export default function DmTable(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* <TablePagination
-              rowsPerPageOptions={[10]}
-              component="div"
-              count={list.length * 2}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            /> */}
             </Paper>
             <Pagination
               style={{
                 display: "flex",
-                justifyContent: "right",
+                justifyContent: "center",
               }}
               count={list.totalPage}
               page={page ? page : page + 1}
               onChange={handleChange}
+              color="primary"
+              shape="rounded"
+              variant="outlined"
+              size="large"
+              sx={{ margin: 2 }}
             />
             {documentInfo && (
               <DocumentModal
                 open={infoModalOpen}
                 document={documentInfo}
                 infoModalOpen={setInfoModalOpen}
-                page={page}
-                setPage={setPage}
-                dtoList={list.dtoList.length}
               />
             )}
-            {/* <div>
-            <button
-              className="pageButton"
-              onClick={() =>
-                setPages(
-                  pageList.start - pageList.size >= 1
-                    ? pageList.start - pageList.size
-                    : pages
-                )
-              }
-            >
-              이전
-            </button>
-
-            {pageList &&
-              pageList.pageList.map((page) => {
-                return (
-                  <span
-                    className={pages === page ? "pageNum" : "pageOut"}
-                    onClick={() => {
-                      setPages(page);
-                    }}
-                    key={page}
-                  >
-                    {page}
-                  </span>
-                );
-              })}
-            <button
-              className="pageButton"
-              onClick={() =>
-                setPages(
-                  pageList.start + pageList.size > pageList.totalPage
-                    ? pages
-                    : pageList.start + pageList.size
-                )
-              }
-            >
-              다음
-            </button>
-          </div> */}
           </Box>
         )
       ) : (

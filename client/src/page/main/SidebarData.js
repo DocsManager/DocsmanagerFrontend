@@ -1,11 +1,4 @@
 import React from "react";
-import * as FaIcons from "react-icons/fa";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  solid,
-  brands,
-  regular,
-} from "@fortawesome/fontawesome-svg-core/import.macro";
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import FolderSharedOutlinedIcon from "@mui/icons-material/FolderSharedOutlined";

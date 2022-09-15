@@ -29,7 +29,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
         >
           <Box />
           <Box sx={{ margin: "0 auto" }}>
-            <img src={`${process.env.PUBLIC_URL}/012.png`} />
+            <img src={`${process.env.PUBLIC_URL}/012.png`} alt="share" />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
             <Box>
@@ -46,7 +46,6 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
                   variant="contained"
                   onClick={() => {
                     setWriteModalOpen(true);
-                    console.log(open);
                   }}
                 >
                   공유할 문서 등록하기
@@ -73,7 +72,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
         >
           <Box />
           <Box sx={{ margin: "0 auto" }}>
-            <img src={`${process.env.PUBLIC_URL}/015.png`} />
+            <img src={`${process.env.PUBLIC_URL}/015.png`} alt="important" />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
             <Box>
@@ -105,7 +104,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
         >
           <Box />
           <Box sx={{ margin: "0 auto" }}>
-            <img src={`${process.env.PUBLIC_URL}/005.png`} />
+            <img src={`${process.env.PUBLIC_URL}/005.png`} alt="trashcan" />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
             <Box>
@@ -136,7 +135,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
         >
           <Box />
           <Box sx={{ margin: "0 auto" }}>
-            <img src={`${process.env.PUBLIC_URL}/014.png`} />
+            <img src={`${process.env.PUBLIC_URL}/014.png`} alt="workspace" />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
             <Box>
@@ -167,7 +166,7 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
         >
           <Box />
           <Box sx={{ margin: "0 auto" }}>
-            <img src={`${process.env.PUBLIC_URL}/011.png`} />
+            <img src={`${process.env.PUBLIC_URL}/011.png`} alt="main" />
           </Box>
           <Box sx={{ margin: "0 auto" }}>
             <Box>
@@ -184,7 +183,6 @@ const whichPageisNone = (open, setOpen, writeModalOpen, setWriteModalOpen) => {
                   variant="contained"
                   onClick={() => {
                     setWriteModalOpen(!open);
-                    console.log(open);
                   }}
                 >
                   문서 등록하기

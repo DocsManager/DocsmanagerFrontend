@@ -1,6 +1,22 @@
 import { createTheme } from "@mui/material/styles";
 export const theme = createTheme({
+  typography: {
+    fontFamily: `"Pretendard-Regular"`,
+    fontSize: 16,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightBold: 800,
+  },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: `{
+        @font-face {
+          font-family: 'Pretendard-Regular';
+          src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+          font-weight: 500;
+          font-style: normal;`,
+    },
     MuiTableCell: {
       styleOverrides: {
         root: {
@@ -22,6 +38,9 @@ export const theme = createTheme({
             fontWeight: "bold",
             textDecoration: "none",
           },
+        },
+        textPrimary: {
+          color: "#3791f8",
         },
         contained: {
           backgroundColor: "#3791f8",
@@ -137,10 +156,23 @@ export const theme = createTheme({
         },
       },
     },
-    MuiAvatar: {
+    MuiTextField: {
       styleOverrides: {
         root: {
-          marginLeft: "-8px !important",
+          "& .MuiOutlinedInput-root": {
+            "&.Mui-focused fieldset": {
+              borderColor: "#3791f8",
+            },
+            "&.Mui-error fieldset": {
+              borderColor: "#d32f2f",
+            },
+          },
+          "& label.Mui-focused": {
+            color: "#3791f8",
+          },
+          "& label.Mui-error": {
+            color: "#d32f2f",
+          },
         },
       },
     },
@@ -164,6 +196,26 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: "15px",
+          display: "flex",
+          justifyContent: "right",
+        },
+      },
+    },
+    MuiPaginationItem: {
+      styleOverrides: {
+        rounded: {
+          height: "30px",
+          fontSize: "20px",
+          margin: "0px 10px 0px 10px",
+          border: "none",
+        },
+      },
+    },
+
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+          backgroundColor: "#3791f8",
         },
       },
     },

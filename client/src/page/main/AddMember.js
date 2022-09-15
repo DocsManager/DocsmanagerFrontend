@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import React, { useContext, useEffect, useState } from "react";
+import { Box, Modal, Typography } from "@mui/material";
 import ShareUser from "./ShareUser";
 import { addWorkspaceUser, workspaceMember } from "../../api/workspaceUserApi";
 import { documentAddUser, documentMember } from "../../api/documentApi";
@@ -7,6 +7,7 @@ import { workspaceMemberAddPublish } from "../../api/noticeApi";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { MyContext } from "../Main";
 const style = {
   position: "absolute",
   top: "50%",
@@ -14,7 +15,6 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
   overflow: "auto",
@@ -38,6 +38,7 @@ export default function AddMember(props) {
   } = props;
   const [searchList, setSearchList] = useState([]);
   const [memberList, setMemberList] = useState([]);
+  const { userInfo } = useContext(MyContext);
 
   useEffect(() => {
     if (type === "workspace") {
@@ -46,7 +47,6 @@ export default function AddMember(props) {
       documentMember(number, setMemberList);
     }
   }, []);
-  console.log(row);
   return (
     <div>
       <Modal
@@ -79,11 +79,14 @@ export default function AddMember(props) {
                   infoModalOpen(false);
                 }
                 setOpen(false);
-                workspaceMemberAddPublish(memberList, searchList, type, row);
-                {
-                  /**type에 따른 메시지 내용 구분 */
-                }
-
+                workspaceMemberAddPublish(
+                  memberList,
+                  searchList,
+                  type,
+                  row,
+                  userInfo
+                );
+                // type에 따른 메시지 내용 구분
                 setSearchList([]);
                 setOpen(false);
               }}

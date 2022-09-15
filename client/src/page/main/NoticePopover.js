@@ -16,6 +16,7 @@ import Toastify from "../Toast";
 import { NoticeContext } from "./Header";
 import { withStyles } from "@material-ui/styles";
 import { Link } from "react-router-dom";
+import { MyContext } from "../Main";
 
 //notice.isRead가 1이 되면 글자색이 lightgray가 됨
 const noticeColor = {
@@ -28,9 +29,11 @@ export function NoticePopover({
   setNoticeList,
   newNotice,
   setCheck,
+  check,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const { isRead, setIsReadHandler } = useContext(NoticeContext);
+  const { userInfo } = useContext(MyContext);
 
   //읽은 알림은 전체 알림 개수에서 제외하는 것
   const unRead =
@@ -70,7 +73,7 @@ export function NoticePopover({
       fontWeight: "bold",
     },
     selected: {
-      color: "#3791F8",
+      color: "#3791F8 !important",
       fontWeight: "bolder",
     },
   })(Tab);
@@ -81,7 +84,7 @@ export function NoticePopover({
         return noticeList;
       case 1:
         return unRead;
-      case 2:
+      default:
         return read;
     }
   };
@@ -95,10 +98,12 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
-                deleteAllNotice(setNoticeList);
+                deleteAllNotice(setNoticeList, userInfo);
                 setCheck(true);
+                handleClose();
               }}
             >
               전체 알림 삭제
@@ -107,9 +112,10 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList);
+                updateAllNotce(noticeList, setNoticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >
@@ -126,7 +132,7 @@ export function NoticePopover({
                 textAlign: "center",
               }}
               onClick={() => {
-                deleteAllUnreadNotice(setNoticeList);
+                deleteAllUnreadNotice(setNoticeList, userInfo);
                 setCheck(true);
               }}
             >
@@ -142,7 +148,7 @@ export function NoticePopover({
                 textAlign: "center",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList);
+                updateAllNotce(noticeList, setNoticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >
@@ -154,7 +160,7 @@ export function NoticePopover({
             </Button>
           </React.Fragment>
         );
-      case 2:
+      default:
         return (
           <Button
             sx={{
@@ -162,7 +168,7 @@ export function NoticePopover({
               textAlign: "center",
             }}
             onClick={() => {
-              deleteAllReadNotice(setNoticeList);
+              deleteAllReadNotice(setNoticeList, userInfo);
               setCheck(true);
             }}
           >
@@ -189,7 +195,11 @@ export function NoticePopover({
         overlap="circular"
       >
         <NotificationsOutlined
-          sx={{ color: "rgba(0,0,0,0.7);", fontSize: "35px" }}
+          sx={{
+            color: "rgba(0,0,0,0.7);",
+            fontSize: "35px",
+            cursor: noticeList.length > 0 ? "pointer" : "",
+          }}
         />
       </Badge>
       {noticeList.length > 0 ? (
@@ -221,7 +231,9 @@ export function NoticePopover({
               <Tabs onChange={handleChange} value={selectedTab}>
                 {/* label이라는 객체의 값만으로 map을 돌림 */}
                 {Object.values(label).map((la) => {
-                  return <CustomTab label={la} key={la} />; //09.02 키 변경
+                  return (
+                    <CustomTab label={la} key={la} sx={{ color: "#3791f8" }} />
+                  ); //09.02 키 변경
                 })}
               </Tabs>
             </Box>
@@ -282,7 +294,10 @@ export function NoticePopover({
                           }}
                           onClick={() => {
                             deleteNotice(notice.noticeNo);
-                            setCheck(true);
+                            setCheck(!check);
+                            if (tabContent().length === 1) {
+                              handleClose();
+                            }
                           }}
                         />
                         <span

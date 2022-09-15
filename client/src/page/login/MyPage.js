@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { mypage } from "../../api/userApi";
+import React, { useContext, useRef, useState } from "react";
+import { updateProfile } from "../../api/userApi";
 import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
 import { Box, Button, Card, CardContent } from "@mui/material";
@@ -9,8 +9,11 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import EditIcon from "@mui/icons-material/Edit";
 import { Container } from "@mui/system";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
+import { MyContext } from "../Main";
+import Swal from "sweetalert2";
 
 //아바타 프로필
 const ProfileAvatar = styled(Avatar)(({ theme }) => ({
@@ -28,7 +31,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 600,
-  height: 450,
+  height: 500,
   bgcolor: "background.paper",
   // border: "2px solid #3791f8",
   boxShadow: 24,
@@ -37,19 +40,36 @@ const style = {
 };
 
 function MyPage() {
-  const [info, setInfo] = useState([]);
+  const { userInfo, setUserInfoHandler } = useContext(MyContext);
+  const [open, setOpen] = useState(false);
+  const [profile, setProfile] = useState(userInfo.profile);
+  const [imageUrl, setImageUrl] = useState("");
+  const imgRef = useRef();
 
-  const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
 
-  useEffect(() => {
-    mypage(setInfo);
-  }, [setInfo]);
-
-  const showDept = info.dept;
-  const showRegdate = info.registerDate;
+  const onChangeImage = () => {
+    const reader = new FileReader();
+    const file = imgRef.current.files[0];
+    if (file) {
+      if (file.type.split("/")[0] === "image") {
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setImageUrl(reader.result);
+          setProfile(file);
+        };
+      } else {
+        Swal.fire({
+          title: "이미지 파일이 아닙니다.",
+          icon: "error",
+          confirmButtonColor: "#3791f8",
+        });
+        imgRef.current.value = "";
+      }
+    }
+  };
 
   return (
     <div style={{ height: "100vh" }}>
@@ -62,7 +82,7 @@ function MyPage() {
             paddingLeft: "30px",
           }}
         >
-          {info && info.name}님의 정보
+          {userInfo.name}님의 정보
         </h2>
       </div>
       <Container>
@@ -78,16 +98,43 @@ function MyPage() {
           <Card>
             <CardContent sx={{ display: "flex" }}>
               <div>
-                <Button component="label">
-                  프로필 이미지 수정
-                  <EditIcon sx={{ float: "left", margin: "5px" }} />
-                  <input hidden accept="image/*" multiple type="file" />
-                </Button>
-                <ProfileAvatar
-                  alt="프로필"
-                  src={info.profile}
-                  className="mypageavatar"
+                <CheckIcon
+                  fontSize="medium"
+                  sx={{ float: "right", marginTop: "10px", mr: "30px" }}
+                  onClick={() =>
+                    profile !== userInfo.profile &&
+                    updateProfile(userInfo.userNo, profile, setUserInfoHandler)
+                  }
                 />
+                <ClearIcon
+                  fontSize="medium"
+                  sx={{
+                    float: "right",
+                    marginTop: "10px",
+                    marginRight: "20px",
+                  }}
+                  onClick={() => {
+                    setProfile();
+                    setImageUrl("");
+                    imgRef.current.value = "";
+                  }}
+                />
+                <Button component="label" sx={{ background: "#ffffff" }}>
+                  <ProfileAvatar
+                    alt="프로필"
+                    src={imageUrl || profile}
+                    className="mypageavatar"
+                    sx={{ background: "#3791f8" }}
+                  />
+                  <input
+                    hidden
+                    accept="image/*"
+                    multiple
+                    type="file"
+                    ref={imgRef}
+                    onChange={onChangeImage}
+                  />
+                </Button>
               </div>
               <Table sx={{ minWidth: 500 }}>
                 <TableBody
@@ -99,13 +146,13 @@ function MyPage() {
                     <TableCell className="nameCell" align="center">
                       이름
                     </TableCell>
-                    <TableCell>{info && info.name}</TableCell>
+                    <TableCell>{userInfo.name}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="nameCell" align="center">
                       아이디
                     </TableCell>
-                    <TableCell>{info && info.id}</TableCell>
+                    <TableCell>{userInfo.id}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="nameCell" align="center">
@@ -128,21 +175,20 @@ function MyPage() {
                     <TableCell className="nameCell" align="center">
                       이메일
                     </TableCell>
-                    <TableCell>{info && info.email}</TableCell>
+                    <TableCell>{userInfo.email}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="nameCell" align="center">
                       부서
                     </TableCell>
-                    <TableCell>{showDept && showDept.deptName}</TableCell>
+                    <TableCell>{userInfo.dept.deptName}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell className="nameCell" align="center">
                       가입일
                     </TableCell>
                     <TableCell>
-                      {showRegdate &&
-                        showRegdate.replace("T", " ").slice(0, 10)}
+                      {userInfo.registerDate.replace("T", " ").slice(0, 10)}
                     </TableCell>
                   </TableRow>
                 </TableBody>

@@ -1,12 +1,9 @@
 import React from "react";
 import "./Modal.css";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-
 import { WorkspaceButton } from "../workspace/AddWorkspace";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "../../Config";
 
@@ -17,7 +14,6 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };

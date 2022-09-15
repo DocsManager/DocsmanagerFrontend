@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getUser } from "../component/getUser/getUser";
 
 const baseUrl = "/api/workspace/user/";
 
@@ -20,17 +19,21 @@ export function deleteUserWorkspace(userNo, workspaceNo, setWorkspace) {
     .catch((err) => console.log(err));
 }
 
-export function deleteAllWorkspaceUser(userNo, workspaceNoList, setWorkspace) {
+export function deleteAllWorkspaceUser(
+  userNo,
+  workspaceNoList,
+  setCheck,
+  check
+) {
   const url = baseUrl + `all/${userNo}`;
   axios
     .post(url, workspaceNoList)
-    .then((res) => setWorkspace(res.data))
+    .then(() => setCheck(!check))
     .catch((err) => console.log(err));
 }
 
 export function addWorkspaceUser(row, userList, check, setCheck) {
   const url = baseUrl + row.workspaceNo;
-  console.log(userList);
   axios
     .post(url, userList)
     .then((res) => setCheck(!check))
@@ -40,13 +43,9 @@ export function addWorkspaceUser(row, userList, check, setCheck) {
 //멤버 검색
 export function workspaceMember(workspaceNo, setMemberList) {
   const url = `/api/workspace/member/${workspaceNo}`;
-  const user = getUser();
   axios
     .get(url)
     .then((res) => {
-      // const workspaceList = res.data.filter(
-      //   (v) => v.workspaceNo.master.userNo !== v.userNo.userNo
-      // );
       const memberList = [];
       res.data.map((v) => memberList.push(v.userNo));
       setMemberList(memberList);

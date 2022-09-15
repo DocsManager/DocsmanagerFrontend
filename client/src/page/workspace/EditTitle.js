@@ -1,6 +1,8 @@
 import React from "react";
-import { Box, Button, Modal, TextField, Typography } from "@mui/material";
+import { Box, Modal, TextField, Typography } from "@mui/material";
 import { updateTitleWorkspace } from "../../api/workspaceApi";
+import { WorkspaceButton } from "./AddWorkspace";
+import { CloseOutlined, Edit } from "@mui/icons-material";
 
 const style = {
   position: "absolute",
@@ -9,7 +11,6 @@ const style = {
   transform: "translate(-50%, -50%)",
   width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
 };
@@ -34,27 +35,43 @@ function EditTitle({ open, setOpen, row, setList }) {
               variant="outlined"
             />
           </div>
-
-          <Button
-            onClick={() => {
-              const newTitle = document.getElementById("newWorksapceTitle")
-                .value;
-
-              if (newTitle) {
-                updateTitleWorkspace(
-                  row.workspaceNo,
-                  { title: newTitle },
-                  setList
-                );
-                setOpen(false);
-              } else {
-                alert("값을 입력하세요");
-              }
+          <Box
+            sx={{
+              marginTop: "20px",
+              display: "flex",
+              justifyContent: "space-evenly",
             }}
           >
-            수정
-          </Button>
-          <Button onClick={() => setOpen(false)}>취소</Button>
+            <WorkspaceButton
+              variant="contained"
+              endIcon={<Edit />}
+              // sx={{marginRight:"10px"}}
+              onClick={() => {
+                const newTitle = document.getElementById("newWorksapceTitle")
+                  .value;
+
+                if (newTitle) {
+                  updateTitleWorkspace(
+                    row.workspaceNo,
+                    { title: newTitle },
+                    setList
+                  );
+                  setOpen(false);
+                } else {
+                  alert("값을 입력하세요");
+                }
+              }}
+            >
+              수정
+            </WorkspaceButton>
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => setOpen(false)}
+              endIcon={<CloseOutlined />}
+            >
+              취소
+            </WorkspaceButton>
+          </Box>
         </Box>
       </Modal>
     </div>

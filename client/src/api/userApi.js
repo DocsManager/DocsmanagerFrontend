@@ -1,15 +1,18 @@
 import axios from "axios";
-import { getUser, setSessionUser } from "../component/getUser/getUser";
 import Swal from "sweetalert2";
 
 const baseUrl = "/api/";
-export function signUp(newUser) {
+export function signUp(newUser, profile) {
   const url = baseUrl + "signup";
+  const fd = new FormData();
+  fd.append(
+    "user",
+    new Blob([JSON.stringify(newUser)], { type: "application/json" })
+  );
+  fd.append("profile", profile);
+  fd.append("profile", profile ? profile : new Blob());
   axios
-    .post(url, newUser)
-    .then((res) => {
-      console.log(res.data);
-    })
+    .post(url, fd, { headers: { "Content-Type": "multipart/form-data" } })
     .catch((err) =>
       Swal.fire({
         text: "오류가 발생했습니다 다시 시도해주세요",
@@ -19,14 +22,22 @@ export function signUp(newUser) {
     );
 }
 
-export function login(userInfo, setUser) {
+export function login(userInfo) {
   const url = baseUrl + "login";
   axios
     .post(url, userInfo)
     .then((res) => {
       if (res.data) {
-        setUser(res.data);
-        setSessionUser(res.data);
+        // setSessionUser(res.data);
+        Swal.fire({
+          title: "로그인 성공",
+          icon: "success",
+          showConfirmButton: false,
+        }).then(
+          setTimeout(function() {
+            window.location.href = "main";
+          }, 1000)
+        );
       } else {
         Swal.fire({
           title: "로그인실패",
@@ -36,8 +47,8 @@ export function login(userInfo, setUser) {
         });
       }
     })
-    .catch((err) =>
-      Swal.file({
+    .catch(() =>
+      Swal.fire({
         title: "잘못된 접근시도",
         icon: "error",
         confirmButtonColor: "#3791f8",
@@ -50,7 +61,6 @@ export function allUser(setUserList) {
   axios
     .get(url)
     .then((res) => {
-      console.log(res.data);
       setUserList(res.data);
     })
     .catch(() => {
@@ -70,10 +80,10 @@ export function findUser(userName, setUserList) {
     });
 }
 
-export function findMember(memberList, setMemberList, setSearchList) {
+export function findMember(memberList, setMemberList, setSearchList, user) {
   const url = baseUrl + "user/member";
   axios.post(url, memberList).then((res) => {
-    let arr = res.data.filter((v) => v.userNo !== getUser().userNo);
+    let arr = res.data.filter((v) => v.userNo !== user.userNo);
     setMemberList(arr);
     setSearchList(arr);
   });
@@ -86,17 +96,12 @@ export function logout() {
     .then(
       Swal.fire({
         title: "로그아웃",
-        text: "로그아웃이 되었습니다.",
+        text: "로그아웃 하였습니다.",
         icon: "success",
         confirmButtonColor: "#3791f8",
       })
     )
-    .then(
-      //바로 then(result)=> /로 보내면 세션, 쿠키 삭제 전에 실행되서 main으로 넘어감
-      setTimeout(function() {
-        window.location.href = "/";
-      }, 1000)
-    );
+    .then((window.location.href = "/"));
 }
 
 export const mypage = async (setInfo) => {
@@ -119,7 +124,7 @@ export const changepw = async (params) => {
     } else {
       Swal.fire({
         title: "비밀번호 변경 실패",
-        text: "잘못된 요청입니다",
+        text: "기존의 비밀번호를 다시 확인해주세요",
         icon: "warning",
         confirmButtonColor: "#3791f8",
       });
@@ -127,31 +132,43 @@ export const changepw = async (params) => {
   });
 };
 
-export const checkId = async (params) => {
+export const checkId = async (params, setVerifyId) => {
   const url = baseUrl + "checkuser";
   if (params.id === "") {
     Swal.fire({
-      text: "값입력하셈",
+      text: "값을 입력하세요",
       icon: "error",
       confirmButtonColor: "#3791f8",
     });
   } else {
-    await axios.get(url, { params }).then((response) => {
+    await axios.get(url, { params, setVerifyId }).then((response) => {
+      setVerifyId(response.data.check);
       if (response.data.check) {
         Swal.fire({
           title: "가입이 가능합니다",
           icon: "success",
           confirmButtonColor: "#3791f8",
         });
-        console.log(params);
-        // } else if (!response.data.check) {
-      } else if ((params.value = undefined)) {
+        // setVerifyId = true;
+      } else if (!response.data.check) {
         Swal.fire({
           title: "이미 가입된 아이디가 있습니다",
           icon: "warning",
           confirmButtonColor: "#3791f8",
         });
+        // setVerifyId = false;
       }
     });
   }
 };
+
+export function updateProfile(userNo, profile, setUserInfo) {
+  const url = `${baseUrl}profile/${userNo}`;
+
+  const fd = new FormData();
+  fd.append("profile", profile ? profile : new Blob());
+
+  axios
+    .post(url, fd, { headers: { "Content-Type": "multipart/form-data" } })
+    .then(() => mypage(setUserInfo));
+}

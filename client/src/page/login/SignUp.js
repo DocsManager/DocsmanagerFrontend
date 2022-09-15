@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { signUp } from "../../api/userApi";
 import { Link } from "react-router-dom";
 import "./SignUp.css";
-import { sendMail, verifyMail } from "../../api/mailApi";
+import { checkMail, verifyMail } from "../../api/mailApi";
 import { checkId } from "../../api/userApi";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -13,17 +13,43 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Swal from "sweetalert2";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 function SignUp() {
+  const [verifyId, setVerifyId] = useState(false);
   const [confirmVerifyCode, setConfirmVerifyCode] = useState({});
   const [verifyResult, setVerifyResult] = useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = useState("");
+  const [profile, setProfile] = useState();
+  const [imageUrl, setImageUrl] = useState();
+  const imgRef = useRef();
 
   const ProfileAvatar = styled(Avatar)(({ theme }) => ({
     width: 300,
     height: 300,
     marginTop: 30,
   }));
+
+  const onChangeImage = () => {
+    const reader = new FileReader();
+    const file = imgRef.current.files[0];
+    if (file) {
+      if (file.type.split("/")[0] === "image") {
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          setImageUrl(reader.result);
+          setProfile(file);
+        };
+      } else {
+        Swal.fire({
+          title: "이미지 파일이 아닙니다.",
+          icon: "error",
+          confirmButtonColor: "#3791f8",
+        });
+        imgRef.current.value = "";
+      }
+    }
+  };
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -33,42 +59,55 @@ function SignUp() {
     register,
     handleSubmit,
     watch,
-    formState: { errors, isSubmitting },
+    trigger,
+    formState: { errors },
   } = useForm();
 
   const password = useRef(null);
   password.current = watch("newPwd");
 
   const onSubmit = (data) => {
-    if (
-      verifyResult &&
-      document.getElementById("newPwd").value ===
-        document.getElementById("confirmPwd").value
-    ) {
-      const newUser = {
-        id: document.getElementById("newId").value,
-        password: document.getElementById("newPwd").value,
-        name: document.getElementById("newName").value,
-        email: document.getElementById("newEmail").value,
-        dept: {
-          deptNo: value,
-        },
-      };
-      signUp(newUser);
-      console.log(newUser);
-      console.log(data.password);
-      Swal.fire({
-        title: "회원가입 성공",
-        icon: "success",
-        confirmButtonColor: "#3791f8",
-      }).then((result) => {
-        window.location.href = "/successsignup";
-      });
+    if (verifyId) {
+      if (verifyResult) {
+        if (
+          document.getElementById("newPwd").value ===
+          document.getElementById("confirmPwd").value
+        ) {
+          const newUser = {
+            id: document.getElementById("newId").value,
+            password: document.getElementById("newPwd").value,
+            name: document.getElementById("newName").value,
+            email: document.getElementById("newEmail").value,
+            dept: {
+              deptNo: value,
+            },
+          };
+          signUp(newUser, profile);
+          Swal.fire({
+            title: "회원가입 성공",
+            icon: "success",
+            confirmButtonColor: "#3791f8",
+          }).then((result) => {
+            window.location.href = "/";
+          });
+        } else {
+          Swal.fire({
+            text: "비밀번호값이 동일하지 않습니다",
+            icon: "warning",
+            confirmButtonColor: "#3791f8",
+          });
+        }
+      } else {
+        Swal.fire({
+          text: "E-mail중복검사 및 검증을 완료해주세요",
+          icon: "warning",
+          confirmButtonColor: "#3791f8",
+        });
+      }
     } else {
       Swal.fire({
-        title: "회원가입 실패",
-        text: "이메일검증을 확인해주세요",
-        icon: "error",
+        text: "ID중복검사를 완료해주세요",
+        icon: "warning",
         confirmButtonColor: "#3791f8",
       });
     }
@@ -79,13 +118,9 @@ function SignUp() {
       <div className="signupcontainer">
         <div className="photocontainer">
           <img
-            src={`${process.env.PUBLIC_URL}/logo.png`}
-            width="150"
-            className="logo"
-          />
-          <img
             src={`${process.env.PUBLIC_URL}/signup.png`}
             className="signuplogo"
+            alt="회원가입사진"
           />
           <Link to="/">
             <button className="homebtn" fontSize="large">
@@ -95,6 +130,12 @@ function SignUp() {
           </Link>
         </div>
         <div className="formcontainer">
+          <img
+            src={`${process.env.PUBLIC_URL}/logo.png`}
+            width="150"
+            className="logo"
+            alt="로고사진"
+          />
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box
               className="signupform"
@@ -106,10 +147,31 @@ function SignUp() {
             >
               <div className="profilediv">
                 <Button component="label" sx={{ background: "#ffffff" }}>
-                  <ProfileAvatar sx={{ background: "#3791f8" }} />
-                  <input hidden accept="image/*" multiple type="file" />
+                  <ProfileAvatar
+                    sx={{ background: "#3791f8" }}
+                    src={imageUrl ? imageUrl : "/img"}
+                  />
+                  <input
+                    id="newUserProfile"
+                    hidden
+                    accept="image/*"
+                    multiple
+                    type="file"
+                    ref={imgRef}
+                    onChange={onChangeImage}
+                  />
                 </Button>
               </div>
+              <HighlightOffIcon
+                fontSize="large"
+                sx={{ float: "right" }}
+                onClick={() => {
+                  setImageUrl();
+                  setProfile();
+                  imgRef.current.value = "";
+                }}
+              />
+              <div />
               <TextField
                 style={{ marginLeft: 0 }}
                 id="newId"
@@ -129,13 +191,20 @@ function SignUp() {
                 style={{ margin: 0 }}
                 className="mailbtn"
                 type="button"
-                // disabled={isSubmitting}
                 name="idbtn"
-                onClick={() => {
-                  const params = {
-                    id: document.getElementById("newId").value,
-                  };
-                  checkId(params);
+                onClick={async () => {
+                  const result = await trigger("newId");
+                  if (!result) {
+                    Swal.fire({
+                      title: "아이디 입력 양식을 준수해주세요.",
+                      confirmButtonColor: "#3791f8",
+                    });
+                  } else {
+                    const params = {
+                      id: document.getElementById("newId").value,
+                    };
+                    checkId(params, setVerifyId);
+                  }
                 }}
                 variant="contained"
               >
@@ -176,21 +245,29 @@ function SignUp() {
                   pattern: /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
                 })}
               />
+
               <Button
                 style={{ margin: 0 }}
                 type="button"
-                // disabled={isSubmitting}
                 name="mailbtn"
                 className="mailbtn"
-                onClick={() => {
-                  const params = {
-                    email: document.getElementById("newEmail").value,
-                  };
-                  sendMail(params, setConfirmVerifyCode);
+                onClick={async () => {
+                  const result = await trigger("newEmail");
+                  if (!result) {
+                    Swal.fire({
+                      title: "이메일 입력 양식을 준수해주세요",
+                      confirmButtonColor: "#3791f8",
+                    });
+                  } else {
+                    const params = {
+                      email: document.getElementById("newEmail").value,
+                    };
+                    checkMail(params, setConfirmVerifyCode);
+                  }
                 }}
                 variant="contained"
               >
-                인증메일 발송
+                메일 중복 검사
               </Button>
               {errors.newEmail && errors.newEmail.type === "required" && (
                 <p className="signupptag">이메일은 필수 입력 항목입니다.</p>
@@ -317,8 +394,10 @@ function SignUp() {
                     width: "80%",
                     magin: "20px 0px 20px 0px",
                     marginTop: "20px",
+                    class: "signupbtn",
                   }}
                   type="submit"
+                  name="signupbtn"
                   className="signupbtn"
                   variant="contained"
                 >
