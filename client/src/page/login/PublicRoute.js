@@ -3,13 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 const PublicRoute = () => {
   function getCookie(name) {
-    let matches = document.cookie.match(
-      new RegExp(
-        "(?:^|; )" +
-          name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, "\\$1") +
-          "=([^;]*)"
-      )
-    );
+    let matches = document.cookie.match(name);
     return matches ? decodeURIComponent(matches[1]) : undefined;
   }
 

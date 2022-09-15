@@ -1,5 +1,4 @@
 import axios from "axios";
-import { getUser } from "../component/getUser/getUser";
 import * as StompJs from "@stomp/stompjs";
 import "react-toastify/dist/ReactToastify.css";
 import "../page/Toast.css";
@@ -35,9 +34,6 @@ export function updateNotice(
         sendDate: noticeSendDate,
       }
     )
-    .then((res) => {
-      console.log(res.data);
-    })
     .catch((err) => console.log(err));
 }
 
@@ -45,8 +41,8 @@ export function updateNotice(
 export function updateAllNotce(noticeList, user) {
   const url = baseUrl + `notice/receiver/${user.userNo}/all`;
   let arr = [];
-  const unRead = noticeList.filter((notice) => notice.isRead != 1);
-  const read = noticeList.filter((notice) => notice.isRead == 1);
+  const unRead = noticeList.filter((notice) => notice.isRead !== 1);
+  // const read = noticeList.filter((notice) => notice.isRead === 1);
   unRead.map((notice) => {
     arr.push({
       noticeNo: notice.noticeNo,
@@ -56,8 +52,8 @@ export function updateAllNotce(noticeList, user) {
       isRead: 1,
       sendDate: notice.sendDate,
     });
+    return notice;
   });
-  console.log(arr);
   axios.put(url, arr).catch((err) => console.log(err));
 }
 
@@ -103,10 +99,10 @@ export const wsDocsSubscribe = (
       count += 1;
       setCheck(count % 2 === 1 ? true : false);
       // setNoticeList(
-        //   noticeList.length === 0
-        //     ? [dataFromServer]
-        //     : [...noticeList, dataFromServer]
-        // );
+      //   noticeList.length === 0
+      //     ? [dataFromServer]
+      //     : [...noticeList, dataFromServer]
+      // );
       getNoticeList(setNoticeList);
     });
 
@@ -153,16 +149,10 @@ export const notipublish = (searchList, user) => {
   });
 };
 
-export const worksapcepublish = (
-  searchList,
-  newWorkspaceNo,
-  setLoading,
-  user
-) => {
+export const worksapcepublish = (searchList, newWorkspaceNo, user) => {
   if (!client.connected) {
     return;
   }
-  setLoading(false);
   searchList.map((element) => {
     return client.publish({
       destination: `/send/workspace`,
@@ -217,12 +207,13 @@ export const workspaceMemberAddPublish = (
         skipContentLengthHeader: true,
       });
     }
+    return element;
   });
 };
 
 export const deleteNotice = (noticeNo) => {
   const url = baseUrl + `notice/${noticeNo}`;
-  axios.delete(url).then((res) => console.log(res.data));
+  axios.delete(url);
 };
 
 //전체 알림 삭제

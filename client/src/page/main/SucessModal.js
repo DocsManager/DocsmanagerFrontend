@@ -1,12 +1,9 @@
 import React from "react";
 import "./Modal.css";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-
 import { WorkspaceButton } from "../workspace/AddWorkspace";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { ThemeProvider } from "@mui/material";
 import { theme } from "../../Config";
 

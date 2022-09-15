@@ -1,23 +1,16 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Navbar, NavbarBrand } from "reactstrap";
 import "./Header.css";
-import { deleteUser } from "../../component/getUser/getUser";
-import {
-  getNoticeList,
-  wsDisconnect,
-  wsDocsSubscribe,
-} from "../../api/noticeApi";
+import { getNoticeList, wsDocsSubscribe } from "../../api/noticeApi";
 import { NoticePopover } from "./NoticePopover";
 import { createContext } from "react";
 import { notify } from "../Toast";
 import "react-toastify/dist/ReactToastify.css";
 import "../Toast.css";
 import { Avatar, Popover, Button } from "@mui/material";
-import { makeStyles } from "@material-ui/core";
 import { Box } from "@mui/system";
-import { styled, ThemeProvider } from "@mui/material/styles";
+import { styled } from "@mui/material/styles";
 import { AccountBox, Logout } from "@mui/icons-material";
-import { theme } from "../../Config";
 import { MyContext } from "../Main";
 import { logout } from "../../api/userApi";
 import { Link } from "react-router-dom";
@@ -41,10 +34,9 @@ export default function Header() {
   const [noticeList, setNoticeList] = useState([]);
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
-  const setIsReadHandler = (isRead) => setIsRead(isRead);
   const [headerCheck, setHeaderCheck] = useState(false);
-  const { check, setCheckHandler, userInfo } = useContext(MyContext);
-  console.log(userInfo);
+  const { setCheckHandler, userInfo } = useContext(MyContext);
+  const setIsReadHandler = (isRead) => setIsRead(isRead);
   useEffect(() => {
     getNoticeList(setNoticeList, userInfo);
   }, [isRead, newNotice, headerCheck]);
@@ -80,7 +72,7 @@ export default function Header() {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
-  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+  const [, , removeCookie] = useCookies(["accessToken"]);
   const deleteCookie = () => {
     removeCookie(["accessToken"]);
   };
@@ -135,7 +127,6 @@ export default function Header() {
                   onClick={() => {
                     deleteCookie();
                     logout();
-                    deleteUser();
                   }}
                 >
                   로그아웃

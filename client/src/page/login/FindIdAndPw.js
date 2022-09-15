@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import FindId from "./FindId";
 import FindPassword from "./FindPassword.js";
 import PropTypes from "prop-types";
@@ -98,6 +98,7 @@ export default function FullWidthTabs() {
           <Link to="/">
             <img
               src={`${process.env.PUBLIC_URL}/findidpwlogo.png`}
+              alt="dmlogo"
               className="dmlogo"
               width="600"
               height="150"

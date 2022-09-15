@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   TableBody,
   TableCell,
@@ -9,12 +9,10 @@ import { Box, TableRow, Table, Paper, Checkbox } from "@mui/material";
 import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
-import { getUser } from "../../component/getUser/getUser";
 import { MyContext } from "../Main";
 import { getList, importantFile } from "../../api/documentApi";
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
-import Sidebar from "./Sidebar";
 import { searchDocument } from "../../api/documentApi";
 import { NoSearchData } from "./NoSearchData";
 
@@ -50,32 +48,58 @@ export function fileCategoryIcon(fileCategory) {
   switch (true) {
     case fileCategory.includes("jpeg"):
     case fileCategory.includes("png"):
-      return <img src="https://img.icons8.com/fluency/30/000000/image.png" />;
+      return (
+        <img
+          src="https://img.icons8.com/fluency/30/000000/image.png"
+          alt="img"
+        />
+      );
     case fileCategory.includes("pdf"):
       return (
-        <img src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png" />
+        <img
+          src="https://img.icons8.com/ios-filled/30/ff0000/pdf--v1.png"
+          alt="pdf"
+        />
       );
     case fileCategory.includes("ppt"):
     case fileCategory.includes("powerpoint"):
     case fileCategory.includes("show"):
       return (
-        <img src="https://img.icons8.com/color/30/000000/powerpoint.png" />
+        <img
+          src="https://img.icons8.com/color/30/000000/powerpoint.png"
+          alt="ppt"
+        />
       );
     case fileCategory.includes("excel"):
     case fileCategory.includes("xls"):
     case fileCategory.includes("cell"):
-      return <img src="https://img.icons8.com/color/30/000000/xls.png" />;
+      return (
+        <img src="https://img.icons8.com/color/30/000000/xls.png" alt="excel" />
+      );
     case fileCategory.includes("docx"):
     case fileCategory.includes("hwp"):
     case fileCategory.includes("word"):
     case fileCategory.includes("hwdt"):
       return (
-        <img src="https://img.icons8.com/color/30/000000/google-docs--v1.png" />
+        <img
+          src="https://img.icons8.com/color/30/000000/google-docs--v1.png"
+          alt="hwp"
+        />
       );
     case fileCategory.includes("zip"):
-      return <img src="https://img.icons8.com/color/30/000000/archive.png" />;
+      return (
+        <img
+          src="https://img.icons8.com/color/30/000000/archive.png"
+          alt="zip"
+        />
+      );
     default:
-      return <img src="https://img.icons8.com/color/30/000000/file.png" />;
+      return (
+        <img
+          src="https://img.icons8.com/color/30/000000/file.png"
+          alt="default"
+        />
+      );
   }
 }
 
@@ -85,21 +109,18 @@ export default function DmTable(props) {
   const [selected, setSelected] = useState([]);
   const [selectStar, setSelectStar] = useState([]);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
   const [searchCategory, setSearchCategory] = useState("originalName");
   const [searchData, setSearchData] = useState("");
-  // const [size, setSize] = useState(0);
-  const { check, setCheckHandler } = useContext(MyContext);
-
-  // const setCheckHandler = (check) => setCheck(check);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
+  const rowsPerPage = 10;
 
   useEffect(() => {
     searchData
       ? searchDocument(
-          getUser().userNo,
+          userInfo.userNo,
           searchData,
           props.documentUrl ? props.documentUrl : "",
           setList,
@@ -109,35 +130,24 @@ export default function DmTable(props) {
       : getList(
           setList,
           page ? page : page + 1,
-          props.documentUrl ? props.documentUrl : ""
+          props.documentUrl ? props.documentUrl : "",
+          userInfo
         );
-    // fileSize(getUser().userNo, setSize);
-    // setPage(0);
   }, [check, page]);
-  console.log(check);
-  // {
-  //   console.log(pageList.dtoList && pageList.dtoList.length);
-  // }
   if (list.dtoList) {
-    console.log(page);
-    console.log(list.dtoList);
     if (page !== 0 && list.totalPage === page - 1) {
       setPage(page - 1);
     }
   }
   let newSelected = [];
   const handleRequestSort = (event, property) => {
-    console.log(property);
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      console.log("--------------");
       //체크 표시할 시, 모든 documentNo를 담음
-      console.log(page);
-      console.log(rowsPerPage);
       newSelected = list.dtoList;
       // .slice(
       //   page * rowsPerPage,
@@ -169,7 +179,6 @@ export default function DmTable(props) {
   //행마다 별 클릭하는 이벤트
   const handleStarClick = (event, li) => {
     const selectedIndex = selectStar.indexOf(li.documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
-    // console.log(selectedIndex);
     let newSelected = [];
     if (selectedIndex === -1) {
       //-1이면 찾는 문자열이 배열에 없다는 뜻
@@ -192,23 +201,13 @@ export default function DmTable(props) {
     //렌더링 - 별 씹힘
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    setSelected([]);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    console.log(event.target.value, parseInt(event.target.value, 10));
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   const isSelected = (documentNo) => {
     let check = false;
     selected.map((select) => {
       if (select.documentNo.documentNo === documentNo) {
         check = true;
       }
+      return select;
     });
     return check;
   };
@@ -246,7 +245,6 @@ export default function DmTable(props) {
           </Box>
         ) : (
           <Box sx={{ width: "100%" }}>
-            {console.log(list)}
             <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
               <DmTableToolbar
                 numSelected={selected.length}
@@ -271,7 +269,6 @@ export default function DmTable(props) {
                     rowCount={list.dtoList && list.dtoList.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    totalPage={list.totalPage}
                   />
                   <TableBody>
                     {stableSort(list.dtoList, getComparator(order, orderBy))
@@ -413,9 +410,6 @@ export default function DmTable(props) {
                 open={infoModalOpen}
                 document={documentInfo}
                 infoModalOpen={setInfoModalOpen}
-                page={page}
-                setPage={setPage}
-                dtoList={list.dtoList.length}
               />
             )}
           </Box>

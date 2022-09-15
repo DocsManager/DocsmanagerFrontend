@@ -59,26 +59,10 @@ function DmTableHead(props) {
     onRequestSort,
     rowsPerPage,
     page,
-    totalPage,
   } = props;
   const createSortHandler = (property) => (event) => {
-    // console.log(event);
     onRequestSort(event, property);
   };
-  // const createSortHandler = (property) => (event) => {
-  //   console.log(event);
-  //   console.log("1111");
-  //   onRequestSort(event, property);
-  // };
-
-  // const arr = [headCell2, headCells];
-  // const label = { inputProps: { "aria-label": "Checkbox demo" } };
-  // 페이징 처리 수정 09.02
-  // const totalPageCount = Math.ceil(rowCount / rowsPerPage);
-  // console.log(
-  //   "wrong:" + (rowCount % ((page + 1) * rowsPerPage)),
-  //   "true:" + ((rowCount % ((page + 1) * rowsPerPage)) % 10)
-  // );
   const checkAll = (rowCount, page, rowsPerPage, numSelected) => {
     if (numSelected === rowCount) {
       return true;

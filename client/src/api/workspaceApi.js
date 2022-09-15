@@ -39,13 +39,7 @@ export function deleteWorkspace(workspaceNo, setCheck, check) {
   axios.delete(url).then(() => setCheck(!check));
 }
 
-export function addWorkspace(
-  workspace,
-  searchList,
-  setLoading,
-  closeHandler,
-  user
-) {
+export function addWorkspace(workspace, searchList, closeHandler, user) {
   axios
     .post(baseUrl, workspace)
     .then((res) => {
@@ -53,7 +47,6 @@ export function addWorkspace(
       worksapcepublish(
         searchList,
         res.data.at(-1).workspaceNo.workspaceNo,
-        setLoading,
         user
       );
       closeHandler();
@@ -76,20 +69,11 @@ export function getTempContent(fileNo, setMessage) {
   axios
     .get(url)
     .then((res) => {
-      console.log(res.data);
       res.data && getTempText(res.data.filePath, setMessage);
     })
     .catch((err) => console.log(err));
 }
 
 export function getTempText(url, setMessage) {
-  // console.log(url);
-  // fetch(url)
-  //   .then((res) => res.text())
-  //   .then((text) => {
-  //     console.log(text);
-  //     setMessage(text);
-  //   });
-  console.log(url);
   axios.get(url).then((res) => setMessage(res.data));
 }

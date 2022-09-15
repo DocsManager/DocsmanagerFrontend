@@ -84,7 +84,7 @@ export function NoticePopover({
         return noticeList;
       case 1:
         return unRead;
-      case 2:
+      default:
         return read;
     }
   };
@@ -98,7 +98,7 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
-                color:"rgba(0,0,0,0.7)"
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
                 deleteAllNotice(setNoticeList, userInfo);
@@ -112,7 +112,7 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
-                color:"rgba(0,0,0,0.7)"
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
                 updateAllNotce(noticeList, setNoticeList, userInfo);
@@ -160,7 +160,7 @@ export function NoticePopover({
             </Button>
           </React.Fragment>
         );
-      case 2:
+      default:
         return (
           <Button
             sx={{
@@ -231,7 +231,9 @@ export function NoticePopover({
               <Tabs onChange={handleChange} value={selectedTab}>
                 {/* label이라는 객체의 값만으로 map을 돌림 */}
                 {Object.values(label).map((la) => {
-                  return <CustomTab label={la} key={la} sx={{color:"#3791f8"}} />; //09.02 키 변경
+                  return (
+                    <CustomTab label={la} key={la} sx={{ color: "#3791f8" }} />
+                  ); //09.02 키 변경
                 })}
               </Tabs>
             </Box>

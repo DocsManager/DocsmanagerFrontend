@@ -1,17 +1,14 @@
 import React, { useContext, useState } from "react";
 import { Box, Button, Typography, Modal } from "@mui/material";
-import { SvgIcon, TextField, ThemeProvider } from "@mui/material";
+import { SvgIcon, TextField } from "@mui/material";
 import ShareUser from "../main/ShareUser";
 import { addWorkspace } from "../../api/workspaceApi";
-import { getUser } from "../../component/getUser/getUser";
-import { worksapcepublish } from "../../api/noticeApi";
 import { styled } from "@mui/material/styles";
 import {
   LaptopChromebook,
   AddBoxOutlined,
   CloseOutlined,
 } from "@mui/icons-material";
-import { theme } from "../../Config";
 import { MyContext } from "../Main";
 
 const style = {
@@ -49,7 +46,7 @@ export default function AddWorkspace({ open, setOpen }) {
   };
   //워크스페이스 번호를 알림 파라미터로 넘겨주기 위해 생성
   // const [newWorkspace, setNewWorkspace] = useState();
-  const [loading, setLoading] = useState(false);
+
   // const newWorkspaceNo = newWorkspace && newWorkspace.workspaceNo.workspaceNo;
   const [title, setTitle] = useState("");
   const [clickHandler, setClickHandler] = useState(false);
@@ -146,19 +143,10 @@ export default function AddWorkspace({ open, setOpen }) {
                 if (title) {
                   const workspace = {
                     title: title,
-                    master: getUser(),
+                    master: userInfo,
                     userList: searchList,
                   };
-                  addWorkspace(
-                    workspace,
-                    searchList,
-                    setLoading,
-                    closeHandler,
-                    userInfo
-                  );
-                  // console.log(newWorkspace);
-                  // newWorkspace &&
-                  // worksapcepublish(searchList, newWorkspaceNo, setLoading);
+                  addWorkspace(workspace, searchList, closeHandler, userInfo);
                   setSearchList([]);
                   setTitle();
                 }

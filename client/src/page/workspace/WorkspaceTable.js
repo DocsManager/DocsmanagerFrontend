@@ -1,12 +1,11 @@
 import React, { Fragment, useContext, useState } from "react";
-import { alpha, ThemeProvider } from "@mui/material/styles";
+import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Toolbar from "@mui/material/Toolbar";
@@ -20,16 +19,14 @@ import {
   deleteAllWorkspaceUser,
   deleteUserWorkspace,
 } from "../../api/workspaceUserApi";
-import { getUser } from "../../component/getUser/getUser";
 import { Button, Pagination } from "@mui/material";
 import AddMember from "../main/AddMember";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
-import { ConstructionOutlined, FolderSpecial, ReportOutlined, Warning } from "@mui/icons-material";
+import { ReportOutlined } from "@mui/icons-material";
 import Delete from "@mui/icons-material/Delete";
 import { InfoFunctionBox, ToRecyclebin } from "../main/DmTableToolbar";
-import { theme } from "../../Config";
 import { deleteWorkspace } from "../../api/workspaceApi";
 import { MyContext } from "../Main";
 
@@ -178,8 +175,8 @@ function EnhancedTableHead(props) {
 }
 
 const EnhancedTableToolbar = (props) => {
-  const { numSelected, selected, setWorkspace, setSelected } = props;
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { numSelected, selected, setSelected } = props;
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
 
   return (
     <Toolbar
@@ -194,7 +191,7 @@ const EnhancedTableToolbar = (props) => {
             ),
         }),
       }}
->
+    >
       {numSelected > 0 ? (
         <Box
           sx={{ flex: "1 1 100%" }}
@@ -220,7 +217,7 @@ const EnhancedTableToolbar = (props) => {
               startIcon={<Delete />}
               onClick={() => {
                 deleteAllWorkspaceUser(
-                  getUser().userNo,
+                  userInfo.userNo,
                   selected,
                   setCheckHandler,
                   check
@@ -231,7 +228,9 @@ const EnhancedTableToolbar = (props) => {
               삭제
             </ToRecyclebin>
           </div>
-        </Box>):<InfoFunctionBox variant="contained">
+        </Box>
+      ) : (
+        <InfoFunctionBox variant="contained">
           <Typography
             sx={{
               display: "flex",
@@ -242,8 +241,11 @@ const EnhancedTableToolbar = (props) => {
             워크스페이스의 멤버추가는 개설자만 가능합니다!
             <ReportOutlined />
           </Typography>
-        </InfoFunctionBox>}
-    </Toolbar>)};
+        </InfoFunctionBox>
+      )}
+    </Toolbar>
+  );
+};
 
 export default function WorkspaceTable(props) {
   const { user, workspace, setWorkspace, check, setCheck } = props;
@@ -251,11 +253,9 @@ export default function WorkspaceTable(props) {
   const [orderBy, setOrderBy] = useState("registerDate");
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(1);
-  // const [open, setOpen] = useState({ member: false, edit: false });
   const [editOpen, setEditOpen] = useState(false);
   const [memberOpen, setMemberOpen] = useState(false);
   const [row, setRow] = useState({});
-  console.log(row);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -320,6 +320,7 @@ export default function WorkspaceTable(props) {
       if (v.workspaceNo === workspaceNo) {
         check = true;
       }
+      return v;
     });
     return check;
   };
@@ -328,15 +329,14 @@ export default function WorkspaceTable(props) {
   const emptyRows = page >= 0 ? Math.max(0, page * 5 - rows.length) : 0;
   return (
     <React.Fragment>
-      {rows.length == 0 ? (
+      {rows.length === 0 ? (
         <NoneData />
       ) : (
-        <Box sx={{ width: "100%"}}>
+        <Box sx={{ width: "100%" }}>
           <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
             <EnhancedTableToolbar
               numSelected={selected.length}
               selected={selected}
-              setWorkspace={setWorkspace}
               setSelected={setSelected}
             />
             <TableContainer>
@@ -352,7 +352,7 @@ export default function WorkspaceTable(props) {
                 />
                 <TableBody>
                   {stableSort(rows, getComparator(order, orderBy))
-                    .slice((page-1) * 5, page * 5)
+                    .slice((page - 1) * 5, page * 5)
                     .map((row, index) => {
                       const isItemSelected = isSelected(row.workspaceNo);
                       const labelId = `enhanced-table-checkbox-${index}`;
@@ -398,7 +398,9 @@ export default function WorkspaceTable(props) {
                                 setRow(row);
                               }}
                             >
-                              <CreateOutlinedIcon sx={{fontSize:"16px !important"}}/>
+                              <CreateOutlinedIcon
+                                sx={{ fontSize: "16px !important" }}
+                              />
                             </IconButton>
                           </TableCell>
                           <TableCell align="center">
@@ -409,7 +411,7 @@ export default function WorkspaceTable(props) {
                           </TableCell>
                           <TableCell align="center">
                             {row.member.map((member, index) =>
-                              row.member.length - 1 != index ? (
+                              row.member.length - 1 !== index ? (
                                 <Fragment key={index}>{`${
                                   member.split(",")[1]
                                 },`}</Fragment>
@@ -452,42 +454,42 @@ export default function WorkspaceTable(props) {
                             >
                               나가기
                             </Button>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {/* 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07 */}
-                    {emptyRows > 0 && (
-                      <TableRow
-                        style={{
-                          height: 70 * emptyRows,
-                        }}
-                      >
-                        <TableCell colSpan={10} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <Pagination
-                style={{
-                  display: "flex",
-                  justifyContent: "right",
-                }}
-                count={Math.ceil(rows.length / 5)}
-                page={page}
-                onChange={handleChangePage}
-              />
-            </Paper>
-            {row.workspaceNo && (
-              <AddMember
-                open={memberOpen}
-                setOpen={setMemberOpen}
-                row={row}
-                check={check}
-                setCheck={setCheck}
-                type={"workspace"}
-                number={row.workspaceNo}
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {/* 테이블 데이터 수가 5개 미만일때 공간 채워줌-09.07 */}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: 70 * emptyRows,
+                      }}
+                    >
+                      <TableCell colSpan={10} />
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Pagination
+              style={{
+                display: "flex",
+                justifyContent: "right",
+              }}
+              count={Math.ceil(rows.length / 5)}
+              page={page}
+              onChange={handleChangePage}
+            />
+          </Paper>
+          {row.workspaceNo && (
+            <AddMember
+              open={memberOpen}
+              setOpen={setMemberOpen}
+              row={row}
+              check={check}
+              setCheck={setCheck}
+              type={"workspace"}
+              number={row.workspaceNo}
             />
           )}
           <EditTitle

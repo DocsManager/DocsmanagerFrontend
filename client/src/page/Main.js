@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
 import React, { useState, createContext, useEffect } from "react";
 import { mypage } from "../api/userApi";
-import { theme } from "../Config";
 import Header from "./main/Header";
 import { useLocation } from "react-router-dom";
 import Sidebar from "./main/Sidebar";
@@ -34,7 +33,7 @@ function Main() {
               style={{
                 display: "grid",
                 gridTemplateColumns:
-                  location.pathname == "/main/document"
+                  location.pathname === "/main/document"
                     ? "100% 0%"
                     : "350px 2fr", //09.01 바뀜
                 width: "100%",
