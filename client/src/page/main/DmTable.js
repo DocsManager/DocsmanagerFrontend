@@ -3,26 +3,17 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TextField,
-  Typography,
-  ThemeProvider,
   Pagination,
 } from "@mui/material";
-import { Box, TablePagination, TableRow, LinearProgress } from "@mui/material";
-import Paper from "@mui/material/Paper";
-import Checkbox from "@mui/material/Checkbox";
-import { Table, Button } from "@mui/material";
+import { Box, TableRow,Table, Paper, Checkbox } from "@mui/material";
 import { StarBorderOutlined, StarOutlined } from "@mui/icons-material";
 import DmTableHead from "./DmTableHead";
 import DmTableToolbar from "./DmTableToolbar";
 import { getUser } from "../../component/getUser/getUser";
 import { MyContext } from "../Main";
 import {
-  fileSize,
   getList,
   importantFile,
-  searchDocument,
-  removeImportantFile,
 } from "../../api/documentApi";
 import { NoneData } from "./NoneData";
 import DocumentModal from "./DocumentModal";
@@ -90,11 +81,6 @@ export function fileCategoryIcon(fileCategory) {
   }
 }
 
-// export const MyContext = createContext({
-//   check: "",
-//   setCheckHandler: (check) => {},
-// });
-
 export default function DmTable(props) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("");
@@ -106,12 +92,6 @@ export default function DmTable(props) {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
   const [searchCategory, setSearchCategory] = useState("originalName");
-
-  // const [pageList, setPageList] = useState({});
-
-  // const [pageNum, setPageNum] = useState(1);
-
-  // const [check, setCheck] = useState(false);
   const [searchData, setSearchData] = useState("");
   // const [size, setSize] = useState(0);
   const { check, setCheckHandler } = useContext(MyContext);
@@ -208,14 +188,6 @@ export default function DmTable(props) {
       );
     }
     setSelectStar(newSelected);
-    // if (li.important) {
-    //   importantFile(li.documentNo.documentNo, 0);
-    //   check ? setCheckHandler(false) : setCheckHandler(true);
-    // } else {
-    //   importantFile(li.documentNo.documentNo, 1);
-    //   check ? setCheckHandler(false) : setCheckHandler(true);
-    // }
-
     importantFile(li.documentNo.documentNo, li.important ? 0 : 1);
     check ? setCheckHandler(false) : setCheckHandler(true);
 
@@ -244,9 +216,13 @@ export default function DmTable(props) {
   };
   const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
 
-  const emptyRows =
-    page >= 0 ? Math.max(0, (1 + page) * rowsPerPage - list.length) : 0;
-
+  const emptyRows = //emptyRows 수정 09.14
+    page >= 0
+      ? Math.max(
+          0,
+          rowsPerPage - (list.dtoList && list.dtoList.length)
+        )
+      : 0;
   return (
     <React.Fragment>
       {list.dtoList ? (
@@ -413,7 +389,7 @@ export default function DmTable(props) {
                       0 /**>=0이면 애매하게 칸이 생겨서 >0으로 바꿈 */ && (
                       <TableRow
                         style={{
-                          height: 45 * emptyRows,
+                          height: 77.422 * emptyRows,
                         }}
                       >
                         <TableCell colSpan={10} />
@@ -422,15 +398,6 @@ export default function DmTable(props) {
                   </TableBody>
                 </Table>
               </TableContainer>
-              {/* <TablePagination
-              rowsPerPageOptions={[10]}
-              component="div"
-              count={list.length * 2}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            /> */}
             </Paper>
             <Pagination
               style={{

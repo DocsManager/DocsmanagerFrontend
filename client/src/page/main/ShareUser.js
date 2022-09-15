@@ -91,17 +91,16 @@ function ShareUser({ searchList, setSearchList, type, member }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <React.Fragment>
-        <Typography component="h3" mt={1}>
-          사원 검색
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "flex-start",
-          }}
+    <React.Fragment>
+      <Typography component="h3" mt={1}>
+        사원 검색
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+        }}
         >
           <TextField
             id="searchUserName"
@@ -117,14 +116,15 @@ function ShareUser({ searchList, setSearchList, type, member }) {
             margin="normal"
             onKeyPress={handleKeyPress}
           />
-          <IconButton
-            size="large"
-            onClick={() => {
-              handleClick();
-            }}
-          >
-            <Search sx={{ fontSize: "1.2em" }} />
-          </IconButton>
+          <Button
+           sx={{ fontSize: "1.1em", marginLeft:"10px"}}
+          onClick={() => {
+            const userName = document.getElementById("searchUserName").value;
+            userName && findUser(userName, setUserList);
+          }}
+          endIcon={<Search sx={{ fontSize: "1.1em" }} />}
+        >검색
+        </Button>
         </Box>
         <Typography component="h3" mt={1}>
           검색 결과
@@ -157,70 +157,69 @@ function ShareUser({ searchList, setSearchList, type, member }) {
                       width: "130px",
                       alignItems: "center",
                     }}
-                  >
-                    <span>{users.dept.deptName + "팀"}</span>
-                    <span>{users.name}</span>
-                  </Box>
-                </Box>
-              );
-            }
-          })}
-        </Card>
-        <Typography component="h3" mt={1}>
-          사원 목록
-        </Typography>
-        <Table aria-labelledby="tableTitle">
-          <TableHead>
-            <TableRow>
-              {headCells.map((headCell) => (
-                <TableCell
-                  sx={{ fontSize: "1em" }}
-                  key={headCell.id}
-                  align={headCell.numeric ? "right" : "left"}
                 >
-                  {headCell.label}
-                </TableCell>
-              ))}
-              <TableCell />
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {searchList.map((search, index) => (
-              <TableRow
-                key={search.userNo}
-                sx={{ maxHeight: 70 }}
-                hover
-                role="checkbox"
+                  <span>{users.dept.deptName + "팀"}</span>
+                  <span>{users.name}</span>
+                </Box>
+              </Box>
+            );
+          }
+        })}
+      </Card>
+      <Typography component="h3" mt={1}>
+        사원 목록
+      </Typography>
+      <Table aria-labelledby="tableTitle">
+        <TableHead>
+          <TableRow>
+            {headCells.map((headCell) => (
+              <TableCell
+                sx={{ fontSize: "1em" }}
+                key={headCell.id}
+                align={headCell.numeric ? "right" : "left"}
               >
-                {console.log(search)}
-                <TableCell component="th">{search.dept.deptName}</TableCell>
-                <TableCell component="th">{search.name}</TableCell>
-                {type !== "workspace" ? (
-                  <TableCell component="th">
-                    <AuthoritySelect search={search} />
-                  </TableCell>
-                ) : (
-                  <></>
-                )}
+                {headCell.label}
+              </TableCell>
+            ))}
+            <TableCell />
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {searchList.map((search, index) => (
+            <TableRow
+              key={search.userNo}
+              sx={{ maxHeight: 70 }}
+              hover
+              role="checkbox"
+            >
+              <TableCell component="th">{search.dept.deptName}</TableCell>
+              <TableCell component="th">{search.name}</TableCell>
+              {type !== "workspace" ? (
                 <TableCell component="th">
-                  {checkDuplication(member, search) ? (
-                    <IconButton disabled>
-                      <DeleteIcon />
-                    </IconButton>
-                  ) : (
-                    <IconButton onClick={() => deleteHandler(search.userNo)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
+                  <AuthoritySelect search={search} />
                 </TableCell>
+
+              ) : (
+                <></>
+              )}
+              <TableCell component="th">
+                {checkDuplication(member, search) ? (
+                  <IconButton disabled>
+                    <DeleteIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={() => deleteHandler(search.userNo)}>
+                    <DeleteIcon />
+                  </IconButton>
+                )}
+              </TableCell>
                 {type === "workspace" ? <TableCell /> : <></>}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </React.Fragment>
-    </ThemeProvider>
   );
 }
 
