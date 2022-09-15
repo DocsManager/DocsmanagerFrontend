@@ -74,10 +74,7 @@ function DmTableHead(props) {
   // const arr = [headCell2, headCells];
   // const label = { inputProps: { "aria-label": "Checkbox demo" } };
   // 페이징 처리 수정 09.02
-  const totalPageCount = Math.ceil(rowCount / rowsPerPage);
-  console.log(totalPage);
-  console.log(rowCount);
-  console.log(page);
+  // const totalPageCount = Math.ceil(rowCount / rowsPerPage);
   // console.log(
   //   "wrong:" + (rowCount % ((page + 1) * rowsPerPage)),
   //   "true:" + ((rowCount % ((page + 1) * rowsPerPage)) % 10)
