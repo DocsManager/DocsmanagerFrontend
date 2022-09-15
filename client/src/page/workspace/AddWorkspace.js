@@ -19,7 +19,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 500,
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -81,7 +81,7 @@ export default function AddWorkspace({ open, setOpen }) {
             startAdornment: (
               <ModalIcon
                 position="start"
-                sx={{ color: title ? "#3781f8" : "#d32f2f" }}
+                sx={{ color: title ? "#3791f8" : "#d32f2f" }}
               >
                 <LaptopChromebook />
               </ModalIcon>
@@ -103,80 +103,78 @@ export default function AddWorkspace({ open, setOpen }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <Modal
-          open={open}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <Typography
-              id="modal-modal-title"
-              variant="h6" //텍스트의 크기 뿐만 아니라 HTML 태그 결정, <h6/>로 마크업 됨
-              component="h2" //variant prop과 상이한 HTML 태그를 사용해야 할 때는 component prop으로 태그명을 명시
-              align="center"
-              mb={2}
-            >
-              새로운 워크스페이스 {/**모달 이름 변경 */}
+    <div>
+      <Modal
+        open={open}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography
+            id="modal-modal-title"
+            variant="h6" //텍스트의 크기 뿐만 아니라 HTML 태그 결정, <h6/>로 마크업 됨
+            component="h2" //variant prop과 상이한 HTML 태그를 사용해야 할 때는 component prop으로 태그명을 명시
+            align="center"
+            mb={2}
+          >
+            새로운 워크스페이스 {/**모달 이름 변경 */}
+          </Typography>
+          <React.Fragment>
+            <Typography component="h3" mt={1}>
+              워크스페이스명
             </Typography>
-            <React.Fragment>
-              <Typography component="h3" mt={1}>
-                워크스페이스명
-              </Typography>
-              {fillTitle()}
-            </React.Fragment>
+            {fillTitle()}
+          </React.Fragment>
 
-            <ShareUser
-              searchList={searchList}
-              setSearchList={setSearchList}
-              type={"workspace"}
-            />
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-evenly",
+          <ShareUser
+            searchList={searchList}
+            setSearchList={setSearchList}
+            type={"workspace"}
+          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+            mt={2}
+          >
+            <WorkspaceButton
+              variant="contained"
+              onClick={() => {
+                const title = document.getElementById("workspaceTitle").value;
+                setTitle(title);
+                if (title) {
+                  const workspace = {
+                    title: title,
+                    master: getUser(),
+                    userList: searchList,
+                  };
+                  addWorkspace(
+                    workspace,
+                    searchList,
+                    setLoading,
+                    closeHandler
+                  );
+                  // console.log(newWorkspace);
+                  // newWorkspace &&
+                  // worksapcepublish(searchList, newWorkspaceNo, setLoading);
+                  setSearchList([]);
+                  setTitle();
+                }
+                title ? setClickHandler(false) : setClickHandler(true);
+                setCheckHandler(!check);
               }}
-              mt={2}
             >
-              <WorkspaceButton
-                variant="contained"
-                onClick={() => {
-                  const title = document.getElementById("workspaceTitle").value;
-                  setTitle(title);
-                  if (title) {
-                    const workspace = {
-                      title: title,
-                      master: getUser(),
-                      userList: searchList,
-                    };
-                    addWorkspace(
-                      workspace,
-                      searchList,
-                      setLoading,
-                      closeHandler
-                    );
-                    // console.log(newWorkspace);
-                    // newWorkspace &&
-                    // worksapcepublish(searchList, newWorkspaceNo, setLoading);
-                    setSearchList([]);
-                    setTitle();
-                  }
-                  title ? setClickHandler(false) : setClickHandler(true);
-                  setCheckHandler(!check);
-                }}
-              >
-                생성
-                <AddBoxOutlined />
-              </WorkspaceButton>
-              <WorkspaceButton variant="contained" onClick={handleClose}>
-                취소
-                <CloseOutlined />
-              </WorkspaceButton>
+              생성
+              <AddBoxOutlined />
+            </WorkspaceButton>
+            <WorkspaceButton variant="contained" onClick={handleClose}>
+              취소
+              <CloseOutlined />
+            </WorkspaceButton>
             </Box>
           </Box>
-        </Modal>
-      </div>
-    </ThemeProvider>
+      </Modal>
+    </div>
   );
 }

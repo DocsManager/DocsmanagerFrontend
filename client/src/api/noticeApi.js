@@ -95,7 +95,6 @@ export const wsDocsSubscribe = (
       console.log(dataFromServer);
       count += 1;
       setNewNotice(dataFromServer);
-      setNoticeList((noticeList) => [...noticeList, dataFromServer]);
       setCheck(count % 2 === 1 ? true : false);
       getNoticeList(setNoticeList);
     });
@@ -103,14 +102,14 @@ export const wsDocsSubscribe = (
       console.log("----------------");
       const dataFromServer = JSON.parse(body);
       setNewNotice(dataFromServer);
-      getNoticeList(setNoticeList);
       count += 1;
       setCheck(count % 2 === 1 ? true : false);
       // setNoticeList(
-      //   noticeList.length === 0
-      //     ? [dataFromServer]
-      //     : [...noticeList, dataFromServer]
-      // );
+        //   noticeList.length === 0
+        //     ? [dataFromServer]
+        //     : [...noticeList, dataFromServer]
+        // );
+      getNoticeList(setNoticeList);
     });
 
     client.subscribe(`/queue/workspace/member/${getUser().id}`, ({ body }) => {
@@ -118,11 +117,11 @@ export const wsDocsSubscribe = (
       console.log(dataFromServer);
       count += 1;
       setNewNotice(dataFromServer);
-      setNoticeList(
-        noticeList.length === 0
-          ? [dataFromServer]
-          : [...noticeList, dataFromServer]
-      );
+      // setNoticeList(
+      //   noticeList.length === 0
+      //     ? [dataFromServer]
+      //     : [...noticeList, dataFromServer]
+      // );
       setCheck(count % 2 === 1 ? true : false);
       getNoticeList(setNoticeList);
     });
@@ -170,8 +169,7 @@ export const worksapcepublish = (searchList, newWorkspaceNo, setLoading) => {
         receiver: element,
         content: `${getUser().name}님이 워크스페이스에 초대했습니다`,
         isRead: 0,
-        urlParams: `/document?room=${newWorkspaceNo + 1}`,
-        // urlParams: `/document?room=${workspace.workspaceNo.workspaceNo}`,
+        urlParams: `/main/document?room=${newWorkspaceNo}`,
       }),
       skipContentLengthHeader: true,
     });
@@ -211,7 +209,7 @@ export const workspaceMemberAddPublish = (
           receiver: element,
           content: `${getUser().name}님이 워크스페이스 멤버로 추가했습니다!`,
           isRead: 0,
-          urlParams: "/document?room=" + row.workspaceNo,
+          urlParams: "/main/document?room=" + row.workspaceNo,
         }),
         skipContentLengthHeader: true,
       });

@@ -1,28 +1,35 @@
 import React, { useState } from "react";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { TextField } from "@material-ui/core";
-import { IconButton } from "@mui/material";
-import { border, minHeight } from "@mui/system";
+import { TextField } from "@mui/material";
+import { Stack, ThemeProvider } from "@mui/material";
 import ShareUser from "../main/ShareUser";
 import { onHtmlPng } from "../../component/editor/pdfSave";
 import { getUser } from "../../component/getUser/getUser";
-import ConfirmModal from "../main/ConfirmModal";
 import UploadModal from "./UploadModal";
 import { notipublish } from "../../api/noticeApi";
+import { DriveFileRenameOutlineOutlined } from "@mui/icons-material";
+import { ModalIcon } from "../workspace/AddWorkspace";
+import { WorkspaceButton } from "../workspace/AddWorkspace";
+import {AddBoxOutlined, CloseOutlined} from "@mui/icons-material"
+import { theme } from "../../Config";
 
 const style = {
   position: "absolute",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: 480,
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  overflowY: "auto",
+  height: "700px",
+  scrollbarWidth: "thin",
+  "&::-webkit-scrollbar": {
+    width: "0.4em",
+  },
 };
 
 export default function SaveWorksapce({ open, setOpen }) {
@@ -64,7 +71,7 @@ export default function SaveWorksapce({ open, setOpen }) {
   const [clickHandler, setClickHandler] = useState(false);
 
   return (
-    <div>
+    <ThemeProvider theme={theme}>
       <Modal
         open={open}
         aria-labelledby="modal-modal-title"
@@ -79,58 +86,101 @@ export default function SaveWorksapce({ open, setOpen }) {
           >
             문서 등록
           </Typography>
-          <hr />
+          <Typography component="h3" mt={1}>
+            문서 제목
+          </Typography>
           {/* 문서 이름 등록 안했을때 나오는 textinput */}
           {clickHandler === false || title ? (
             <TextField
-              id="newDocumentTitle"
-              label="문서 이름"
-              variant="outlined"
-            />
+            id="newDocumentTitle"
+            InputProps={{
+              startAdornment: (
+                <ModalIcon position="start">
+                  <DriveFileRenameOutlineOutlined />
+                </ModalIcon>
+              ),
+            }}
+            variant="outlined"
+            label="문서 이름"
+            margin="normal"
+            sx={{width:"280px"}}
+          />
           ) : (
             <TextField
-              id="newDocumentTitle"
-              label="문서 이름"
-              variant="outlined"
-              error
-              helperText="문서 제목은 필수 사항입니다!"
-            />
+            id="newDocumentTitle"
+            InputProps={{
+              startAdornment: (
+                <ModalIcon position="start" sx={{ color: title ? "#3791f8" : "#d32f2f" }}>
+                  <DriveFileRenameOutlineOutlined />
+                </ModalIcon>
+              ),
+            }}
+            variant="outlined"
+            label="문서 이름"
+            margin="normal"
+            sx={{width:"280px"}}
+            error
+            helperText="문서 제목은 필수 사항입니다!"
+          />
           )}
           <ShareUser
             searchList={searchList}
             setSearchList={setSearchList}
             type={"document"}
           />
-          <TextField
-            id="newDocumentContent"
-            label="파일 설명"
-            variant="outlined"
-          />
-          <div>
-            <Button
-              onClick={() => {
-                const title = document.getElementById("newDocumentTitle").value;
-                setTitle(title);
-                const content = document.getElementById("newDocumentContent")
-                  .value;
-                const newDocument = { user: user, content: content };
-                onHtmlPng(title, newDocument);
-                title ? setClickHandler(false) : setClickHandler(true);
+          <Stack direction="column" spacing={1}>
+            <Box mt={2} mb={1}>
+              파일 설명
+            </Box>
+
+            <TextField
+              type="text"
+              variant="outlined"
+              id="newDocumentContent"
+              inputProps={{ maxLength: 100 }}
+              helperText="100자 제한"
+              sx={{
+                "& legend": {
+                  display: "none",
+                },
+                WebkitBoxShadow: "0 0 0 1000px white inset",
               }}
-            >
-              저장
-            </Button>
-            <Button
-              onClick={() => {
-                setOpen(false);
-                setSearchList([]);
-              }}
-            >
-              취소
-            </Button>
-          </div>
+            />
+          </Stack>
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-evenly",
+            }}
+            mt={2}
+          >
+            <WorkspaceButton
+                variant="contained"
+                onClick={() => {
+                  const title = document.getElementById("newDocumentTitle").value;
+                  setTitle(title);
+                  const content = document.getElementById("newDocumentContent")
+                    .value;
+                  const newDocument = { user: user, content: content };
+                  onHtmlPng(title, newDocument);
+                  title ? setClickHandler(false) : setClickHandler(true);
+                }}
+              >
+                저장
+                <AddBoxOutlined />
+              </WorkspaceButton>
+              <WorkspaceButton
+                variant="contained"
+                onClick={() => {
+                  setOpen(false);
+                  setSearchList([]);
+                }}
+              >
+                취소
+                <CloseOutlined />
+              </WorkspaceButton>
+            </Typography>
         </Box>
-        {/* <ConfirmModal open={}><Typography>등록 하시겠습니까?</Typography></ConfirmModal> */}
       </Modal>
       <UploadModal
         sizeCheck={sizeCheck}
@@ -142,6 +192,6 @@ export default function SaveWorksapce({ open, setOpen }) {
         writeConfirm={writeConfirm}
         setWriteConfirm={setWriteConfirm}
       />
-    </div>
+    </ThemeProvider>
   );
 }

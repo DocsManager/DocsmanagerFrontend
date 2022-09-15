@@ -15,7 +15,10 @@ export const notify = (newNotice) =>
         <Typography style={{ fontWeight: "bold" }}>
           {newNotice.content}
         </Typography>
-        <Link to={newNotice.urlParams}>
+        <Link
+          to={newNotice.urlParams}
+          style={{ marginLeft: "80%", marginTop: "40px" }}
+        >
           <Button sx={{ fontSize: "1.1rem" }} variant="contained">
             이동하기
           </Button>

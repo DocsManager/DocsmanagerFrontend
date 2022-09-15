@@ -86,45 +86,42 @@ export default function Header() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <div>
-        <Navbar className="header-box">
-          <NavbarBrand href="/main" style={{ padding: "0" }}>
-            <img
-              src={`${process.env.PUBLIC_URL}/logo.png`}
-              alt="banner"
-              className="header-logo"
+    <div>
+      <Navbar className="header-box">
+        <NavbarBrand href="/main" style={{ padding: "0" }}>
+          <img
+            src={`${process.env.PUBLIC_URL}/logo.png`}
+            alt="banner"
+            className="header-logo"
+          />
+        </NavbarBrand>
+        <div className="header-user">
+          <div className="header-user-icon">
+            <Avatar
+              onClick={handleClick}
+              sx={{ bgcolor: "#3791F8" }}
+              src={user.profile}
             />
-          </NavbarBrand>
-          <div className="header-user">
-            <div className="header-user-icon">
-              <Avatar
-                onClick={handleClick}
-                sx={{ bgcolor: "#3791F8" }}
-                src={userInfo.profile}
-              />
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "center",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "center",
-                }}
-              >
-                <Box
-                  sx={{
-                    p: 2,
-                    width: "350px",
-                    display: "flex",
-                    justifyContent: "space-around",
-                  }}
-                >
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+              sx={{width:"400px !important"}}
+            >
+              <Box
+                sx={{
+                  p: 2,
+                  display: "flex",
+                  justifyContent: "space-around",
                   <Link to="/main/mypage">
                     <PopoverBtn variant="contained" endIcon={<AccountBox />}>
                       마이페이지
@@ -141,7 +138,6 @@ export default function Header() {
                   >
                     로그아웃
                   </PopoverBtn>
-                  {/* <PopoverBtn variant="contained">로그아웃</PopoverBtn> */}
                 </Box>
               </Popover>
             </div>
@@ -162,8 +158,8 @@ export default function Header() {
               <div className="header-profile" />
             </div>
           </div>
-        </Navbar>
-      </div>
-    </ThemeProvider>
+        </div>
+      </Navbar>
+    </div>
   );
 }
