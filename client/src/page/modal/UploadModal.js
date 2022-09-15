@@ -32,7 +32,7 @@ function UploadModal(props) {
       <SucessModal open={loading}>
         <Box sx={{ width: "100%" }}>
           <LinearProgress />
-          <Typography>업로드 중입니다...</Typography>
+          <Typography sx={{ marginTop: "10px" }}>업로드 중입니다...</Typography>
         </Box>
       </SucessModal>
       {sizeCheck === 1 ? (

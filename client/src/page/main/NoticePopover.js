@@ -191,7 +191,11 @@ export function NoticePopover({
         overlap="circular"
       >
         <NotificationsOutlined
-          sx={{ color: "rgba(0,0,0,0.7);", fontSize: "35px" }}
+          sx={{
+            color: "rgba(0,0,0,0.7);",
+            fontSize: "35px",
+            cursor: noticeList.length > 0 ? "pointer" : "",
+          }}
         />
       </Badge>
       {noticeList.length > 0 ? (

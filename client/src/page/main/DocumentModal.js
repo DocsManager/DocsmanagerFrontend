@@ -82,7 +82,6 @@ const DocumentModal = (props) => {
               display: "flex",
               justifyContent: "right",
             }}
-            mt={2}
           >
             {console.log(document)}
             {(() => {
@@ -152,10 +151,14 @@ const DocumentModal = (props) => {
             {/* </Box>
           </Box> */}
           </Typography>
-
           <Box sx={{ display: "flex", alignItems: "center" }}>
             {fileCategoryIcon(document.documentNo.fileCategory)}
-            <Typography variant="h6" component="h2">
+            <Typography
+              variant="h6"
+              component="h2"
+              marginLeft={"10px"}
+              marginTop={"3px"}
+            >
               {document.documentNo.originalName}
             </Typography>
           </Box>

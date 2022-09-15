@@ -164,6 +164,18 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           fontSize: "15px",
+          display: "flex",
+          justifyContent: "right",
+        },
+      },
+    },
+    MuiPaginationItem: {
+      styleOverrides: {
+        rounded: {
+          height: "30px",
+          fontSize: "20px",
+          margin: "0px 10px 0px 10px",
+          border: "none",
         },
       },
     },
