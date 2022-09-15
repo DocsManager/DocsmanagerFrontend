@@ -9,17 +9,14 @@ import "medium-editor/dist/css/themes/default.css";
 import "../../App.css";
 import { getTempContent, getWorkspace } from "../../api/workspaceApi";
 import { workspaceMember } from "../../api/workspaceUserApi";
-import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import LaptopMacOutlinedIcon from '@mui/icons-material/LaptopMacOutlined';
-import Header from "../main/Header";
+
 import {
   Avatar,
   AvatarGroup,
   Box,
   Button,
   Chip,
-  TextField,
-  ThemeProvider,
   Typography,
 } from "@mui/material";
 import { Save, Send } from "@mui/icons-material";
@@ -204,7 +201,7 @@ function Workspace() {
                     className="userInfo"
                     key={user.name}
                     sizes="50px"
-                    sx={{ marginLeft: "-8px" }}
+                    sx={{ marginLeft: "-8px !important" }}
                   />
 
                   <UncontrolledTooltip placement="top" target={user.name}>
@@ -231,7 +228,6 @@ function Workspace() {
             }}
             
           >
-            
             <Box sx={style} id="chatBox" ref={scrollRef}>
               <Box sx={{ height: "90%", width: "100%" }} id="chatRoom">
                 {users.userActivity &&

@@ -73,19 +73,18 @@ const handleToolbarBtn = (writeModalOpen, setWriteModalOpen) => {
 
     case "/trashcan":
       return (
-        <></>
-        // <InfoFunctionBox variant="contained">
-        //   <Typography
-        //     sx={{
-        //       display: "flex",
-        //       justifyContent: "space-around",
-        //       width: "350px",
-        //     }}
-        //   >
-        //     휴지통에서 삭제되면 복원할 수 없습니다!
-        //     <Warning />
-        //   </Typography>
-        // </InfoFunctionBox>
+        <InfoFunctionBox variant="contained">
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "350px",
+            }}
+          >
+            휴지통에서 삭제되면 복원할 수 없습니다!
+            <Warning />
+          </Typography>
+        </InfoFunctionBox>
       );
     default:
       return (

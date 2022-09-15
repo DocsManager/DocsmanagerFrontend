@@ -14,8 +14,6 @@ import {
   SaveAs,
 } from "@mui/icons-material";
 import SaveWorksapce from "../modal/SaveWorksapce";
-import { Link } from "react-router-dom";
-import { theme } from "../../Config";
 import { getUser } from "../../component/getUser/getUser";
 Quill.register("modules/ImageResize", ImageResize);
 

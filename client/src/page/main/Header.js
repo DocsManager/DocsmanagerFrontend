@@ -120,7 +120,6 @@ export default function Header() {
                   
                 }}
               >
-                
                 <Link to="/main/mypage">
                   <PopoverBtn variant="contained" endIcon={<AccountBox />}>
                     마이페이지

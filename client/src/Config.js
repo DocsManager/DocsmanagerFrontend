@@ -39,6 +39,9 @@ export const theme = createTheme({
             textDecoration: "none",
           },
         },
+        textPrimary:{
+          color:"#3791f8"
+        },
         contained: {
           backgroundColor: "#3791f8",
           ":hover": {
@@ -117,8 +120,8 @@ export const theme = createTheme({
           paddingLeft: "10px",
           WebkitBoxShadow: "0 0 0 1000px white inset",
         },
-      },
     },
+  },
     MuiTypography: {
       styleOverrides: {
         body2: {
@@ -153,12 +156,28 @@ export const theme = createTheme({
         },
       },
     },
-    MuiAvatar: {
-      styleOverrides: {
-        root: {
-          marginLeft: "-8px !important",
-        },
-      },
+    MuiTextField:{
+      styleOverrides:{
+        root:{
+          "& .MuiOutlinedInput-root": {
+            "&.Mui-focused fieldset": {
+              borderColor: "#3791f8"
+            },
+          },
+          "& .MuiOutlinedInput-root": {
+            "&.Mui-error fieldset": {
+              borderColor: "#d32f2f"
+            },
+          },
+          "& label.Mui-focused": {
+            color: "#3791f8",
+          },
+          "& label.Mui-error": {
+            color: "#d32f2f",
+          }
+            
+          },
+      }
     },
     MuiChip: {
       styleOverrides: {

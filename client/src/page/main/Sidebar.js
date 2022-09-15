@@ -140,7 +140,7 @@ const Storage = styled(Box)({
   padding: "20px",
   fontSize: "1.2rem",
 });
-export default function Sidebar() {
+export default function Sidebar({urlPath}) {
   const pathName = useLocation().pathname;
 
   const [open, setOpen] = useState(false);
@@ -158,87 +158,89 @@ export default function Sidebar() {
   }, [check]);
   console.log(pathName);
   return (
-    <Box>
-      <Box className="sidebar-nav">
-        <div className="sidebar-nav-child">
-          <SidebarBtn variant="contained" onClick={() => setOpen(true)}>
-            워크스페이스 생성
-          </SidebarBtn>
-        </div>
+    <>
+    {urlPath===("/main/document")?<></>: <Box>
+    <Box className="sidebar-nav">
+      <div className="sidebar-nav-child">
+        <SidebarBtn variant="contained" onClick={() => setOpen(true)}>
+          워크스페이스 생성
+        </SidebarBtn>
+      </div>
 
-        <List style={sidebarLinkStyle}>
-          {SidebarData.map((item, index) =>
-            pathName === item.path ? (
-              <SidebarSideLinkPage
-                to={item.path}
-                key={index}
-                onClick={clickHandler}
+      <List style={sidebarLinkStyle}>
+        {SidebarData.map((item, index) =>
+          pathName === item.path ? (
+            <SidebarSideLinkPage
+              to={item.path}
+              key={index}
+              onClick={clickHandler}
+            >
+              <Tooltip
+                title={item.tooltip}
+                classes={{ tooltip: classes.tooltip }}
+                placement="bottom-end" //툴팁 위치 변경됨 08.31
               >
-                <Tooltip
-                  title={item.tooltip}
-                  classes={{ tooltip: classes.tooltip }}
-                  placement="bottom-end" //툴팁 위치 변경됨 08.31
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "0.25fr 0.5fr",
+                    width: "250px",
+                  }}
                 >
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: "0.25fr 0.5fr",
-                      width: "250px",
-                    }}
-                  >
-                    <p style={{ margin: "0 auto" }}>{item.icon}</p>
+                  <p style={{ margin: "0 auto" }}>{item.icon}</p>
 
-                    <ListItemText
-                      primary={
-                        <Typography style={style}>{item.title}</Typography>
-                      }
-                    />
-                  </Box>
-                </Tooltip>
-              </SidebarSideLinkPage>
-            ) : (
-              <SidebarSideLink
-                to={item.path}
-                key={index}
-                onClick={clickHandler}
+                  <ListItemText
+                    primary={
+                      <Typography style={style}>{item.title}</Typography>
+                    }
+                  />
+                </Box>
+              </Tooltip>
+            </SidebarSideLinkPage>
+          ) : (
+            <SidebarSideLink
+              to={item.path}
+              key={index}
+              onClick={clickHandler}
+            >
+              <Tooltip
+                title={item.tooltip}
+                classes={{ tooltip: classes.tooltip }}
+                placement="bottom-end" //툴팁 위치 변경됨 08.31
               >
-                <Tooltip
-                  title={item.tooltip}
-                  classes={{ tooltip: classes.tooltip }}
-                  placement="bottom-end" //툴팁 위치 변경됨 08.31
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "0.25fr 0.5fr",
+                    width: "250px",
+                  }}
                 >
-                  <Box
-                    sx={{
-                      display: "grid",
-                      gridTemplateColumns: "0.25fr 0.5fr",
-                      width: "250px",
-                    }}
-                  >
-                    <p style={{ margin: "0 auto" }}>{item.icon}</p>
+                  <p style={{ margin: "0 auto" }}>{item.icon}</p>
 
-                    <ListItemText
-                      primary={
-                        <Typography style={style}>{item.title}</Typography>
-                      }
-                    />
-                  </Box>
-                </Tooltip>
-              </SidebarSideLink>
-            )
-          )}
-        </List>
-        {/* 08.31 드라이브 용량 표시 변경 코드 */}
-        <Storage>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <CloudOutlinedIcon sx={{ fontSize: "40px", marginRight: "15px" }} />
-            내 잔여 용량
-          </Box>
-          <LinearProgressWithLabel value={(size / 10485760) * 100} />
-          {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
-        </Storage>
-      </Box>
-
-      <AddWorkspace open={open} setOpen={setOpen} />
+                  <ListItemText
+                    primary={
+                      <Typography style={style}>{item.title}</Typography>
+                    }
+                  />
+                </Box>
+              </Tooltip>
+            </SidebarSideLink>
+          )
+        )}
+      </List>
+      {/* 08.31 드라이브 용량 표시 변경 코드 */}
+      <Storage>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <CloudOutlinedIcon sx={{ fontSize: "40px", marginRight: "15px" }} />
+          내 잔여 용량
+        </Box>
+        <LinearProgressWithLabel value={(size / 10485760) * 100} />
+        {(size / 1024 / 1024).toFixed(2)} GB / 10 GB
+      </Storage>
     </Box>
+
+    <AddWorkspace open={open} setOpen={setOpen} />
+  </Box>}
+  </>
   );
 }

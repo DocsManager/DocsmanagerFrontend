@@ -169,7 +169,7 @@ export const worksapcepublish = (searchList, newWorkspaceNo, setLoading) => {
         receiver: element,
         content: `${getUser().name}님이 워크스페이스에 초대했습니다`,
         isRead: 0,
-        urlParams: `/document?room=${newWorkspaceNo}`,
+        urlParams: `/main/document?room=${newWorkspaceNo}`,
       }),
       skipContentLengthHeader: true,
     });
@@ -209,7 +209,7 @@ export const workspaceMemberAddPublish = (
           receiver: element,
           content: `${getUser().name}님이 워크스페이스 멤버로 추가했습니다!`,
           isRead: 0,
-          urlParams: "/document?room=" + row.workspaceNo,
+          urlParams: "/main/document?room=" + row.workspaceNo,
         }),
         skipContentLengthHeader: true,
       });

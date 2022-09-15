@@ -26,7 +26,7 @@ import AddMember from "../main/AddMember";
 import CreateOutlinedIcon from "@mui/icons-material/CreateOutlined";
 import EditTitle from "./EditTitle";
 import { NoneData } from "../main/NoneData";
-import { ConstructionOutlined, Warning } from "@mui/icons-material";
+import { ConstructionOutlined, FolderSpecial, ReportOutlined, Warning } from "@mui/icons-material";
 import Delete from "@mui/icons-material/Delete";
 import { InfoFunctionBox, ToRecyclebin } from "../main/DmTableToolbar";
 import { theme } from "../../Config";
@@ -193,7 +193,7 @@ const EnhancedTableToolbar = (props) => {
         }),
       }}
 >
-      {numSelected > 0 && (
+      {numSelected > 0 ? (
         <Box
           sx={{ flex: "1 1 100%" }}
           color="inherit"
@@ -228,7 +228,18 @@ const EnhancedTableToolbar = (props) => {
               삭제
             </ToRecyclebin>
           </div>
-        </Box>)}
+        </Box>):<InfoFunctionBox variant="contained">
+          <Typography
+            sx={{
+              display: "flex",
+              justifyContent: "space-around",
+              width: "400px",
+            }}
+          >
+            워크스페이스의 멤버추가는 개설자만 가능합니다!
+            <ReportOutlined />
+          </Typography>
+        </InfoFunctionBox>}
     </Toolbar>)};
 
 export default function WorkspaceTable(props) {
@@ -313,7 +324,6 @@ export default function WorkspaceTable(props) {
       ) : (
         <Box sx={{ width: "100%"}}>
           <Paper sx={{ width: "98%", mb: 2, margin: "0 auto" }}>
-            {/**테이블 너비 변경 */}
             <EnhancedTableToolbar
               numSelected={selected.length}
               selected={selected}
@@ -366,7 +376,7 @@ export default function WorkspaceTable(props) {
                             align="center"
                           >
                             <Link
-                              to={`/document?room=${row.workspaceNo}`}
+                              to={`/main/document?room=${row.workspaceNo}`}
                               style={{
                                 marginRight: "5px",
                                 textDecoration: "none",
@@ -376,21 +386,12 @@ export default function WorkspaceTable(props) {
                             </Link>
                             <IconButton
                               onClick={() => {
-                                // const open = { member: false, edit: true };
                                 setEditOpen(true);
                                 setRow(row);
                               }}
                             >
-                              <CreateOutlinedIcon  sx={{fontSize:"16px !important"}}/>
+                              <CreateOutlinedIcon sx={{fontSize:"16px !important"}}/>
                             </IconButton>
-                            {/* <Button
-                              startIcon={<CreateOutlinedIcon />}
-                              onClick={() => {
-                                // const open = { member: false, edit: true };
-                                setEditOpen(true);
-                                setRow(row);
-                              }}
-                            /> */}
                           </TableCell>
                           <TableCell align="center">
                             {row.master.name}

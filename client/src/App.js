@@ -18,8 +18,6 @@ import PublicRoute from "./page/login/PublicRoute";
 import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./Config";
 
-// import TodoApp from "./page/main/TodoApp";
-
 function App() {
   const [isLogged, SetIsLogged] = useState(false);
   return (
@@ -44,7 +42,6 @@ function App() {
               <Route path="mypage" element={<Mypage />} />
             </Route>
           </Route>
-          {/* workspace에 사이드바 안 보이게 하려고 뺏는데 알림 토스트 메시지가 안 오는 부작용.. */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
