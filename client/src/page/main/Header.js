@@ -21,6 +21,7 @@ import { theme } from "../../Config";
 import { MyContext } from "../Main";
 import { logout } from "../../api/userApi";
 import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export const NoticeContext = createContext({
   isRead: "",
@@ -80,6 +81,11 @@ export default function Header() {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  const [cookies, setCookie, removeCookie] = useCookies(["accessToken"]);
+  const deleteCookie = () => {
+    removeCookie(["accessToken"]);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div>
@@ -129,6 +135,7 @@ export default function Header() {
                     variant="contained"
                     endIcon={<Logout />}
                     onClick={() => {
+                      deleteCookie();
                       logout();
                       deleteUser();
                     }}

@@ -9,14 +9,14 @@ function SuccesSignup() {
       <div className="successcontainer">
         <img
           src={`${process.env.PUBLIC_URL}/successsignup.png`}
-          className="logo"
-          alt="signuplogo"
+          className="successlogo"
+          alt="successlogo"
         />
-        <p> 회원가입을 축하드립니다</p>
-        <p className="successfont">
+        <h2> 회원가입을 축하드립니다</h2>
+        <h2 className="successfont">
           다양한 서비스를 <span className="D">D</span>{" "}
           <span className="M">M</span>에서 즐겨보세요!
-        </p>
+        </h2>
         <Link to="/">
           <Button type="button">로그인하러가기</Button>
         </Link>

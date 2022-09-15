@@ -74,10 +74,7 @@ function Pwupdate({ open, style, setOpen }) {
               fullWidth
               variant="outlined"
               sx={{
-                marginBottom:
-                  errors.newPassword && errors.newPassword.type === "required"
-                    ? "5px"
-                    : "42px",
+                marginBottom: "10px",
               }}
               {...register("oldPassword", { required: true })}
             />
@@ -95,10 +92,7 @@ function Pwupdate({ open, style, setOpen }) {
               fullWidth
               variant="outlined"
               sx={{
-                marginBottom:
-                  errors.newPassword && errors.newPassword.type === "required"
-                    ? "5px"
-                    : "42px",
+                marginBottom: "10px",
               }}
               {...register("newPassword", {
                 required: true,
@@ -141,10 +135,7 @@ function Pwupdate({ open, style, setOpen }) {
                 validate: (value) => value === checkPassword.current,
               })}
               sx={{
-                marginBottom:
-                  errors.newPassword && errors.newPassword.type === "required"
-                    ? "5px"
-                    : "42px",
+                marginBottom: "10px",
               }}
             />
 

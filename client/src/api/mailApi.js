@@ -4,6 +4,7 @@ const baseUrl = "/mail/";
 
 export function sendMail(params, setConfirmVerifyCode) {
   const url = baseUrl + "send";
+
   if (params.email === "") {
     Swal.fire({
       text: "메일주소를 입력하여주세요.",
@@ -103,4 +104,43 @@ export function findPw(params) {
       });
     }
   });
+}
+
+export function checkMail(params, setConfirmVerifyCode) {
+  axios
+    .get("api/mail/checkmail", { params, setConfirmVerifyCode })
+    .then((response) => {
+      if (response.data.check) {
+        Swal.fire({
+          title: "사용 가능한 이메일주소",
+          text:
+            "해당 이메일로 가입이 가능합니다. 해당 주소로 메일을 전송하시겠습니까?",
+          confirmButtonColor: "#3791f8",
+          showCancelButton: true,
+          cancelButtonColor: "#d33",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            sendMail(params, setConfirmVerifyCode);
+          } else if (result.isDismissed) {
+            Swal.fire({
+              title: "취소되었습니다",
+              confirmButtonColor: "#3791f8",
+            });
+          }
+        });
+      } else {
+        Swal.fire({
+          title: "이미 가입되어 있는 이메일 주소입니다.",
+          text: "다른 이메일 주소로 시도해주세요",
+          confirmButtonColor: "#3791f8",
+        });
+      }
+    })
+    .catch((err) =>
+      Swal.fire({
+        title: "잘못된 접근 시도",
+        icon: "error",
+        cancelButtonColor: "3791f8",
+      })
+    );
 }

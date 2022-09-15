@@ -9,8 +9,9 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
-import EditIcon from "@mui/icons-material/Edit";
 import { Container } from "@mui/system";
+import CheckIcon from "@mui/icons-material/Check";
+import ClearIcon from "@mui/icons-material/Clear";
 
 //아바타 프로필
 const ProfileAvatar = styled(Avatar)(({ theme }) => ({
@@ -28,7 +29,7 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 600,
-  height: 450,
+  height: 500,
   bgcolor: "background.paper",
   // border: "2px solid #3791f8",
   boxShadow: 24,
@@ -78,16 +79,27 @@ function MyPage() {
           <Card>
             <CardContent sx={{ display: "flex" }}>
               <div>
-                <Button component="label">
-                  프로필 이미지 수정
-                  <EditIcon sx={{ float: "left", margin: "5px" }} />
+                <CheckIcon
+                  fontSize="medium"
+                  sx={{ float: "right", marginTop: "10px", mr: "30px" }}
+                />
+                <ClearIcon
+                  fontSize="medium"
+                  sx={{
+                    float: "right",
+                    marginTop: "10px",
+                    marginRight: "20px",
+                  }}
+                />
+                <Button component="label" sx={{ background: "#ffffff" }}>
+                  <ProfileAvatar
+                    alt="프로필"
+                    src={info.profile}
+                    className="mypageavatar"
+                    sx={{ background: "#3791f8" }}
+                  />
                   <input hidden accept="image/*" multiple type="file" />
                 </Button>
-                <ProfileAvatar
-                  alt="프로필"
-                  src={info.profile}
-                  className="mypageavatar"
-                />
               </div>
               <Table sx={{ minWidth: 500 }}>
                 <TableBody
