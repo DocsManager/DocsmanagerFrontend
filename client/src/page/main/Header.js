@@ -38,7 +38,6 @@ export default function Header() {
   const { setCheckHandler, userInfo } = useContext(MyContext);
   const setIsReadHandler = (isRead) => setIsRead(isRead);
   useEffect(() => {
-    console.log(userInfo);
     getNoticeList(setNoticeList, userInfo);
   }, [isRead, newNotice, headerCheck]);
   useEffect(() => {
