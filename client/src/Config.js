@@ -50,6 +50,9 @@ export const theme = createTheme({
             textDecoration: "none !important",
           },
         },
+        outlinedPrimary:{
+          color:"#3791f8"
+        }
       },
     },
     MuiIconButton: {
@@ -79,7 +82,6 @@ export const theme = createTheme({
         },
       },
     },
-
     MuiCheckbox: {
       styleOverrides: {
         root: {

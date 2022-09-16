@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, TextField } from "@mui/material";
+import { Avatar, Box, Button, IconButton, TextField } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
@@ -21,8 +21,7 @@ function SignUp() {
   const [verifyResult, setVerifyResult] = useState(false);
   const [value, setValue] = useState("");
   const [profile, setProfile] = useState();
-  const [imageUrl, setImageUrl] = useState();
-  const imgRef = useRef();
+  const [imageSrc, setImageSrc] = useState("");
 
   const ProfileAvatar = styled(Avatar)(({ theme }) => ({
     width: 300,
@@ -30,24 +29,20 @@ function SignUp() {
     marginTop: 30,
   }));
 
+  const [imageUrl, setImageUrl] = useState(null);
+  const imgRef = useRef();
+
   const onChangeImage = () => {
     const reader = new FileReader();
     const file = imgRef.current.files[0];
+    console.log(file);
+
     if (file) {
-      if (file.type.split("/")[0] === "image") {
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          setImageUrl(reader.result);
-          setProfile(file);
-        };
-      } else {
-        Swal.fire({
-          title: "이미지 파일이 아닙니다.",
-          icon: "error",
-          confirmButtonColor: "#3791f8",
-        });
-        imgRef.current.value = "";
-      }
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        setImageUrl(reader.result);
+        console.log("이미지주소", reader.result);
+      };
     }
   };
 
@@ -112,13 +107,24 @@ function SignUp() {
       });
     }
   };
+  const encodeFileToBase64 = (fileBlob) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileBlob);
+    return new Promise((resolve) => {
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        resolve();
+      };
+    });
+  };
+  console.log(profile);
 
   return (
     <div className="maincontainer">
       <div className="signupcontainer">
         <div className="photocontainer">
           <img
-            src={`${process.env.PUBLIC_URL}/signup.png`}
+            src={`${process.env.PUBLIC_URL}/signupadd2.png`}
             className="signuplogo"
             alt="회원가입사진"
           />
@@ -162,15 +168,9 @@ function SignUp() {
                   />
                 </Button>
               </div>
-              <HighlightOffIcon
-                fontSize="large"
-                sx={{ float: "right" }}
-                onClick={() => {
-                  setImageUrl();
-                  setProfile();
-                  imgRef.current.value = "";
-                }}
-              />
+              <IconButton sx={{ float: "right" }}>
+                <HighlightOffIcon fontSize="large"/>
+              </IconButton>
               <div />
               <TextField
                 style={{ marginLeft: 0 }}
@@ -199,12 +199,15 @@ function SignUp() {
                       title: "아이디 입력 양식을 준수해주세요.",
                       confirmButtonColor: "#3791f8",
                     });
+                    console.log(verifyId);
                   } else {
                     const params = {
                       id: document.getElementById("newId").value,
                     };
                     checkId(params, setVerifyId);
+                    console.log(verifyId);
                   }
+                  console.log(verifyId);
                 }}
                 variant="contained"
               >
@@ -388,14 +391,11 @@ function SignUp() {
               {errors.department && errors.department.type === "required" && (
                 <p className="signupptag">부서선택은 필수선택사항입니다.</p>
               )}
-              <Box textAlign="center">
+              <Box textAlign="center" sx={{
+                    margin: "40px 0px 50px 0px !important",
+                  }}>
                 <Button
-                  style={{
-                    width: "80%",
-                    magin: "20px 0px 20px 0px",
-                    marginTop: "20px",
-                    class: "signupbtn",
-                  }}
+                  sx={{width:"80%", class: "signupbtn"}}
                   type="submit"
                   name="signupbtn"
                   className="signupbtn"

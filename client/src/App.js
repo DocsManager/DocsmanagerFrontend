@@ -17,6 +17,7 @@ import PrivateRoute from "./page/login/PrivateRoute";
 import PublicRoute from "./page/login/PublicRoute";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { theme } from "./Config";
+import "./App.css";
 
 function App() {
   return (
