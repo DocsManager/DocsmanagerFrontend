@@ -1,5 +1,12 @@
-import { Avatar, Box, Button, TextField } from "@mui/material";
-import React, { useRef, useState } from "react";
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonBase,
+  TextField,
+  IconButton,
+} from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
 import { signUp } from "../../api/userApi";
@@ -14,6 +21,7 @@ import Select from "@mui/material/Select";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Swal from "sweetalert2";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import axios from "axios";
 
 function SignUp() {
   const [verifyId, setVerifyId] = useState(false);
@@ -23,6 +31,23 @@ function SignUp() {
   const [profile, setProfile] = useState();
   const [imageUrl, setImageUrl] = useState();
   const imgRef = useRef();
+  const [OptionList, SetOptionList] = useState([]);
+
+  const baseUrl = "/api/";
+  const showDepartment = () => {
+    const url = baseUrl + "alldepartment";
+    axios
+      .get(url)
+      .then((res) => {
+        const { data } = res;
+        SetOptionList(data);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    showDepartment();
+  }, []);
 
   const ProfileAvatar = styled(Avatar)(({ theme }) => ({
     width: 300,
@@ -85,8 +110,11 @@ function SignUp() {
           signUp(newUser, profile);
           Swal.fire({
             title: "회원가입 성공",
-            icon: "success",
             confirmButtonColor: "#3791f8",
+            imageUrl: `${process.env.PUBLIC_URL}/congrats~.gif`,
+            imageAlt: "congrats",
+            imageWidth: 400,
+            imageHeight: 300,
           }).then((result) => {
             window.location.href = "/";
           });
@@ -118,15 +146,24 @@ function SignUp() {
       <div className="signupcontainer">
         <div className="photocontainer">
           <img
-            src={`${process.env.PUBLIC_URL}/signup.png`}
+            src={`${process.env.PUBLIC_URL}/signupadd2.png`}
             className="signuplogo"
             alt="회원가입사진"
           />
           <Link to="/">
-            <button className="homebtn" fontSize="large">
+            <ButtonBase
+              className="homebtn"
+              fontSize="large"
+              sx={{
+                backgroundColor: "#3791f8",
+                color: "white",
+                marginLeft: "20px",
+                marginBottom: "20px",
+              }}
+            >
               <HomeOutlinedIcon size="large" />
               HOME
-            </button>
+            </ButtonBase>
           </Link>
         </div>
         <div className="formcontainer">
@@ -162,15 +199,16 @@ function SignUp() {
                   />
                 </Button>
               </div>
-              <HighlightOffIcon
-                fontSize="large"
+              <IconButton
                 sx={{ float: "right" }}
                 onClick={() => {
-                  setImageUrl();
-                  setProfile();
                   imgRef.current.value = "";
+                  setImageUrl("");
+                  setProfile();
                 }}
-              />
+              >
+                <HighlightOffIcon fontSize="large" />
+              </IconButton>
               <div />
               <TextField
                 style={{ marginLeft: 0 }}
@@ -196,15 +234,18 @@ function SignUp() {
                   const result = await trigger("newId");
                   if (!result) {
                     Swal.fire({
-                      title: "아이디 입력 양식을 준수해주세요.",
+                      text: "아이디 입력 양식을 준수해주세요.",
                       confirmButtonColor: "#3791f8",
                     });
+                    console.log(verifyId);
                   } else {
                     const params = {
                       id: document.getElementById("newId").value,
                     };
                     checkId(params, setVerifyId);
+                    console.log(verifyId);
                   }
+                  console.log(verifyId);
                 }}
                 variant="contained"
               >
@@ -255,7 +296,7 @@ function SignUp() {
                   const result = await trigger("newEmail");
                   if (!result) {
                     Swal.fire({
-                      title: "이메일 입력 양식을 준수해주세요",
+                      text: "이메일 입력 양식을 준수해주세요",
                       confirmButtonColor: "#3791f8",
                     });
                   } else {
@@ -380,22 +421,27 @@ function SignUp() {
                   <MenuItem value="" style={{ margin: 0 }}>
                     <em>부서를 선택하세요</em>
                   </MenuItem>
-                  <MenuItem value={10}>개발</MenuItem>
-                  <MenuItem value={20}>인사</MenuItem>
-                  <MenuItem value={30}>전산</MenuItem>
+                  {OptionList &&
+                    OptionList.map((item) => {
+                      return (
+                        <MenuItem value={item.deptNo} key={item.deptNo}>
+                          {item.deptName}
+                        </MenuItem>
+                      );
+                    })}
                 </Select>
               </FormControl>
               {errors.department && errors.department.type === "required" && (
                 <p className="signupptag">부서선택은 필수선택사항입니다.</p>
               )}
-              <Box textAlign="center">
+              <Box
+                textAlign="center"
+                sx={{
+                  margin: "40px 0px 50px 0px !important",
+                }}
+              >
                 <Button
-                  style={{
-                    width: "80%",
-                    magin: "20px 0px 20px 0px",
-                    marginTop: "20px",
-                    class: "signupbtn",
-                  }}
+                  sx={{ width: "80%", class: "signupbtn" }}
                   type="submit"
                   name="signupbtn"
                   className="signupbtn"
