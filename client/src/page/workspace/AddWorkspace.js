@@ -146,12 +146,18 @@ export default function AddWorkspace({ open, setOpen }) {
                     master: userInfo,
                     userList: searchList,
                   };
-                  addWorkspace(workspace, searchList, closeHandler, userInfo);
+                  addWorkspace(
+                    workspace,
+                    searchList,
+                    closeHandler,
+                    userInfo,
+                    setCheckHandler,
+                    check
+                  );
                   setSearchList([]);
                   setTitle();
                 }
                 title ? setClickHandler(false) : setClickHandler(true);
-                setCheckHandler(!check);
               }}
             >
               생성
