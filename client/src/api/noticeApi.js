@@ -57,8 +57,8 @@ export function updateAllNotce(noticeList, user) {
   axios.put(url, arr).catch((err) => console.log(err));
 }
 
-// const socketUrl = "ws://3.39.187.48:8080/ws-dm/websocket";
-const socketUrl = "ws://localhost:8080/ws-dm/websocket"; //당장 통신 확인하려고 로컬로 서버 바꿈
+const socketUrl = "ws://3.39.187.48:8080/ws-dm/websocket";
+// const socketUrl = "ws://localhost:8080/ws-dm/websocket"; //당장 통신 확인하려고 로컬로 서버 바꿈
 
 // const client = new StompJs.Client();
 const client = new StompJs.Client({
@@ -91,7 +91,7 @@ export const wsDocsSubscribe = (
       count += 1;
       setNewNotice(dataFromServer);
       setCheck(count % 2 === 1 ? true : false);
-      getNoticeList(setNoticeList);
+      getNoticeList(setNoticeList, user);
     });
     client.subscribe(`/queue/workspace/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
@@ -103,7 +103,7 @@ export const wsDocsSubscribe = (
       //     ? [dataFromServer]
       //     : [...noticeList, dataFromServer]
       // );
-      getNoticeList(setNoticeList);
+      getNoticeList(setNoticeList, user);
     });
 
     client.subscribe(`/queue/workspace/member/${user.id}`, ({ body }) => {
@@ -116,7 +116,7 @@ export const wsDocsSubscribe = (
       //     : [...noticeList, dataFromServer]
       // );
       setCheck(count % 2 === 1 ? true : false);
-      getNoticeList(setNoticeList);
+      getNoticeList(setNoticeList, user);
     });
   };
 

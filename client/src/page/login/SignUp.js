@@ -139,7 +139,7 @@ function SignUp() {
       <div className="signupcontainer">
         <div className="photocontainer">
           <img
-            src={`${process.env.PUBLIC_URL}/signup.png`}
+            src={`${process.env.PUBLIC_URL}/signupadd2.png`}
             className="signuplogo"
             alt="회원가입사진"
           />
@@ -192,15 +192,9 @@ function SignUp() {
                   />
                 </Button>
               </div>
-              <HighlightOffIcon
-                fontSize="large"
-                sx={{ float: "right" }}
-                onClick={() => {
-                  setImageUrl();
-                  setProfile();
-                  imgRef.current.value = "";
-                }}
-              />
+              <IconButton sx={{ float: "right" }}>
+                <HighlightOffIcon fontSize="large"/>
+              </IconButton>
               <div />
               <TextField
                 style={{ marginLeft: 0 }}
@@ -229,12 +223,15 @@ function SignUp() {
                       text: "아이디 입력 양식을 준수해주세요.",
                       confirmButtonColor: "#3791f8",
                     });
+                    console.log(verifyId);
                   } else {
                     const params = {
                       id: document.getElementById("newId").value,
                     };
                     checkId(params, setVerifyId);
+                    console.log(verifyId);
                   }
+                  console.log(verifyId);
                 }}
                 variant="contained"
               >
@@ -423,14 +420,11 @@ function SignUp() {
               {errors.department && errors.department.type === "required" && (
                 <p className="signupptag">부서선택은 필수선택사항입니다.</p>
               )}
-              <Box textAlign="center">
+              <Box textAlign="center" sx={{
+                    margin: "40px 0px 50px 0px !important",
+                  }}>
                 <Button
-                  style={{
-                    width: "80%",
-                    magin: "20px 0px 20px 0px",
-                    marginTop: "20px",
-                    class: "signupbtn",
-                  }}
+                  sx={{width:"80%", class: "signupbtn"}}
                   type="submit"
                   name="signupbtn"
                   className="signupbtn"

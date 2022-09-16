@@ -101,7 +101,8 @@ export function logout() {
         confirmButtonColor: "#3791f8",
       })
     )
-    .then((window.location.href = "/"));
+    .then((window.location.href = "/"))
+    .then(console.log(1));
 }
 
 export const mypage = async (setInfo) => {
