@@ -34,7 +34,7 @@ const style = {
 
 export default function SaveWorksapce({ open, setOpen }) {
   const [searchList, setSearchList] = useState([]);
-  const [sizeCheck, setSizeCheck] = useState(2);
+  const [sizeCheck, setSizeCheck] = useState(3);
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -45,7 +45,7 @@ export default function SaveWorksapce({ open, setOpen }) {
     setWriteSuccessConfirm(false);
     setWriteConfirm(false);
     setSearchList([]);
-    setSizeCheck(2);
+    setSizeCheck(3);
     setLoading(false);
   };
   const openSuccessWriteModal = (writeFile) => {
