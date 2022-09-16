@@ -39,6 +39,10 @@ function UploadModal(props) {
         <SucessModal open={writeSuccessConfirm} close={successWrite}>
           <Typography>용량 초과</Typography>
         </SucessModal>
+      ) : sizeCheck === 2 ? (
+        <SucessModal open={writeSuccessConfirm} close={successWrite}>
+          <Typography>파일은 100MB까지 업로드 가능합니다</Typography>
+        </SucessModal>
       ) : (
         <></>
       )}

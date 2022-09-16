@@ -39,10 +39,15 @@ function Login() {
           className="dmlogo"
           alt="logo"
         />
-        <p className="font1">
-          <span className="D">D</span> <span className="M">M</span>에 오신것을
-          환영합니다.
-        </p>
+        <div className="font1">
+          <img
+            src={`${process.env.PUBLIC_URL}/welcome.png`}
+            className="welcomelogo"
+            alt="welcome"
+          />
+          {/* <span className="D">D</span> <span className="M">M</span>에 오신것을
+          환영합니다. */}
+        </div>
         <div style={{ width: "30vw", margin: "0 auto", fontSize: 500 }}>
           <form>
             <Box
