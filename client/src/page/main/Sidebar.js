@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Button from "@mui/material/Button";
 import { SidebarData } from "./SidebarData";
 import "./Sidebar.css";
 import { styled } from "@mui/material/styles";
+import styles from "styled-components";
 import AddWorkspace from "../workspace/AddWorkspace";
 import { makeStyles, Tooltip } from "@material-ui/core";
 import { Typography, LinearProgress } from "@mui/material";
@@ -25,30 +25,8 @@ const sidebarLinkStyle = {
   listStyle: "none",
   textDecoration: "none",
 };
-const SidebarSideLink = styled(ListItemButton)`
-  font-size: 30px;
-  padding: 5px 10px 5px 10px;
-  margin: 5px 10px 0px 5px;
-  height: 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-weight: bolder;
-  list-style: none;
-  text-decoration: none;
-  border-radius: 30px 0px 0px 30px;
 
-  &:hover {
-    background: #8bc7ff;
-    border-left: 3px solid #3791f8;
-    cursor: pointer;
-    text-decoration-line: none;
-    color: white;
-    font-weight: bold;
-  }
-`;
-
-const SidebarSideLinkPage = styled(ListItemButton)`
+const SidebarSideLinkPage = styles(Link)`
   font-size: 30px;
   padding: 5px 10px 5px 10px;
   margin: 5px 10px 0px 5px;
@@ -75,8 +53,30 @@ const SidebarSideLinkPage = styled(ListItemButton)`
     font-weight: bold;
   }
 `;
+const SidebarSideLink = styles(Link)`
+font-size: 30px;
+padding: 5px 10px 5px 10px;
+margin: 5px 10px 0px 5px;
+color:white;
+height: 60px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+font-weight: bolder;
+list-style: none;
+text-decoration: none;
+border-radius: 30px 0px 0px 30px;
 
-const style = {
+&:hover {
+  background: #8bc7ff;
+  border-left: 3px solid #3791f8;
+  cursor: pointer;
+  text-decoration-line: none;
+  color: white;
+  font-weight: bold;
+}
+`;
+const style1 = {
   fontSize: "1.4rem",
   width: "193px",
   display: "flex",
@@ -191,7 +191,7 @@ export default function Sidebar({ urlPath }) {
 
                         <ListItemText
                           primary={
-                            <Typography style={style}>{item.title}</Typography>
+                            <Typography style={style1}>{item.title}</Typography>
                           }
                         />
                       </Box>
@@ -218,7 +218,7 @@ export default function Sidebar({ urlPath }) {
                         <p style={{ margin: "0 auto" }}>{item.icon}</p>
                         <ListItemText
                           primary={
-                            <Typography style={style}>{item.title}</Typography>
+                            <Typography style={style1}>{item.title}</Typography>
                           }
                         />
                       </Box>
