@@ -471,16 +471,21 @@ export default function WorkspaceTable(props) {
                 </TableBody>
               </Table>
             </TableContainer>
-            <Pagination
-              style={{
-                display: "flex",
-                justifyContent: "right",
-              }}
-              count={Math.ceil(rows.length / 5)}
-              page={page}
-              onChange={handleChangePage}
-            />
           </Paper>
+          <Pagination
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+            count={Math.ceil(rows.length / 5)}
+            page={page}
+            onChange={handleChangePage}
+            color="primary"
+            shape="rounded"
+            variant="outlined"
+            size="large"
+            sx={{ margin: 2 }}
+          />
           {row.workspaceNo && (
             <AddMember
               open={memberOpen}

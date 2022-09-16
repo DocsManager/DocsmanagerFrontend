@@ -2,7 +2,7 @@ import React, { useContext, useRef, useState } from "react";
 import { updateProfile } from "../../api/userApi";
 import { styled } from "@mui/material/styles";
 import Avatar from "@mui/material/Avatar";
-import { Box, Button, Card, CardContent } from "@mui/material";
+import { Box, Button, Card, CardContent, IconButton } from "@mui/material";
 import "./Mypage.css";
 import Pwupdate from "./Pwupdate";
 import Table from "@mui/material/Table";
@@ -98,27 +98,27 @@ function MyPage() {
           <Card>
             <CardContent sx={{ display: "flex" }}>
               <div>
-                <CheckIcon
-                  fontSize="medium"
-                  sx={{ float: "right", marginTop: "10px", mr: "30px" }}
+                <IconButton
+                  sx={{ float: "right" }}
                   onClick={() =>
                     profile !== userInfo.profile &&
                     updateProfile(userInfo.userNo, profile, setUserInfoHandler)
                   }
-                />
-                <ClearIcon
-                  fontSize="medium"
-                  sx={{
-                    float: "right",
-                    marginTop: "10px",
-                    marginRight: "20px",
-                  }}
+                >
+                  <CheckIcon fontSize="medium" />
+                </IconButton>
+
+                <IconButton
+                  sx={{ float: "right" }}
                   onClick={() => {
                     setProfile();
                     setImageUrl("");
                     imgRef.current.value = "";
                   }}
-                />
+                >
+                  <ClearIcon fontSize="medium" />
+                </IconButton>
+
                 <Button component="label" sx={{ background: "#ffffff" }}>
                   <ProfileAvatar
                     alt="프로필"
@@ -161,7 +161,7 @@ function MyPage() {
                     <TableCell>
                       <Button
                         onClick={handleOpen}
-                        variant="outlined"
+                        variant="contained"
                         sx={{ float: "right" }}
                       >
                         재설정
