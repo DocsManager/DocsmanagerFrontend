@@ -195,7 +195,7 @@ export default function DmTable(props) {
       );
     }
     setSelectStar(newSelected);
-    importantFile(li.documentNo.documentNo, li.important ? 0 : 1);
+    importantFile(li.documentNo.documentNo, li.important ? 0 : 1, userInfo);
     check ? setCheckHandler(false) : setCheckHandler(true);
 
     //렌더링 - 별 씹힘
