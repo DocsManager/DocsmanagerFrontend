@@ -80,7 +80,7 @@ const DocumentModal = (props) => {
                   return (
                     <Button
                       onClick={() => {
-                        restoreFile([document]);
+                        restoreFile([document], userInfo);
                         setSuccessModalOpen(true);
                         infoModalOpen(false);
                       }}
@@ -208,7 +208,7 @@ const DocumentModal = (props) => {
                 act={() => {
                   document.authority === "MASTER"
                     ? masterDeleteFile([document.documentNo.documentNo])
-                    : deleteFile([document.documentNo.documentNo]);
+                    : deleteFile([document.documentNo.documentNo], userInfo);
                   setConfirmModalOpen(false);
                   setDeleteSuccessModalOpen(true);
                   infoModalOpen(false);
