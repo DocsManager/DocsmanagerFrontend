@@ -52,7 +52,7 @@ const WriteModal = (props) => {
   const [writeConfirm, setWriteConfirm] = useState(false);
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [fileNull, setFileNull] = useState(false);
-  const [sizeCheck, setSizeCheck] = useState(2);
+  const [sizeCheck, setSizeCheck] = useState(3);
   const [loading, setLoading] = useState(false);
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
@@ -72,7 +72,7 @@ const WriteModal = (props) => {
     setCheckHandler(!check);
     setFile("");
     setSearchList([]);
-    setSizeCheck(2);
+    setSizeCheck(3);
     setLoading(false);
   };
   const openSuccessWriteModal = (writeFile) => {

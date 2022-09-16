@@ -91,7 +91,7 @@ export default function Header() {
           <div className="header-user-icon">
             <Avatar
               onClick={handleClick}
-              sx={{ bgcolor: "#3791F8" }}
+              sx={{ bgcolor: "#3791F8", cursor: "pointer" }}
               src={userInfo.profile}
             />
             <Popover
