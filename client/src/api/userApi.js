@@ -145,18 +145,16 @@ export const checkId = async (params, setVerifyId) => {
       setVerifyId(response.data.check);
       if (response.data.check) {
         Swal.fire({
-          title: "가입이 가능합니다",
+          title: "사용가능한 아이디 입니다.",
           icon: "success",
           confirmButtonColor: "#3791f8",
         });
-        // setVerifyId = true;
       } else if (!response.data.check) {
         Swal.fire({
           title: "이미 가입된 아이디가 있습니다",
           icon: "warning",
           confirmButtonColor: "#3791f8",
         });
-        // setVerifyId = false;
       }
     });
   }
