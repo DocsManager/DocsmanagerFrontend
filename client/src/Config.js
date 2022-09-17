@@ -50,9 +50,9 @@ export const theme = createTheme({
             textDecoration: "none !important",
           },
         },
-        outlinedPrimary:{
-          color:"#3791f8"
-        }
+        outlinedPrimary: {
+          color: "#3791f8",
+        },
       },
     },
     MuiIconButton: {
@@ -199,7 +199,6 @@ export const theme = createTheme({
         root: {
           fontSize: "15px",
           display: "flex",
-          justifyContent: "right",
         },
       },
     },

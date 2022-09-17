@@ -1,4 +1,11 @@
-import { Avatar, Box, Button, ButtonBase, TextField } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  ButtonBase,
+  IconButton,
+  TextField,
+} from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
@@ -193,7 +200,7 @@ function SignUp() {
                 </Button>
               </div>
               <IconButton sx={{ float: "right" }}>
-                <HighlightOffIcon fontSize="large"/>
+                <HighlightOffIcon fontSize="large" />
               </IconButton>
               <div />
               <TextField
@@ -420,11 +427,14 @@ function SignUp() {
               {errors.department && errors.department.type === "required" && (
                 <p className="signupptag">부서선택은 필수선택사항입니다.</p>
               )}
-              <Box textAlign="center" sx={{
-                    margin: "40px 0px 50px 0px !important",
-                  }}>
+              <Box
+                textAlign="center"
+                sx={{
+                  margin: "40px 0px 50px 0px !important",
+                }}
+              >
                 <Button
-                  sx={{width:"80%", class: "signupbtn"}}
+                  sx={{ width: "80%", class: "signupbtn" }}
                   type="submit"
                   name="signupbtn"
                   className="signupbtn"
