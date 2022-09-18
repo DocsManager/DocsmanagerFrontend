@@ -220,7 +220,8 @@ const EnhancedTableToolbar = (props) => {
                   userInfo.userNo,
                   selected,
                   setCheckHandler,
-                  check
+                  check,
+                  userInfo
                 );
                 setSelected([]);
               }}
@@ -248,7 +249,7 @@ const EnhancedTableToolbar = (props) => {
 };
 
 export default function WorkspaceTable(props) {
-  const { user, workspace, setWorkspace, check, setCheck } = props;
+  const { user, workspace, setWorkspace } = props;
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("registerDate");
   const [selected, setSelected] = useState([]);
@@ -256,12 +257,12 @@ export default function WorkspaceTable(props) {
   const [editOpen, setEditOpen] = useState(false);
   const [memberOpen, setMemberOpen] = useState(false);
   const [row, setRow] = useState({});
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
-
   const rows = [];
   if (workspace.length !== 0) {
     workspace.map((v) =>
@@ -289,24 +290,16 @@ export default function WorkspaceTable(props) {
     }
     setSelected([]);
   };
-  const handleClick = (event, workspaceNo) => {
-    const selectedIndex = selected.indexOf(workspaceNo);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, workspaceNo);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
+  const handleClick = (event, workspace) => {
+    if (event.target.checked) {
+      setSelected(
+        selected.length === 0 ? [workspace] : [...selected, workspace]
+      );
+    } else {
+      setSelected(
+        selected.filter((v) => v.workspaceNo !== workspace.workspaceNo)
       );
     }
-
-    setSelected(newSelected);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -368,9 +361,7 @@ export default function WorkspaceTable(props) {
                           <TableCell padding="checkbox">
                             <Checkbox
                               color="primary"
-                              onClick={(event) =>
-                                handleClick(event, row.workspaceNo)
-                              }
+                              onClick={(event) => handleClick(event, row)}
                               checked={isItemSelected}
                               inputProps={{
                                 "aria-labelledby": labelId,
@@ -438,19 +429,22 @@ export default function WorkspaceTable(props) {
 
                             <Button
                               sx={{ color: "red" }}
-                              onClick={() =>
+                              onClick={() => {
                                 row.master.userNo === user.userNo
                                   ? deleteWorkspace(
                                       row.workspaceNo,
-                                      setCheck,
-                                      check
+                                      setCheckHandler,
+                                      check,
+                                      userInfo,
+                                      row.title
                                     )
                                   : deleteUserWorkspace(
                                       user.userNo,
                                       row.workspaceNo,
                                       setWorkspace
-                                    )
-                              }
+                                    );
+                                setSelected([]);
+                              }}
                             >
                               나가기
                             </Button>
@@ -486,13 +480,13 @@ export default function WorkspaceTable(props) {
             size="large"
             sx={{ margin: 2 }}
           />
-          {row.workspaceNo && (
+          {memberOpen && (
             <AddMember
               open={memberOpen}
               setOpen={setMemberOpen}
               row={row}
               check={check}
-              setCheck={setCheck}
+              setCheck={setCheckHandler}
               type={"workspace"}
               number={row.workspaceNo}
             />

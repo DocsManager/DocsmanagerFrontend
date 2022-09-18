@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./Modal.css";
-import { updateContent, updateFile } from "../../api/documentApi";
+import { updateFile } from "../../api/documentApi";
 
 const UpdateFile = (props) => {
   // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴

@@ -27,9 +27,9 @@ const UpdateContent = (props) => {
   // 열기, 닫기, 모달 헤더 텍스트를 부모로부터 받아옴
   const [content, setContent] = useState("");
   const [contentUpdateModal, setContentUpdateModal] = useState(false);
-  const { check, setCheckHandler } = useContext(MyContext);
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
 
-  const { open, setOpen, document, infoModalOpen } = props;
+  const { open, setOpen, document, infoModalOpen, member } = props;
 
   return (
     <React.Fragment>
@@ -74,9 +74,18 @@ const UpdateContent = (props) => {
             <WorkspaceButton
               variant="contained"
               onClick={() => {
+                const noticeContent = `${userInfo.name}님께서 ${
+                  document.originalName
+                } 문서 내용을 수정하셨습니다.`;
                 infoModalOpen(false);
                 setContentUpdateModal(true);
-                updateContent(document.documentNo, content);
+                updateContent(
+                  document.documentNo,
+                  content,
+                  member,
+                  userInfo,
+                  noticeContent
+                );
                 check ? setCheckHandler(false) : setCheckHandler(true);
                 setOpen(false);
               }}

@@ -115,7 +115,7 @@ export function NoticePopover({
                 color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList, userInfo);
+                updateAllNotce(noticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >
@@ -202,6 +202,7 @@ export function NoticePopover({
           }}
         />
       </Badge>
+
       {noticeList.length > 0 ? (
         <Box ref={containerRef}>
           <Popover
@@ -237,6 +238,7 @@ export function NoticePopover({
                 })}
               </Tabs>
             </Box>
+
             <div
               style={{
                 display: "flex",

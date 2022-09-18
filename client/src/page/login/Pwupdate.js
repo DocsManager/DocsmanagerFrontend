@@ -121,7 +121,7 @@ function Pwupdate({ open, style, setOpen }) {
             )}
             <InputBox
               id="confirmNewPassword"
-              helperText="비밀번호는 대/소문자와 특수문자를 포함한 8~12자리로 구성해주세요 "
+              // helperText="비밀번호는 대/소문자와 특수문자를 포함한 8~12자리로 구성해주세요 "
               placeholder="새 비밀번호 확인"
               name="confirmNewPassword"
               type="password"
