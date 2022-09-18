@@ -1,4 +1,5 @@
 import axios from "axios";
+import { notipublish } from "./noticeApi";
 
 const baseUrl = "/api/";
 const documentBaseUrl = baseUrl + "documents/user/";
@@ -43,16 +44,29 @@ export function deleteFile(newSelected, user) {
 }
 
 // 마스터 영구 삭제
-export function masterDeleteFile(newSelected) {
-  const url = baseUrl + "documents/";
-  axios
-    .delete(url, {
-      headers: {
-        "Content-Type": `application/json`,
-      },
-      data: newSelected,
+export function masterDeleteFile(newSelected, userInfo, content) {
+  const memberUrl = `${baseUrl}document/member/${newSelected}`;
+  const url = baseUrl + `documents/${newSelected}`;
+  axios.get(memberUrl).then((res) =>
+    axios.delete(url).then(() => {
+      console.log(res.data.filter((v) => v.authority !== "MASTER"));
+      notipublish(
+        res.data.map((v) => {
+          if (v.authority !== "MASTER") {
+            return v.userNo;
+          }
+          return null;
+        }),
+        userInfo,
+        content,
+        "delete"
+      );
     })
-    .catch((err) => console.log(err));
+  );
+  // axios
+  //   .delete(url)
+  //   .then((res) => console.log(res.data))
+  //   .catch((err) => console.log(err));
 }
 
 // 파일 복원
@@ -121,13 +135,13 @@ export function writeFile(
 }
 
 // content 변경
-export function updateContent(documentNo, text) {
+export function updateContent(documentNo, text, member, user, content) {
   const url = baseUrl + "document/" + documentNo;
   axios
     .put(url, {
       content: text,
     })
-    .then((res) => console.log(res.data));
+    .then(() => notipublish(member, user, content));
 }
 
 // File 변경

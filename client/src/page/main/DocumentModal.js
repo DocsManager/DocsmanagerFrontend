@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import "./Modal.css";
 import {
   deleteFile,
+  documentMember,
   fileDownload,
   masterDeleteFile,
   restoreFile,
@@ -53,9 +54,11 @@ const DocumentModal = (props) => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [openShareAdd, setOpenShareAdd] = useState(false);
   const [documentShareModal, setDocumentShareModal] = useState(false);
-
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
-
+  const [member, setMember] = useState([]);
+  useEffect(() => {
+    documentMember(document.documentNo.documentNo, setMember);
+  }, [document.documentNo.documentNo]);
   return (
     <div>
       <Modal
@@ -182,6 +185,7 @@ const DocumentModal = (props) => {
         successModalOpen={successModalOpen}
         document={document.documentNo}
         infoModalOpen={infoModalOpen}
+        member={member}
       />
 
       {openShareAdd && (
@@ -206,9 +210,20 @@ const DocumentModal = (props) => {
                 open={confirmModalOpen}
                 setOpen={setConfirmModalOpen}
                 act={() => {
-                  document.authority === "MASTER"
-                    ? masterDeleteFile([document.documentNo.documentNo])
-                    : deleteFile([document.documentNo.documentNo], userInfo);
+                  if (document.authority === "MASTER") {
+                    const content = `${userInfo.name}님께서 공유하신 ${
+                      document.documentNo.originalName
+                    } 문서를 삭제하셨습니다. `;
+                    // notipublish(member, userInfo, content, "delete");
+                    console.log(member);
+                    masterDeleteFile(
+                      document.documentNo.documentNo,
+                      userInfo,
+                      content
+                    );
+                  } else {
+                    deleteFile([document.documentNo.documentNo], userInfo);
+                  }
                   setConfirmModalOpen(false);
                   setDeleteSuccessModalOpen(true);
                   infoModalOpen(false);
@@ -263,14 +278,14 @@ const DocumentModal = (props) => {
                 </SucessModal>
                 <SucessModal
                   open={deleteSuccessModalOpen}
-                  close={() =>
+                  close={() => {
                     openSuccessModal(
                       setDeleteSuccessModalOpen,
                       infoModalOpen,
                       check,
                       setCheckHandler
-                    )
-                  }
+                    );
+                  }}
                 >
                   <main>
                     <div>영구 삭제 완료</div>

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Modal, TextField, Typography } from "@mui/material";
 import { updateTitleWorkspace } from "../../api/workspaceApi";
 import { WorkspaceButton } from "./AddWorkspace";
 import { CloseOutlined, Edit } from "@mui/icons-material";
+import { MyContext } from "../Main";
 
 const style = {
   position: "absolute",
@@ -16,6 +17,7 @@ const style = {
 };
 
 function EditTitle({ open, setOpen, row, setList }) {
+  const { check, setCheckHandler, userInfo } = useContext(MyContext);
   return (
     <div>
       <Modal
@@ -53,8 +55,11 @@ function EditTitle({ open, setOpen, row, setList }) {
                 if (newTitle) {
                   updateTitleWorkspace(
                     row.workspaceNo,
+                    row.title,
                     { title: newTitle },
-                    setList
+                    check,
+                    setCheckHandler,
+                    userInfo
                   );
                   setOpen(false);
                 } else {
