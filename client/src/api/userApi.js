@@ -91,18 +91,18 @@ export function findMember(memberList, setMemberList, setSearchList, user) {
 
 export function logout() {
   const url = baseUrl + "logout";
-  axios
-    .get(url)
-    .then(
-      Swal.fire({
-        title: "로그아웃",
-        text: "로그아웃 하였습니다.",
-        icon: "success",
-        confirmButtonColor: "#3791f8",
-      })
-    )
-    .then((window.location.href = "/"))
-    .then(console.log(1));
+  axios.get(url).then((window.location.href = "/"));
+  // Swal.fire({
+  //   title: "로그아웃",
+  //   text: "로그아웃 하였습니다.",
+  //   icon: "success",
+  //   confirmButtonColor: "#3791f8",
+  // }).then((result) => {
+  //   if (result.isConfirmed) {
+
+  //   })
+  // );
+  // .then((window.location.href = "/"));
 }
 
 export const mypage = async (setInfo) => {
@@ -170,4 +170,15 @@ export function updateProfile(userNo, profile, setUserInfo) {
   axios
     .post(url, fd, { headers: { "Content-Type": "multipart/form-data" } })
     .then(() => mypage(setUserInfo));
+}
+
+export function showDepartment(SetOptionList) {
+  const url = baseUrl + "alldepartment";
+  axios
+    .get(url)
+    .then((res) => {
+      const { data } = res;
+      SetOptionList(data);
+    })
+    .catch((error) => console.log(error));
 }

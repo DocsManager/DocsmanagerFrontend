@@ -133,8 +133,8 @@ export default function Header() {
                   variant="contained"
                   endIcon={<Logout />}
                   onClick={() => {
-                    deleteCookie();
                     logout();
+                    deleteCookie();
                   }}
                 >
                   로그아웃
