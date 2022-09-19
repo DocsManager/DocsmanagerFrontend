@@ -168,7 +168,7 @@ export function documentAddUser(userList, row) {
         documentNo: row,
       })
   );
-  axios.post(url, documentUser);
+  axios.post(url, documentUser).catch((err) => console.log(err));
 }
 
 // 멤버 검색
