@@ -39,8 +39,11 @@ export default function SaveWorksapce({ open, setOpen }) {
   const [writeSuccessConfirm, setWriteSuccessConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const { userInfo } = useContext(MyContext);
+  const [title, setTitle] = useState();
+  const [clickHandler, setClickHandler] = useState(false);
   const successWrite = () => {
-    notipublish(searchList, userInfo);
+    const content = `${userInfo.name}님이 문서를 공유했습니다.`;
+    notipublish(searchList, userInfo, content);
     setOpen(false);
     setWriteSuccessConfirm(false);
     setWriteConfirm(false);
@@ -50,24 +53,28 @@ export default function SaveWorksapce({ open, setOpen }) {
   };
   const openSuccessWriteModal = (writeFile) => {
     const title = document.getElementById("newDocumentTitle").value;
+    setTitle(title);
     const content = document.getElementById("newDocumentContent").value;
-    const newDocument = { user: userInfo, content: content };
-    const shareList = [];
-    searchList.map((search) =>
-      shareList.push({
-        authority: search.authority,
-        userNo: search,
-      })
-    );
-    shareList.push({ authority: "MASTER", userNo: userInfo });
-    writeFile(newDocument, shareList, setSizeCheck, title);
-    setWriteConfirm(false);
-    setWriteSuccessConfirm(true);
-    setOpen(false);
-    setLoading(true);
+    if (title) {
+      setClickHandler(false);
+      const newDocument = { user: userInfo, content: content };
+      const shareList = [];
+      searchList.map((search) =>
+        shareList.push({
+          authority: search.authority,
+          userNo: search,
+        })
+      );
+      shareList.push({ authority: "MASTER", userNo: userInfo });
+      writeFile(newDocument, shareList, setSizeCheck, title);
+      setWriteConfirm(false);
+      setWriteSuccessConfirm(true);
+      setOpen(false);
+      setLoading(true);
+    } else {
+      setClickHandler(true);
+    }
   };
-  const [title, setTitle] = useState();
-  const [clickHandler, setClickHandler] = useState(false);
 
   return (
     <ThemeProvider theme={theme}>
@@ -159,13 +166,14 @@ export default function SaveWorksapce({ open, setOpen }) {
             <WorkspaceButton
               variant="contained"
               onClick={() => {
-                const title = document.getElementById("newDocumentTitle").value;
-                setTitle(title);
-                const content = document.getElementById("newDocumentContent")
-                  .value;
-                const newDocument = { user: userInfo, content: content };
-                onHtmlPng(title, newDocument);
-                title ? setClickHandler(false) : setClickHandler(true);
+                // const title = document.getElementById("newDocumentTitle").value;
+                // setTitle(title);
+                // const content = document.getElementById("newDocumentContent")
+                //   .value;
+                // const newDocument = { user: userInfo, content: content };
+                // onHtmlPng(newDocument, searchList, setSizeCheck, title);
+                // title ? setClickHandler(false) : setClickHandler(true);
+                setWriteConfirm(true);
               }}
             >
               저장

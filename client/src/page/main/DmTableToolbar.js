@@ -14,6 +14,7 @@ import {
   restoreFile,
   updateRecycleBinFile,
   searchDocument,
+  masterDeleteFile,
 } from "../../api/documentApi";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
@@ -312,7 +313,20 @@ const DmTableToolbar = ({
                 open={confirmDeleteModalOpen}
                 setOpen={setConfirmDeleteModalOpen}
                 act={() => {
-                  deleteFile(newSelected, userInfo);
+                  newSelected.map((selected) => {
+                    const content = `${userInfo.name}님께서 공유하신 ${
+                      selected.documentNo.originalName
+                    } 문서를 삭제하셨습니다. `;
+                    selected.authority === "MASTER"
+                      ? masterDeleteFile(
+                          selected.documentNo.documentNo,
+                          userInfo,
+                          content
+                        )
+                      : deleteFile([selected], userInfo);
+                    return selected;
+                  });
+                  // deleteFile(newSelected, userInfo);
                   setConfirmDeleteModalOpen(false);
                   setSuccessDeleteModalOpen(true);
                 }}

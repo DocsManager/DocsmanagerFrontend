@@ -1,5 +1,5 @@
 import axios from "axios";
-import { worksapcepublish } from "./noticeApi";
+import { notipublish, worksapcepublish } from "./noticeApi";
 
 const baseUrl = "/api/workspace";
 
@@ -24,19 +24,51 @@ export function updateWorkspace(content, workspace) {
 }
 
 // 제목 변경
-export function updateTitleWorkspace(workspaceNo, workspace, setList) {
+export function updateTitleWorkspace(
+  workspaceNo,
+  originalName,
+  workspace,
+  check,
+  setCheck,
+  user
+) {
   const url = `${baseUrl}/${workspaceNo}`;
-  axios
-    .put(url, workspace)
-    .then((res) => {
-      setList(res.data);
-    })
-    .catch((err) => console.log(err));
+  axios.get(`/api/workspace/member/${workspaceNo}`).then((res) => {
+    const memberList = [];
+    res.data.map(
+      (v) => user.userNo !== v.userNo.userNo && memberList.push(v.userNo)
+    );
+    axios
+      .put(url, workspace)
+      .then(() => {
+        const content = `${
+          user.name
+        }님께서 워크스페이스 이름을 ${originalName}에서 ${
+          workspace.title
+        }으로 변경하셨습니다. `;
+        notipublish(memberList, user, content, "update");
+        setCheck(!check);
+      })
+      .catch((err) => console.log(err));
+  });
 }
 
-export function deleteWorkspace(workspaceNo, setCheck, check) {
+export function deleteWorkspace(workspaceNo, setCheck, check, user, title) {
   const url = `${baseUrl}/${workspaceNo}`;
-  axios.delete(url).then(() => setCheck(!check));
+  axios.get(`/api/workspace/member/${workspaceNo}`).then((res) => {
+    const memberList = [];
+    res.data.map(
+      (v) => user.userNo !== v.userNo.userNo && memberList.push(v.userNo)
+    );
+    console.log(memberList);
+    axios.delete(url).then(() => {
+      const content = `${
+        user.name
+      }님께서 개설한 ${title} 이/가 삭제되었습니다.`;
+      setCheck(!check);
+      notipublish(memberList, user, content, "delete");
+    });
+  });
 }
 
 export function addWorkspace(

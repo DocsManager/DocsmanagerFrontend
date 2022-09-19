@@ -39,10 +39,9 @@ export default function AddMember(props) {
   const [searchList, setSearchList] = useState([]);
   const [memberList, setMemberList] = useState([]);
   const { userInfo } = useContext(MyContext);
-
   useEffect(() => {
     if (type === "workspace") {
-      workspaceMember(number, setMemberList);
+      workspaceMember(number, setMemberList, userInfo.userNo);
     } else if (type === "document") {
       documentMember(number, setMemberList);
     }

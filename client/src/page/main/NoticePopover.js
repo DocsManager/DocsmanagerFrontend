@@ -202,6 +202,7 @@ export function NoticePopover({
           }}
         />
       </Badge>
+
       {noticeList.length > 0 ? (
         <Box ref={containerRef}>
           <Popover
@@ -237,6 +238,7 @@ export function NoticePopover({
                 })}
               </Tabs>
             </Box>
+
             <div
               style={{
                 display: "flex",

@@ -10,21 +10,32 @@ export const MyContext = createContext({
   setCheckHandler: (check) => {},
   userInfo: {},
   setUserInfoHandler: (info) => {},
+  toast: true,
+  setToastHandler: (toast) => {},
 });
 
 function Main() {
   const [check, setCheck] = useState(false);
   const [userInfo, setUserInfo] = useState({});
+  const [toast, setToast] = useState(true);
   const setCheckHandler = (check) => setCheck(check);
   const location = useLocation();
   const setUserInfoHandler = (info) => setUserInfo(info);
+  const setToastHandler = (toast) => setToast(toast);
   useEffect(() => {
     mypage(setUserInfoHandler);
   }, []);
   return (
     <Box>
       <MyContext.Provider
-        value={{ check, setCheckHandler, userInfo, setUserInfoHandler }}
+        value={{
+          check,
+          setCheckHandler,
+          userInfo,
+          setUserInfoHandler,
+          toast,
+          setToastHandler,
+        }}
       >
         {userInfo.userNo && (
           <>
