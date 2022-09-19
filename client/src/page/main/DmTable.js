@@ -48,6 +48,7 @@ export function fileCategoryIcon(fileCategory) {
   switch (true) {
     case fileCategory.includes("jpeg"):
     case fileCategory.includes("png"):
+    case fileCategory.includes("jpg"):
       return (
         <img
           src="https://img.icons8.com/fluency/30/000000/image.png"
@@ -113,8 +114,14 @@ export default function DmTable(props) {
   const [infoModalOpen, setInfoModalOpen] = useState(false);
   const [documentInfo, setDocumentInfo] = useState("");
   const [searchCategory, setSearchCategory] = useState("originalName");
-  const [searchData, setSearchData] = useState("");
-  const { check, setCheckHandler, userInfo } = useContext(MyContext);
+  // const [searchData, setSearchData] = useState("");
+  const {
+    check,
+    setCheckHandler,
+    userInfo,
+    searchData,
+    setSearchDataHandler,
+  } = useContext(MyContext);
   const rowsPerPage = 10;
 
   useEffect(() => {
@@ -211,8 +218,16 @@ export default function DmTable(props) {
     });
     return check;
   };
-  const isStarClicked = (documentNo) => selectStar.indexOf(documentNo) !== -1;
-
+  const isStarClicked = () => {
+    let check = false;
+    list.dtoList.map((v) => {
+      if (v.documentNo.important === 1) {
+        check = true;
+      }
+      return v;
+    });
+    return check;
+  };
   const emptyRows = //emptyRows 수정 09.14
     page >= 0
       ? Math.max(0, rowsPerPage - (list.dtoList && list.dtoList.length))
@@ -232,7 +247,8 @@ export default function DmTable(props) {
                 setSelected={setSelected}
                 documentUrl={props.documentUrl}
                 setList={setList}
-                setSearchData={setSearchData}
+                setSearchData={setSearchDataHandler}
+                searchData={searchData}
                 page={page}
                 setPage={setPage}
                 searchCategory={searchCategory}
@@ -250,7 +266,7 @@ export default function DmTable(props) {
                 setSelected={setSelected}
                 documentUrl={props.documentUrl}
                 setList={setList}
-                setSearchData={setSearchData}
+                setSearchData={setSearchDataHandler}
                 page={page}
                 setPage={setPage}
                 searchCategory={searchCategory}
@@ -278,7 +294,7 @@ export default function DmTable(props) {
                         const isItemSelected = isSelected(
                           li.documentNo.documentNo
                         );
-                        const isStarSelected = isStarClicked(li.documentNo);
+                        const isStarSelected = isStarClicked();
                         const labelId = `enhanced-table-checkbox-${index}`;
                         return (
                           <TableRow

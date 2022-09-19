@@ -30,7 +30,6 @@ const UpdateContent = (props) => {
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
 
   const { open, setOpen, document, infoModalOpen, member } = props;
-
   return (
     <React.Fragment>
       <Modal
@@ -79,8 +78,9 @@ const UpdateContent = (props) => {
                 } 문서 내용을 수정하셨습니다.`;
                 infoModalOpen(false);
                 setContentUpdateModal(true);
+                console.log(member);
                 updateContent(
-                  document.documentNo,
+                  document,
                   content,
                   member,
                   userInfo,

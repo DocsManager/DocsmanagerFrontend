@@ -61,7 +61,9 @@ export default function Header() {
 
   //Toast message 띄워주는 함수
   const showNotice = (newNotice) => {
-    notify(newNotice);
+    if (toast) {
+      notify(newNotice);
+    }
     //newNotice 초기화 해주자..
     setNewNotice();
   };
@@ -145,7 +147,7 @@ export default function Header() {
           <p className="header-user-text">
             <span>{userInfo.name}</span>님 환영합니다
           </p>
-          {toast && newNotice && showNotice(newNotice)}
+          {newNotice && showNotice(newNotice)}
           <div className="header-alert">
             <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
               <NoticePopover

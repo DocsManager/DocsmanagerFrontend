@@ -31,7 +31,6 @@ function SignUp() {
   const [imageUrl, setImageUrl] = useState();
   const imgRef = useRef();
   const [OptionList, SetOptionList] = useState([]);
-
   useEffect(() => {
     showDepartment(SetOptionList);
   }, []);
@@ -226,15 +225,12 @@ function SignUp() {
                       text: "아이디 입력 양식을 준수해주세요.",
                       confirmButtonColor: "#3791f8",
                     });
-                    console.log(verifyId);
                   } else {
                     const params = {
                       id: document.getElementById("newId").value,
                     };
                     checkId(params, setVerifyId);
-                    console.log(verifyId);
                   }
-                  console.log(verifyId);
                 }}
                 variant="contained"
               >
@@ -269,6 +265,7 @@ function SignUp() {
                 label="이메일"
                 size="small"
                 fullWidth
+                disabled={verifyResult ? true : false}
                 variant="standard"
                 {...register("newEmail", {
                   required: true,
@@ -281,6 +278,7 @@ function SignUp() {
                 type="button"
                 name="mailbtn"
                 className="mailbtn"
+                disabled={verifyResult ? true : false}
                 onClick={async () => {
                   const result = await trigger("newEmail");
                   if (!result) {
@@ -312,6 +310,7 @@ function SignUp() {
                 label="인증코드검증"
                 size="small"
                 fullWidth
+                disabled={verifyResult ? true : false}
                 variant="standard"
                 {...register("confirmEmail", { required: true })}
               />
@@ -320,6 +319,7 @@ function SignUp() {
                 type="button"
                 className="mailbtn"
                 variant="contained"
+                disabled={verifyResult ? true : false}
                 onClick={() => {
                   const params = {
                     verifyMail: confirmVerifyCode,

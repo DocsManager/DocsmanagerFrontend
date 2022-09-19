@@ -162,6 +162,7 @@ const DmTableToolbar = ({
   documentUrl,
   setList,
   setSearchData,
+  searchData,
   page,
   setPage,
   searchCategory,
