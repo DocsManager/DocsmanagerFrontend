@@ -62,7 +62,7 @@ const WriteModal = (props) => {
   const [sizeCheck, setSizeCheck] = useState(3);
   const [loading, setLoading] = useState(false);
   const [searchList, setSearchList] = useState([]);
-  const { open, setWriteModal } = props;
+  const { open, setWriteModal, setPage } = props;
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
   const classes = useStyles();
   const documentDTO = {
@@ -83,6 +83,7 @@ const WriteModal = (props) => {
     setSearchList([]);
     setSizeCheck(3);
     setLoading(false);
+    setPage(0);
   };
   const openSuccessWriteModal = (writeFile) => {
     writeFile(file, documentDTO, documentUser, setSizeCheck);
