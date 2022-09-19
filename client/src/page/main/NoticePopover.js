@@ -115,7 +115,7 @@ export function NoticePopover({
                 color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList, userInfo);
+                updateAllNotce(noticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >
@@ -148,7 +148,7 @@ export function NoticePopover({
                 textAlign: "center",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList, userInfo);
+                updateAllNotce(noticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >

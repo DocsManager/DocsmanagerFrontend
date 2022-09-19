@@ -24,6 +24,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { Avatar } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -158,13 +159,22 @@ const DocumentModal = (props) => {
               ? document.documentNo.content
               : "내용이 없습니다."}
           </Typography>
-          <Typography
+          <Typography />
+          <Box
             sx={{
               display: "flex",
-              justifyContent: "right",
+              justifyContent: "space-between",
             }}
             mt={2}
           >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Avatar
+                sx={{ bgcolor: "#3791F8", marginRight: "5px" }}
+                src={document.documentNo.user.profile}
+                height={3}
+              />
+              <Typography>{document.documentNo.user.name}</Typography>
+            </Box>
             <WorkspaceButton
               variant="contained"
               onClick={() => infoModalOpen(false)}
@@ -172,7 +182,7 @@ const DocumentModal = (props) => {
               닫기
               <CloseOutlinedIcon />
             </WorkspaceButton>
-          </Typography>
+          </Box>
         </Box>
       </Modal>
 

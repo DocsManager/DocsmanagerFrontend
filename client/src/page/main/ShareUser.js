@@ -9,7 +9,7 @@ import {
   TableRow,
   TableBody,
   IconButton,
-  Checkbox,
+  Avatar,
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -29,6 +29,12 @@ function ShareUser({ searchList, setSearchList, type, member }) {
     member = [];
   }
   const headCells = [
+    {
+      id: "profile",
+      numeric: false,
+      disablePadding: true,
+      label: "프로필",
+    },
     {
       id: "department",
       numeric: false,
@@ -128,30 +134,38 @@ function ShareUser({ searchList, setSearchList, type, member }) {
             !checkDuplication(searchList, users)
           ) {
             return (
-              <Box key={users.userNo} sx={{ display: "flex" }}>
-                <Checkbox
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSearchList(
-                        searchList.length === 0
-                          ? [users]
-                          : [...searchList, users]
-                      );
-                    } else {
-                      deleteHandler(users.userNo);
-                    }
-                  }}
-                />
+              <Box
+                key={users.userNo}
+                sx={{
+                  display: "flex",
+                  padding: "10px 0px 10px 0px",
+                  "&:hover": {
+                    backgroundColor: "#d0e8FF",
+                  },
+                }}
+              >
                 <Box
                   sx={{
                     display: "flex",
                     justifyContent: "space-around",
-                    width: "130px",
+                    width: "800px",
                     alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setSearchList(
+                      searchList.length === 0 ? [users] : [...searchList, users]
+                    );
                   }}
                 >
-                  <span>{users.dept.deptName + "팀"}</span>
+                  <Avatar
+                    sx={{ bgcolor: "#3791F8" }}
+                    src={users.profile}
+                    height={3}
+                  />
+                  <span>{users.dept.deptName}</span>
                   <span>{users.name}</span>
+                  <span>{users.email}</span>
                 </Box>
               </Box>
             );
@@ -187,6 +201,13 @@ function ShareUser({ searchList, setSearchList, type, member }) {
               hover
               role="checkbox"
             >
+              <TableCell component="th">
+                <Avatar
+                  sx={{ bgcolor: "#3791F8" }}
+                  src={search.profile}
+                  height={3}
+                />
+              </TableCell>
               <TableCell component="th">{search.dept.deptName}</TableCell>
               <TableCell component="th">{search.name}</TableCell>
               {type !== "workspace" ? (
