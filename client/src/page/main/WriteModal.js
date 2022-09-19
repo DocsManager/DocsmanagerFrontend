@@ -16,6 +16,7 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import { ModalIcon, WorkspaceButton } from "../workspace/AddWorkspace";
 import UploadModal from "../modal/UploadModal";
+import { makeStyles } from "@material-ui/core/styles";
 
 const style = {
   position: "absolute",
@@ -35,6 +36,12 @@ const style = {
     width: "0.4em",
   },
 };
+
+const useStyles = makeStyles((theme) => ({
+  helperText: {
+    justifyContent: "right",
+  },
+}));
 
 export const InputBox = styled(OutlinedInput)({
   "& legend": {
@@ -57,6 +64,7 @@ const WriteModal = (props) => {
   const [searchList, setSearchList] = useState([]);
   const { open, setWriteModal } = props;
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
+  const classes = useStyles();
   const documentDTO = {
     user: userInfo,
     content: text,
@@ -171,6 +179,9 @@ const WriteModal = (props) => {
                 "& legend": {
                   display: "none",
                 },
+              }}
+              FormHelperTextProps={{
+                className: classes.helperText,
               }}
             />
           </Stack>

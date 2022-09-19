@@ -130,6 +130,7 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
                 deleteAllUnreadNotice(setNoticeList, userInfo);
@@ -146,9 +147,10 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, setNoticeList, userInfo);
+                updateAllNotce(noticeList, userInfo);
                 updateModal(isRead, setIsReadHandler);
               }}
             >
@@ -166,6 +168,7 @@ export function NoticePopover({
             sx={{
               fontSize: "1rem",
               textAlign: "center",
+              color: "rgba(0,0,0,0.7)",
             }}
             onClick={() => {
               deleteAllReadNotice(setNoticeList, userInfo);
@@ -260,59 +263,103 @@ export function NoticePopover({
                         margin: 0,
                       }}
                     >
-                      <Typography
+                      <Box
                         sx={{
                           p: 2,
-                          width: "400px",
-                          ":hover": {
-                            cursor: "pointer",
-                          },
+                          width: "450px",
+
+                          display: "flex",
+                          padding: "16px 30px 16px 30px",
                         }}
                       >
-                        <Link
-                          to={notice.urlParams}
-                          style={{
-                            color:
-                              notice.isRead === 0 ? "#3791f8" : "lightgray",
-                          }}
-                          onClick={() => {
-                            updateNotice(
-                              notice.noticeNo,
-                              notice.sender,
-                              notice.receiver,
-                              notice.content,
-                              notice.sendDate
-                            );
-                            updateModal(isRead, setIsReadHandler);
-                          }}
-                        >
-                          {notice.content}
-                        </Link>
-                        <DeleteOutline
+                        {notice.urlParams ? (
+                          <Link
+                            to={notice.urlParams}
+                            style={{
+                              color:
+                                notice.isRead === 0 ? "#3791f8" : "lightgray",
+                              ":hover": {
+                                cursor: "pointer",
+                              },
+                            }}
+                          >
+                            {notice.content}
+                          </Link>
+                        ) : (
+                          <Box
+                            sx={{
+                              color: notice.isRead ? "lightgray" : "#356599",
+                            }}
+                          >
+                            {notice.content}
+                          </Box>
+                        )}
+                        <Box
                           sx={{
-                            margin: "-4px auto",
-                            color:
-                              notice.isRead === 0 ? "#3791f8" : "lightgray",
-                          }}
-                          onClick={() => {
-                            deleteNotice(notice.noticeNo);
-                            setCheck(!check);
-                            if (tabContent().length === 1) {
-                              handleClose();
-                            }
-                          }}
-                        />
-                        <span
-                          style={{
-                            fontSize: "15px",
-                            fontWeight: 300,
-                            color: noticeColor[notice.isRead],
-                            display: "inline-block",
+                            marginLeft: "10px",
+                            alignItems: "center",
+                            fontSize: "16px",
                           }}
                         >
-                          {notice.sendDate}
-                        </span>
-                      </Typography>
+                          <span
+                            style={{
+                              color:
+                                notice.isRead === 0 && notice.urlParams
+                                  ? "#3791f8"
+                                  : notice.isRead === 0
+                                  ? "#356599"
+                                  : "lightgray",
+                              padding: "0",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              updateNotice(
+                                notice.noticeNo,
+                                notice.sender,
+                                notice.receiver,
+                                notice.content,
+                                notice.sendDate
+                              );
+                              updateModal(isRead, setIsReadHandler);
+                            }}
+                          >
+                            읽음
+                          </span>
+                          <DeleteOutline
+                            sx={{
+                              margin: "-4px auto",
+                              color:
+                                notice.isRead === 0 && notice.urlParams
+                                  ? "#3791f8"
+                                  : notice.isRead === 0
+                                  ? "#356599"
+                                  : "lightgray",
+                              fontSize: "19px",
+                              ":hover": {
+                                cursor: "pointer",
+                              },
+                            }}
+                            onClick={() => {
+                              deleteNotice(notice.noticeNo);
+                              setCheck(!check);
+                              if (tabContent().length === 1) {
+                                handleClose();
+                              }
+                            }}
+                          />
+                        </Box>
+                      </Box>
+                      <Box
+                        style={{
+                          fontSize: "15px",
+                          fontWeight: 300,
+                          color: noticeColor[notice.isRead],
+                          display: "inline-block",
+                          padding: "0px 16px 0px 30px",
+                        }}
+                      >
+                        {notice.sendDate}
+                      </Box>
                     </div>
                   );
                 })

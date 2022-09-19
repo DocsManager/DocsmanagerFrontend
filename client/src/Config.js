@@ -50,9 +50,9 @@ export const theme = createTheme({
             textDecoration: "none !important",
           },
         },
-        outlinedPrimary:{
-          color:"#3791f8"
-        }
+        outlinedPrimary: {
+          color: "#3791f8",
+        },
       },
     },
     MuiIconButton: {
@@ -154,7 +154,7 @@ export const theme = createTheme({
       styleOverrides: {
         elevation8: {
           border: "1px solid #3791f8",
-          width: "420px",
+          width: "450px",
         },
       },
     },
@@ -199,7 +199,6 @@ export const theme = createTheme({
         root: {
           fontSize: "15px",
           display: "flex",
-          justifyContent: "right",
         },
       },
     },
@@ -218,6 +217,16 @@ export const theme = createTheme({
       styleOverrides: {
         indicator: {
           backgroundColor: "#3791f8",
+        },
+      },
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        input: {
+          color: "#8bc7ff",
+        },
+        thumb: {
+          color: "#3791f8",
         },
       },
     },
