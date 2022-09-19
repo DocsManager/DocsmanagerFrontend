@@ -130,6 +130,7 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
                 deleteAllUnreadNotice(setNoticeList, userInfo);
@@ -146,6 +147,7 @@ export function NoticePopover({
               sx={{
                 fontSize: "1rem",
                 textAlign: "center",
+                color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
                 updateAllNotce(noticeList, userInfo);
@@ -166,6 +168,7 @@ export function NoticePopover({
             sx={{
               fontSize: "1rem",
               textAlign: "center",
+              color: "rgba(0,0,0,0.7)",
             }}
             onClick={() => {
               deleteAllReadNotice(setNoticeList, userInfo);
@@ -263,23 +266,34 @@ export function NoticePopover({
                       <Box
                         sx={{
                           p: 2,
-                          width: "400px",
-                          ":hover": {
-                            cursor: "pointer",
-                          },
+                          width: "450px",
+
                           display: "flex",
                           padding: "16px 30px 16px 30px",
                         }}
                       >
-                        <Link
-                          to={notice.urlParams}
-                          style={{
-                            color:
-                              notice.isRead === 0 ? "#3791f8" : "lightgray",
-                          }}
-                        >
-                          {notice.content}
-                        </Link>
+                        {notice.urlParams ? (
+                          <Link
+                            to={notice.urlParams}
+                            style={{
+                              color:
+                                notice.isRead === 0 ? "#3791f8" : "lightgray",
+                              ":hover": {
+                                cursor: "pointer",
+                              },
+                            }}
+                          >
+                            {notice.content}
+                          </Link>
+                        ) : (
+                          <Box
+                            sx={{
+                              color: notice.isRead ? "lightgray" : "#356599",
+                            }}
+                          >
+                            {notice.content}
+                          </Box>
+                        )}
                         <Box
                           sx={{
                             marginLeft: "10px",
@@ -290,8 +304,13 @@ export function NoticePopover({
                           <span
                             style={{
                               color:
-                                notice.isRead === 1 ? "lightgray" : "#3791f8",
+                                notice.isRead === 0 && notice.urlParams
+                                  ? "#3791f8"
+                                  : notice.isRead === 0
+                                  ? "#356599"
+                                  : "lightgray",
                               padding: "0",
+                              cursor: "pointer",
                             }}
                             onClick={() => {
                               updateNotice(
@@ -310,7 +329,15 @@ export function NoticePopover({
                             sx={{
                               margin: "-4px auto",
                               color:
-                                notice.isRead === 0 ? "#3791f8" : "lightgray",
+                                notice.isRead === 0 && notice.urlParams
+                                  ? "#3791f8"
+                                  : notice.isRead === 0
+                                  ? "#356599"
+                                  : "lightgray",
+                              fontSize: "19px",
+                              ":hover": {
+                                cursor: "pointer",
+                              },
                             }}
                             onClick={() => {
                               deleteNotice(notice.noticeNo);
@@ -328,7 +355,7 @@ export function NoticePopover({
                           fontWeight: 300,
                           color: noticeColor[notice.isRead],
                           display: "inline-block",
-                          padding: "0px 16px 0px 16px",
+                          padding: "0px 16px 0px 30px",
                         }}
                       >
                         {notice.sendDate}
