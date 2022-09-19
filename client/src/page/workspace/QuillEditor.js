@@ -44,46 +44,32 @@ const QuillEditor = ({
     <div>
       <Box sx={{ display: "flex", justifyContent: "space-between" }} mb={2}>
         <Box>
+          <Button
+            startIcon={<SaveAs />}
+            sx={{ fontSize: "1.2rem", color: "#3791f8" }}
+            onClick={() => {
+              updateWorkspace(message, workspace, userInfo);
+            }}
+          >
+            임시 저장
+          </Button>
           {workspace.master && workspace.master.userNo === userInfo.userNo ? (
-            <>
-              <Button
-                startIcon={<SaveAs />}
-                sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-                onClick={() => {
-                  updateWorkspace(message, workspace);
-                }}
-              >
-                임시 저장
-              </Button>
-              <Button
-                startIcon={<Save />}
-                sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-                onClick={() => setOpen(true)}
-              >
-                저장
-              </Button>
-            </>
+            <Button
+              startIcon={<Save />}
+              sx={{ fontSize: "1.2rem", color: "#3791f8" }}
+              onClick={() => setOpen(true)}
+            >
+              저장
+            </Button>
           ) : (
-            <>
-              <Button
-                startIcon={<SaveAs />}
-                sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-                onClick={() => {
-                  updateWorkspace(message, workspace);
-                }}
-                disabled
-              >
-                임시 저장
-              </Button>
-              <Button
-                startIcon={<Save />}
-                sx={{ fontSize: "1.2rem", color: "#3791f8" }}
-                onClick={() => setOpen(true)}
-                disabled
-              >
-                저장
-              </Button>
-            </>
+            <Button
+              startIcon={<Save />}
+              sx={{ fontSize: "1.2rem", color: "#3791f8" }}
+              onClick={() => setOpen(true)}
+              disabled
+            >
+              저장
+            </Button>
           )}
         </Box>
         <a href="/main/workspace" style={{ textDecoration: "none" }}>

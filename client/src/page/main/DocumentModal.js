@@ -1,9 +1,10 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import SucessModal from "./SucessModal";
 import "./Modal.css";
 import {
   deleteFile,
+  documentMember,
   fileDownload,
   masterDeleteFile,
   restoreFile,
@@ -24,6 +25,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { WorkspaceButton } from "../workspace/AddWorkspace";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { Avatar } from "@mui/material";
 
 const style = {
   position: "absolute",
@@ -53,9 +55,11 @@ const DocumentModal = (props) => {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [openShareAdd, setOpenShareAdd] = useState(false);
   const [documentShareModal, setDocumentShareModal] = useState(false);
-
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
-
+  const [member, setMember] = useState([]);
+  useEffect(() => {
+    documentMember(document.documentNo.documentNo, setMember);
+  }, [document.documentNo.documentNo]);
   return (
     <div>
       <Modal
@@ -158,13 +162,22 @@ const DocumentModal = (props) => {
               ? document.documentNo.content
               : "내용이 없습니다."}
           </Typography>
-          <Typography
+          <Typography />
+          <Box
             sx={{
               display: "flex",
-              justifyContent: "right",
+              justifyContent: "space-between",
             }}
             mt={2}
           >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Avatar
+                sx={{ bgcolor: "#3791F8", marginRight: "5px" }}
+                src={document.documentNo.user.profile}
+                height={3}
+              />
+              <Typography>{document.documentNo.user.name}</Typography>
+            </Box>
             <WorkspaceButton
               variant="contained"
               onClick={() => infoModalOpen(false)}
@@ -172,7 +185,7 @@ const DocumentModal = (props) => {
               닫기
               <CloseOutlinedIcon />
             </WorkspaceButton>
-          </Typography>
+          </Box>
         </Box>
       </Modal>
 
@@ -182,6 +195,7 @@ const DocumentModal = (props) => {
         successModalOpen={successModalOpen}
         document={document.documentNo}
         infoModalOpen={infoModalOpen}
+        member={member}
       />
 
       {openShareAdd && (
@@ -206,9 +220,20 @@ const DocumentModal = (props) => {
                 open={confirmModalOpen}
                 setOpen={setConfirmModalOpen}
                 act={() => {
-                  document.authority === "MASTER"
-                    ? masterDeleteFile([document.documentNo.documentNo])
-                    : deleteFile([document.documentNo.documentNo], userInfo);
+                  if (document.authority === "MASTER") {
+                    const content = `${userInfo.name}님께서 공유하신 ${
+                      document.documentNo.originalName
+                    } 문서를 삭제하셨습니다. `;
+                    // notipublish(member, userInfo, content, "delete");
+                    console.log(member);
+                    masterDeleteFile(
+                      document.documentNo.documentNo,
+                      userInfo,
+                      content
+                    );
+                  } else {
+                    deleteFile([document.documentNo.documentNo], userInfo);
+                  }
                   setConfirmModalOpen(false);
                   setDeleteSuccessModalOpen(true);
                   infoModalOpen(false);
@@ -263,14 +288,14 @@ const DocumentModal = (props) => {
                 </SucessModal>
                 <SucessModal
                   open={deleteSuccessModalOpen}
-                  close={() =>
+                  close={() => {
                     openSuccessModal(
                       setDeleteSuccessModalOpen,
                       infoModalOpen,
                       check,
                       setCheckHandler
-                    )
-                  }
+                    );
+                  }}
                 >
                   <main>
                     <div>영구 삭제 완료</div>

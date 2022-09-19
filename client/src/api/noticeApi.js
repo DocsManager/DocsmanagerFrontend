@@ -131,7 +131,7 @@ export const wsDisconnect = () => {
   client.deactivate();
 };
 
-export const notipublish = (searchList, user) => {
+export const notipublish = (searchList, user, content, type, workspaceNo) => {
   if (!client.connected) {
     return;
   }
@@ -141,14 +141,13 @@ export const notipublish = (searchList, user) => {
       body: JSON.stringify({
         sender: user,
         receiver: element,
-        content: `${user.name}님이 문서를 공유했습니다`,
+        content: content,
         isRead: 0,
-        urlParams: "/main/share",
+        urlParams: type ? null : "/main/share",
       }),
     });
   });
 };
-
 export const worksapcepublish = (searchList, newWorkspaceNo, user) => {
   if (!client.connected) {
     return;

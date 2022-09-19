@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Navbar, NavbarBrand } from "reactstrap";
+import { FormGroup, Navbar, NavbarBrand } from "reactstrap";
 import "./Header.css";
 import { getNoticeList, wsDocsSubscribe } from "../../api/noticeApi";
 import { NoticePopover } from "./NoticePopover";
@@ -7,7 +7,13 @@ import { createContext } from "react";
 import { notify } from "../Toast";
 import "react-toastify/dist/ReactToastify.css";
 import "../Toast.css";
-import { Avatar, Popover, Button } from "@mui/material";
+import {
+  Avatar,
+  Popover,
+  Button,
+  FormControlLabel,
+  Switch,
+} from "@mui/material";
 import { Box } from "@mui/system";
 import { styled } from "@mui/material/styles";
 import { AccountBox, Logout } from "@mui/icons-material";
@@ -35,7 +41,9 @@ export default function Header() {
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
   const [headerCheck, setHeaderCheck] = useState(false);
-  const { setCheckHandler, userInfo } = useContext(MyContext);
+  const { setCheckHandler, userInfo, toast, setToastHandler } = useContext(
+    MyContext
+  );
   const setIsReadHandler = (isRead) => setIsRead(isRead);
   useEffect(() => {
     getNoticeList(setNoticeList, userInfo);
@@ -125,8 +133,8 @@ export default function Header() {
                   variant="contained"
                   endIcon={<Logout />}
                   onClick={() => {
-                    deleteCookie();
                     logout();
+                    deleteCookie();
                   }}
                 >
                   로그아웃
@@ -137,7 +145,7 @@ export default function Header() {
           <p className="header-user-text">
             <span>{userInfo.name}</span>님 환영합니다
           </p>
-          {newNotice && showNotice(newNotice)}
+          {toast && newNotice && showNotice(newNotice)}
           <div className="header-alert">
             <NoticeContext.Provider value={{ isRead, setIsReadHandler }}>
               <NoticePopover
@@ -150,6 +158,19 @@ export default function Header() {
             </NoticeContext.Provider>
             <div className="header-profile" />
           </div>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={toast}
+                  onChange={() => {
+                    setToastHandler(!toast);
+                  }}
+                />
+              }
+              label="알림 ON/OFF"
+            />
+          </FormGroup>
         </div>
       </Navbar>
     </div>
