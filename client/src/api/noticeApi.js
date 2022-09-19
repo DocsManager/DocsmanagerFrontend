@@ -131,7 +131,7 @@ export const wsDisconnect = () => {
   client.deactivate();
 };
 
-export const notipublish = (searchList, user, content, type) => {
+export const notipublish = (searchList, user, content, type, workspaceNo) => {
   if (!client.connected) {
     return;
   }

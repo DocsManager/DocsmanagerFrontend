@@ -1,4 +1,5 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 import { notipublish } from "./noticeApi";
 
 const baseUrl = "/api/workspace/user/";
@@ -48,7 +49,13 @@ export function deleteAllWorkspaceUser(
                 id: member.split(",")[3],
               })
           );
-          notipublish(memberList, user, content, "delete");
+          notipublish(
+            memberList,
+            user,
+            content,
+            "delete",
+            workspace.workspaceNo
+          );
         }
         return workspace;
       });
@@ -77,4 +84,19 @@ export function workspaceMember(workspaceNo, setMemberList, userNo) {
       setMemberList(memberList);
     })
     .catch((err) => console.log(err));
+}
+
+export function checkMember(workspaceNo, userNo, setCheck) {
+  const url = `/api/workspace/check/${workspaceNo}/${userNo}`;
+  axios.get(url).then((res) => {
+    if (res.data) {
+      setCheck(res.data);
+    } else {
+      Swal.fire({
+        title: "해당 방에 권한이 없습니다.",
+        icon: "error",
+        confirmButtonColor: "#3791f8",
+      }).then(() => (window.location.href = "/main/workspace"));
+    }
+  });
 }
