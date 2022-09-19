@@ -3,8 +3,8 @@ import {
   Box,
   Button,
   ButtonBase,
-  IconButton,
   TextField,
+  IconButton,
 } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
@@ -199,7 +199,14 @@ function SignUp() {
                   />
                 </Button>
               </div>
-              <IconButton sx={{ float: "right" }}>
+              <IconButton
+                sx={{ float: "right" }}
+                onClick={() => {
+                  imgRef.current.value = "";
+                  setImageUrl("");
+                  setProfile();
+                }}
+              >
                 <HighlightOffIcon fontSize="large" />
               </IconButton>
               <div />
