@@ -48,7 +48,7 @@ const QuillEditor = ({
             startIcon={<SaveAs />}
             sx={{ fontSize: "1.2rem", color: "#3791f8" }}
             onClick={() => {
-              updateWorkspace(message, workspace);
+              updateWorkspace(message, workspace, userInfo);
             }}
           >
             임시 저장

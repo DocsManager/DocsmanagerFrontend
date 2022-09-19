@@ -20,6 +20,7 @@ import {
 import { Send } from "@mui/icons-material";
 import { InputBox } from "../main/WriteModal";
 import { MyContext } from "../Main";
+import { checkMember } from "../../api/workspaceUserApi";
 
 function Workspace() {
   const [client, setClient] = useState(null);
@@ -27,6 +28,7 @@ function Workspace() {
   const [myId, setMyId] = useState("");
   const [users, setUsers] = useState({});
   const [workspace, setWorkspace] = useState({});
+  const [memberCheck, setMemberCheck] = useState(false);
   // const [userList, setUserList] = useState([]);
   const URLSearch = new URLSearchParams(window.location.search);
   const workspaceNo = URLSearch.get("room");
@@ -37,15 +39,18 @@ function Workspace() {
   // }, []);
 
   useEffect(() => {
-    getWorkspace(workspaceNo, setWorkspace);
-    if (workspace.workspaceNo) {
-      setClient(
-        new w3cwebsocket(
-          "ws://localhost:8000/document" + window.location.search
-        ) /**소켓 통신 확인하려고 localhost로 변경했음 */
-      );
+    !memberCheck && checkMember(workspaceNo, userInfo.userNo, setMemberCheck);
+    if (memberCheck) {
+      getWorkspace(workspaceNo, setWorkspace);
+      if (workspace.workspaceNo) {
+        setClient(
+          new w3cwebsocket(
+            "ws://3.39.187.48:8000/document" + window.location.search
+          ) /**소켓 통신 확인하려고 localhost로 변경했음 */
+        );
+      }
     }
-  }, [workspace.workspaceNo]);
+  }, [workspace.workspaceNo, memberCheck]);
 
   useEffect(() => {
     scrollRef.current.scrollTop = scrollRef.current.scrollHeight;

@@ -1,26 +1,48 @@
 import axios from "axios";
+import Swal from "sweetalert2";
 import { notipublish, worksapcepublish } from "./noticeApi";
 
 const baseUrl = "/api/workspace";
 
 // 임시저장
-export function updateWorkspace(content, workspace) {
+export function updateWorkspace(content, workspace, user) {
   const url = `${baseUrl}/temp`;
-  const fd = new FormData();
-  var blob = new Blob([content], { type: "text/plain", endings: "native" });
-  fd.append("file", blob, `workspace${workspace.workspaceNo}.txt`);
-  fd.append(
-    "workspace",
-    new Blob([JSON.stringify(workspace)], { type: "application/json" })
-  );
   axios
-    .put(url, fd, {
-      headers: {
-        "Content-Type": "multipart/form-data;",
-      },
-    })
-    .then(alert("임시 저장 완료"))
-    .catch((err) => console.log(err));
+    .get(`/api/workspace/check/${workspace.workspaceNo}/${user.userNo}`)
+    .then((res) => {
+      if (res.data) {
+        const fd = new FormData();
+        var blob = new Blob([content], {
+          type: "text/plain",
+          endings: "native",
+        });
+        fd.append("file", blob, `workspace${workspace.workspaceNo}.txt`);
+        fd.append(
+          "workspace",
+          new Blob([JSON.stringify(workspace)], { type: "application/json" })
+        );
+        axios
+          .put(url, fd, {
+            headers: {
+              "Content-Type": "multipart/form-data;",
+            },
+          })
+          .then(alert("임시 저장 완료"))
+          .catch((err) => console.log(err));
+      } else {
+        Swal.fire({
+          title: "존재하지 않는 워크스페이스",
+          text: "워크스페이스 목록으로 돌아가시겠습니까?",
+          confirmButtonColor: "#3791f8",
+          showCancelButton: true,
+          cancelButtonColor: "#d33",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/main/workspace";
+          }
+        });
+      }
+    });
 }
 
 // 제목 변경
@@ -66,7 +88,7 @@ export function deleteWorkspace(workspaceNo, setCheck, check, user, title) {
         user.name
       }님께서 개설한 ${title} 이/가 삭제되었습니다.`;
       setCheck(!check);
-      notipublish(memberList, user, content, "delete");
+      notipublish(memberList, user, content, "delete", workspaceNo);
     });
   });
 }
