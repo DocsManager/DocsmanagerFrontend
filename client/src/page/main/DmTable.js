@@ -345,6 +345,7 @@ export default function DmTable(props) {
                               onClick={() => {
                                 setInfoModalOpen(true);
                                 setDocumentInfo(li);
+                                setSelected([]);
                               }}
                             >
                               {li.documentNo.originalName}

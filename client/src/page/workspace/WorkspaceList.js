@@ -5,7 +5,7 @@ import { MyContext } from "../Main";
 
 function WorkspaceList() {
   const [workspaces, setWorkspace] = useState([]);
-  const { check, setCheckHandler, userInfo } = useContext(MyContext);
+  const { check, userInfo } = useContext(MyContext);
   useEffect(() => {
     getUserWorkspace(userInfo.userNo, setWorkspace);
   }, [check]);
@@ -26,8 +26,6 @@ function WorkspaceList() {
         workspace={workspaces}
         setWorkspace={setWorkspace}
         user={userInfo}
-        check={check}
-        setCheck={setCheckHandler}
       />
     </div>
   );
