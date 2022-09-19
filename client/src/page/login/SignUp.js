@@ -187,6 +187,7 @@ function SignUp() {
                   />
                 </Button>
               </div>
+
               <IconButton
                 sx={{ float: "right" }}
                 onClick={() => {
