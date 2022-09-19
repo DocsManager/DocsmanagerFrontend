@@ -1,11 +1,10 @@
 import React, { useRef } from "react";
 import { changepw } from "../../api/userApi";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import "./Mypage.css";
 import { useForm } from "react-hook-form";
-import { InputBox } from "../main/WriteModal";
 import Swal from "sweetalert2";
 
 function Pwupdate({ open, style, setOpen }) {
@@ -63,7 +62,7 @@ function Pwupdate({ open, style, setOpen }) {
             계속하려면 먼저 본인임을 인증하세요.
           </p>
           <Box style={{ marginTop: "40px" }}>
-            <InputBox
+            <TextField
               id="oldPassword"
               name="oldPassword"
               placeholder="현재 비밀번호"
@@ -81,7 +80,7 @@ function Pwupdate({ open, style, setOpen }) {
                 기존의 비밀번호는 필수 입력 항목입니다.
               </p>
             )}
-            <InputBox
+            <TextField
               id="newPassword"
               name="newPassword"
               placeholder="새 비밀번호"
@@ -119,7 +118,8 @@ function Pwupdate({ open, style, setOpen }) {
             {errors.newPassword && errors.newPassword.type === "validate" && (
               <p className="mypageptag">기존의 비밀번호와 같습니다.</p>
             )}
-            <InputBox
+
+            <TextField
               id="confirmNewPassword"
               helperText="비밀번호는 대/소문자와 특수문자를 포함한 8~12자리로 구성해주세요 "
               placeholder="새 비밀번호 확인"

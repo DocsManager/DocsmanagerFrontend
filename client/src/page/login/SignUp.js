@@ -9,7 +9,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { useForm } from "react-hook-form";
-import { signUp } from "../../api/userApi";
+import { showDepartment, signUp } from "../../api/userApi";
 import { Link } from "react-router-dom";
 import "./SignUp.css";
 import { checkMail, verifyMail } from "../../api/mailApi";
@@ -21,7 +21,6 @@ import Select from "@mui/material/Select";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import Swal from "sweetalert2";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
-import axios from "axios";
 
 function SignUp() {
   const [verifyId, setVerifyId] = useState(false);
@@ -33,26 +32,14 @@ function SignUp() {
   const imgRef = useRef();
   const [OptionList, SetOptionList] = useState([]);
 
-  const baseUrl = "/api/";
-  const showDepartment = () => {
-    const url = baseUrl + "alldepartment";
-    axios
-      .get(url)
-      .then((res) => {
-        const { data } = res;
-        SetOptionList(data);
-      })
-      .catch((error) => console.log(error));
-  };
-
   useEffect(() => {
-    showDepartment();
+    showDepartment(SetOptionList);
   }, []);
 
   const ProfileAvatar = styled(Avatar)(({ theme }) => ({
     width: 300,
     height: 300,
-    marginTop: 30,
+    marginTop: 0,
   }));
 
   const onChangeImage = () => {
@@ -111,7 +98,7 @@ function SignUp() {
           Swal.fire({
             title: "회원가입 성공",
             confirmButtonColor: "#3791f8",
-            imageUrl: `${process.env.PUBLIC_URL}/congrats~.gif`,
+            imageUrl: `${process.env.PUBLIC_URL}/congrats.gif`,
             imageAlt: "congrats",
             imageWidth: 400,
             imageHeight: 300,
@@ -187,6 +174,7 @@ function SignUp() {
                   <ProfileAvatar
                     sx={{ background: "#3791f8" }}
                     src={imageUrl ? imageUrl : "/img"}
+                    variant="plain"
                   />
                   <input
                     id="newUserProfile"
@@ -351,6 +339,7 @@ function SignUp() {
                 helperText="비밀번호는 대/소문자와 특수문자를 포함한 8~12자리로 구성해주세요 "
                 id="newPwd"
                 type="password"
+                autoComplete="off"
                 label="비밀번호"
                 size="small"
                 fullWidth
@@ -384,6 +373,7 @@ function SignUp() {
                 type="password"
                 label="비밀번호확인"
                 size="small"
+                autoComplete="off"
                 fullWidth
                 variant="standard"
                 {...register("confirmPwd", {
