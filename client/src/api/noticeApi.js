@@ -18,7 +18,8 @@ export function updateNotice(
   noticeSender,
   noticeReceiver,
   noticeContent,
-  noticeSendDate
+  noticeSendDate,
+  updateModal
 ) {
   const url = baseUrl + `notice/${noticeNo}`;
   axios
@@ -34,6 +35,7 @@ export function updateNotice(
         sendDate: noticeSendDate,
       }
     )
+    .then(() => updateModal())
     .catch((err) => console.log(err));
 }
 
