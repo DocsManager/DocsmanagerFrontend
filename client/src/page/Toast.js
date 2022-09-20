@@ -8,8 +8,18 @@ import { Link } from "react-router-dom";
 export const notify = (newNotice) =>
   toast(
     newNotice && (
-      <div style={{ height: "100%" }}>
-        <Typography style={{ fontWeight: "bold" }}>
+      <div
+        style={{
+          height: "100%",
+          borderColor: newNotice.urlParams ? "#3791f8" : "#356599",
+        }}
+      >
+        <Typography
+          style={{
+            fontWeight: "bold",
+            color: newNotice.urlParams ? "#3791f8" : "#356599",
+          }}
+        >
           {newNotice.content}
         </Typography>
         {newNotice.urlParams ? (

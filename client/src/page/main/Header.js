@@ -48,7 +48,6 @@ export default function Header() {
   useEffect(() => {
     getNoticeList(setNoticeList, userInfo);
   }, [isRead, newNotice, headerCheck]);
-  console.log(isRead);
   useEffect(() => {
     wsDocsSubscribe(
       setNewNotice,
@@ -128,7 +127,11 @@ export default function Header() {
                 }}
               >
                 <Link to="/main/mypage">
-                  <PopoverBtn variant="contained" endIcon={<AccountBox />}>
+                  <PopoverBtn
+                    variant="contained"
+                    endIcon={<AccountBox />}
+                    onClick={handleClose}
+                  >
                     마이페이지
                   </PopoverBtn>
                 </Link>
