@@ -254,6 +254,7 @@ export default function DmTable(props) {
                 documentUrl={props.documentUrl}
                 setList={setList}
                 setSearchData={setSearchDataHandler}
+                searchData={searchData}
                 page={page}
                 setPage={setPage}
                 searchCategory={searchCategory}

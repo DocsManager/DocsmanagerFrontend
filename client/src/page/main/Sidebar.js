@@ -148,8 +148,8 @@ export default function Sidebar({ urlPath }) {
     MyContext
   );
   const clickHandler = () => {
-    setClick(!click);
     setSearchDataHandler("");
+    setClick(!click);
   };
   const reloadClickHandler = () => {
     setSearchDataHandler("");
