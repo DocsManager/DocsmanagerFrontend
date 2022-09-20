@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Toolbar from "@mui/material/Toolbar";
 import {
   Delete,
@@ -176,6 +176,10 @@ const DmTableToolbar = ({
   // const [searchCategory, setSearchCategory] = useState("");
 
   const { check, setCheckHandler, userInfo } = useContext(MyContext);
+
+  useEffect(() => {
+    document.getElementById("searchDocumentName").value = searchData;
+  }, [searchData]);
 
   const handleChange = (event) => {
     setSearchCategory(event.target.value);
