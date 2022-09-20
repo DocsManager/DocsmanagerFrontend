@@ -185,9 +185,14 @@ export default function DmTable(props) {
 
   //행마다 별 클릭하는 이벤트
   const handleStarClick = (event, li) => {
-    importantFile(li.documentNo.documentNo, li.important ? 0 : 1, userInfo);
-    li.important = li.important ? 0 : 1;
-    check ? setCheckHandler(false) : setCheckHandler(true);
+    importantFile(
+      li.documentNo.documentNo,
+      li.important ? 0 : 1,
+      userInfo,
+      setCheckHandler,
+      check
+    );
+    // check ? setCheckHandler(false) : setCheckHandler(true);
   };
 
   const isSelected = (documentNo) => {

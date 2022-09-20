@@ -83,7 +83,7 @@ export function restoreFile(documentNo, user) {
 }
 
 // 중요 표시
-export function importantFile(documentNo, important, user) {
+export function importantFile(documentNo, important, user, setCheck, check) {
   const url = baseUrl + "documents/" + user.userNo;
   axios
     .put(url, [
@@ -91,10 +91,10 @@ export function importantFile(documentNo, important, user) {
         documentNo: {
           documentNo: documentNo,
         },
-
         important: important,
       },
     ])
+    .then(() => setCheck(!check))
     .catch((err) => console.log(err));
 }
 
