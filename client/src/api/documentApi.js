@@ -135,13 +135,22 @@ export function writeFile(
 }
 
 // content 변경
-export function updateContent(documentNo, text, member, user, content) {
-  const url = baseUrl + "document/" + documentNo;
+export function updateContent(document, text, member, user, content) {
+  const url = baseUrl + "document/" + document.documentNo;
   axios
     .put(url, {
       content: text,
     })
-    .then(() => notipublish(member, user, content));
+    .then(() => {
+      if (document.user.userNo === user.userNo) {
+        notipublish(member, user, content);
+      } else {
+        const memberList = member.filter((v) => v.userNo !== user.userNo);
+        memberList.push(document.user);
+
+        notipublish(memberList, user, content);
+      }
+    });
 }
 
 // File 변경
@@ -168,7 +177,7 @@ export function documentAddUser(userList, row) {
         documentNo: row,
       })
   );
-  axios.post(url, documentUser);
+  axios.post(url, documentUser).catch((err) => console.log(err));
 }
 
 // 멤버 검색

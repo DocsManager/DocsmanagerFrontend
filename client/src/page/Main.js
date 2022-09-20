@@ -12,12 +12,16 @@ export const MyContext = createContext({
   setUserInfoHandler: (info) => {},
   toast: true,
   setToastHandler: (toast) => {},
+  searchData: "",
+  setSearchDataHandler: (searchData) => {},
 });
 
 function Main() {
   const [check, setCheck] = useState(false);
   const [userInfo, setUserInfo] = useState({});
   const [toast, setToast] = useState(true);
+  const [searchData, setSearchData] = useState("");
+  const setSearchDataHandler = (searchData) => setSearchData(searchData);
   const setCheckHandler = (check) => setCheck(check);
   const location = useLocation();
   const setUserInfoHandler = (info) => setUserInfo(info);
@@ -35,6 +39,8 @@ function Main() {
           setUserInfoHandler,
           toast,
           setToastHandler,
+          searchData,
+          setSearchDataHandler,
         }}
       >
         {userInfo.userNo && (

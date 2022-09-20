@@ -162,6 +162,7 @@ const DmTableToolbar = ({
   documentUrl,
   setList,
   setSearchData,
+  searchData,
   page,
   setPage,
   searchCategory,
@@ -390,7 +391,11 @@ const DmTableToolbar = ({
         </Box>
       </SucessModal>
 
-      <WriteModal open={writeModalOpen} setWriteModal={setWriteModalOpen}>
+      <WriteModal
+        open={writeModalOpen}
+        setWriteModal={setWriteModalOpen}
+        setPage={setPage}
+      >
         <Typography>파일 선택</Typography>
       </WriteModal>
     </React.Fragment>

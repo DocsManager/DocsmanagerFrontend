@@ -140,16 +140,21 @@ const Storage = styled(Box)({
 });
 export default function Sidebar({ urlPath }) {
   const pathName = useLocation().pathname;
-
   const [open, setOpen] = useState(false);
   const [size, setSize] = useState(0);
   const classes = useStyles();
   const [click, setClick] = useState(false);
+  const { check, setCheckHandler, userInfo, setSearchDataHandler } = useContext(
+    MyContext
+  );
   const clickHandler = () => {
     setClick(!click);
+    setSearchDataHandler("");
   };
-
-  const { check, userInfo } = useContext(MyContext);
+  const reloadClickHandler = () => {
+    setSearchDataHandler("");
+    setCheckHandler(!check);
+  };
 
   useEffect(() => {
     fileSize(userInfo.userNo, setSize);
@@ -173,7 +178,7 @@ export default function Sidebar({ urlPath }) {
                   <SidebarSideLinkPage
                     to={item.path}
                     key={index}
-                    onClick={clickHandler}
+                    onClick={reloadClickHandler}
                   >
                     <Tooltip
                       title={item.tooltip}

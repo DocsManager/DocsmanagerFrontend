@@ -42,6 +42,7 @@ export function verifyMail(params, setVerifyResult) {
           confirmButtonColor: "#3791f8",
         });
       } else {
+        setVerifyResult(response.data);
         Swal.fire({
           text: "인증코드를 다시 확인하여주세요",
           icon: "warning",

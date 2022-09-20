@@ -180,8 +180,8 @@ export function NoticePopover({
         );
     }
   };
-  const updateModal = (isRead, setIsReadHandler) => {
-    isRead ? setIsReadHandler(false) : setIsReadHandler(true);
+  const updateModal = () => {
+    setIsReadHandler(!isRead);
   };
   const containerRef = React.useRef();
 
@@ -313,14 +313,16 @@ export function NoticePopover({
                               cursor: "pointer",
                             }}
                             onClick={() => {
-                              updateNotice(
-                                notice.noticeNo,
-                                notice.sender,
-                                notice.receiver,
-                                notice.content,
-                                notice.sendDate
-                              );
-                              updateModal(isRead, setIsReadHandler);
+                              if (!notice.isRead) {
+                                updateNotice(
+                                  notice.noticeNo,
+                                  notice.sender,
+                                  notice.receiver,
+                                  notice.content,
+                                  notice.sendDate,
+                                  updateModal
+                                );
+                              }
                             }}
                           >
                             읽음
@@ -355,7 +357,7 @@ export function NoticePopover({
                           fontWeight: 300,
                           color: noticeColor[notice.isRead],
                           display: "inline-block",
-                          padding: "0px 16px 0px 30px",
+                          padding: "0px 16px 16px 30px",
                         }}
                       >
                         {notice.sendDate}

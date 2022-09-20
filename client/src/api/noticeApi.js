@@ -18,7 +18,8 @@ export function updateNotice(
   noticeSender,
   noticeReceiver,
   noticeContent,
-  noticeSendDate
+  noticeSendDate,
+  updateModal
 ) {
   const url = baseUrl + `notice/${noticeNo}`;
   axios
@@ -34,6 +35,7 @@ export function updateNotice(
         sendDate: noticeSendDate,
       }
     )
+    .then(() => updateModal())
     .catch((err) => console.log(err));
 }
 
@@ -57,8 +59,8 @@ export function updateAllNotce(noticeList, user) {
   axios.put(url, arr).catch((err) => console.log(err));
 }
 
-const socketUrl = "ws://3.39.187.48:8080/ws-dm/websocket";
-// const socketUrl = "ws://localhost:8080/ws-dm/websocket"; //당장 통신 확인하려고 로컬로 서버 바꿈
+// const socketUrl = "ws://3.39.187.48:8080/ws-dm/websocket";
+const socketUrl = "ws://localhost:8080/ws-dm/websocket"; //당장 통신 확인하려고 로컬로 서버 바꿈
 
 // const client = new StompJs.Client();
 const client = new StompJs.Client({
