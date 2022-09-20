@@ -108,7 +108,7 @@ export default function DmTable(props) {
   const [order, setOrder] = useState("desc");
   const [orderBy, setOrderBy] = useState("");
   const [selected, setSelected] = useState([]);
-  const [selectStar, setSelectStar] = useState([]);
+  // const [selectStar, setSelectStar] = useState([]);
   const [page, setPage] = useState(0);
   const [list, setList] = useState([]);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -185,27 +185,9 @@ export default function DmTable(props) {
 
   //행마다 별 클릭하는 이벤트
   const handleStarClick = (event, li) => {
-    const selectedIndex = selectStar.indexOf(li.documentNo); //selected라는 빈 배열에 documentNo 값을 찾았을 때 검색된 문자열이 첫번째로 나타나는 위치를 알려줌
-    let newSelected = [];
-    if (selectedIndex === -1) {
-      //-1이면 찾는 문자열이 배열에 없다는 뜻
-      newSelected = newSelected.concat(selectStar, li.documentNo); //newSelected라는 빈 배열에 이미 선택된 값을 담은 selected 배열과 documentNo를 합쳐 담기
-    } else if (selectedIndex === 0) {
-      //이미 선택한 row 인덱스가 제일 처음부터 배열에 존재한다면? => 선택된 값이 담겨있는 selected 배열에서 다음 값(slice 함수 사용)을 합쳐 newSelected 배열에 담아야 함
-      newSelected = newSelected.concat(selectStar.slice(1));
-    } else if (selectedIndex === selectStar.length - 1) {
-      newSelected = newSelected.concat(selectStar.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selectStar.slice(0, selectedIndex),
-        selectStar.slice(selectedIndex + 1)
-      );
-    }
-    setSelectStar(newSelected);
     importantFile(li.documentNo.documentNo, li.important ? 0 : 1, userInfo);
+    li.important = li.important ? 0 : 1;
     check ? setCheckHandler(false) : setCheckHandler(true);
-
-    //렌더링 - 별 씹힘
   };
 
   const isSelected = (documentNo) => {

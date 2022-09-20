@@ -48,7 +48,6 @@ export default function Header() {
   useEffect(() => {
     getNoticeList(setNoticeList, userInfo);
   }, [isRead, newNotice, headerCheck]);
-  console.log(isRead);
   useEffect(() => {
     wsDocsSubscribe(
       setNewNotice,
