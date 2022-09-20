@@ -1,9 +1,20 @@
-.toast-message {
+.toast-message-nourl {
+  font-size: 1.1em;
+  background-color: white;
+  border: 1px solid #356599;
+  font-weight: 700;
+  width: 420px;
+  right: 100px;
+  color: #356599;
+}
+.toast-message-url {
   font-size: 1.1em;
   background-color: white;
   font-weight: 700;
+  border: 1px solid #3791f8;
   width: 420px;
-  right: 80px;
+  right: 100px;
+  color: #3791f8;
 }
 
 @keyframes zoomIn {
