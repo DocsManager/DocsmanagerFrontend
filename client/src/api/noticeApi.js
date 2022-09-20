@@ -69,9 +69,9 @@ const client = new StompJs.Client({
     login: "user",
     passcode: "password",
   },
-  debug: function(str) {
-    console.log(str);
-  },
+  // debug: function(str) {
+  //   console.log(str);
+  // },
   reconnectDelay: 5000,
   heartbeatIncoming: 4000,
   heartbeatOutgoing: 4000,
@@ -86,7 +86,7 @@ export const wsDocsSubscribe = (
   user
 ) => {
   client.onConnect = () => {
-    console.log("연결됨");
+    // console.log("연결됨");
 
     client.subscribe(`/queue/sharedocs/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
