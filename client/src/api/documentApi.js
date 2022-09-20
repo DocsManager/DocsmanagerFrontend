@@ -108,30 +108,33 @@ export function writeFile(
   fileName
 ) {
   const url = "/api/document";
+  if (file.size <= 10240000) {
+    const fd = new FormData();
 
-  const fd = new FormData();
+    fileName
+      ? fd.append("file", file, `${fileName}.pdf`)
+      : fd.append("file", file);
+    fd.append(
+      "documentUser",
+      new Blob([JSON.stringify(documentUser)], { type: "application/json" })
+    );
+    fd.append(
+      "documentDTO",
+      new Blob([JSON.stringify(documentDTO)], { type: "application/json" })
+    );
 
-  fileName
-    ? fd.append("file", file, `${fileName}.pdf`)
-    : fd.append("file", file);
-  fd.append(
-    "documentUser",
-    new Blob([JSON.stringify(documentUser)], { type: "application/json" })
-  );
-  fd.append(
-    "documentDTO",
-    new Blob([JSON.stringify(documentDTO)], { type: "application/json" })
-  );
-
-  axios
-    .post(url, fd, {
-      headers: {
-        "Content-Type": "multipart/form-data;",
-      },
-    })
-    .then((res) => {
-      sizeCheck(res.data);
-    });
+    axios
+      .post(url, fd, {
+        headers: {
+          "Content-Type": "multipart/form-data;",
+        },
+      })
+      .then((res) => {
+        sizeCheck(res.data);
+      });
+  } else {
+    sizeCheck(2);
+  }
 }
 
 // content 변경
