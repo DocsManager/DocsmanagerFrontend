@@ -154,7 +154,7 @@ export const theme = createTheme({
       styleOverrides: {
         elevation8: {
           border: "1px solid #3791f8",
-          width: "450px",
+          width: "500px",
         },
       },
     },

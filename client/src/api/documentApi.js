@@ -108,7 +108,7 @@ export function writeFile(
   fileName
 ) {
   const url = "/api/document";
-  if (file.size <= 10240000) {
+  if (file.size <= 104857600) {
     const fd = new FormData();
 
     fileName

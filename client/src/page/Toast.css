@@ -1,19 +1,20 @@
-.toast-message {
+.toast-message-nourl {
   font-size: 1.1em;
   background-color: white;
-  /* background-color: #3791f8; */
-  border: 1px solid #3791f8;
-  /* background-color: #4993fa; */
-  /* background-color: #ffce63; */
-  /* background-color: #f89e37; */
-  /* color: #fcdabe; */
-  /* color: #f89e37; */
+  border: 1px solid #356599;
   font-weight: 700;
-  /* color: #8bc7ff; */
-  color: #3791f8;
-  /* color: white; */
   width: 420px;
-  right: 80px;
+  right: 100px;
+  color: #356599;
+}
+.toast-message-url {
+  font-size: 1.1em;
+  background-color: white;
+  font-weight: 700;
+  border: 1px solid #3791f8;
+  width: 420px;
+  right: 100px;
+  color: #3791f8;
 }
 
 @keyframes zoomIn {

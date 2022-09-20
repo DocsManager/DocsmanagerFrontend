@@ -2,7 +2,11 @@ import React, { useState, useContext } from "react";
 import Typography from "@mui/material/Typography";
 import Tab from "@mui/material/Tab";
 import { Badge, Box, Tabs, Button } from "@mui/material";
-import { DeleteOutline, NotificationsOutlined } from "@mui/icons-material";
+import {
+  Check,
+  DeleteOutlined,
+  NotificationsOutlined,
+} from "@mui/icons-material";
 import { Popover } from "@mui/material";
 import {
   deleteNotice,
@@ -115,8 +119,7 @@ export function NoticePopover({
                 color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, userInfo);
-                updateModal(isRead, setIsReadHandler);
+                updateAllNotce(noticeList, userInfo, updateModal);
               }}
             >
               전체 알림 읽음
@@ -135,6 +138,7 @@ export function NoticePopover({
               onClick={() => {
                 deleteAllUnreadNotice(setNoticeList, userInfo);
                 setCheck(true);
+                handleClose();
               }}
             >
               <span>
@@ -150,8 +154,7 @@ export function NoticePopover({
                 color: "rgba(0,0,0,0.7)",
               }}
               onClick={() => {
-                updateAllNotce(noticeList, userInfo);
-                updateModal(isRead, setIsReadHandler);
+                updateAllNotce(noticeList, userInfo, updateModal);
               }}
             >
               <span>
@@ -173,6 +176,7 @@ export function NoticePopover({
             onClick={() => {
               deleteAllReadNotice(setNoticeList, userInfo);
               setCheck(true);
+              handleClose();
             }}
           >
             읽은 알림 전체 삭제
@@ -266,10 +270,10 @@ export function NoticePopover({
                       <Box
                         sx={{
                           p: 2,
-                          width: "450px",
+                          width: "480px",
 
                           display: "flex",
-                          padding: "16px 30px 16px 30px",
+                          padding: "16px 20px 16px 30px",
                         }}
                       >
                         {notice.urlParams ? (
@@ -299,18 +303,18 @@ export function NoticePopover({
                             marginLeft: "10px",
                             alignItems: "center",
                             fontSize: "16px",
+                            display: "flex",
                           }}
                         >
-                          <span
+                          <Check
                             style={{
                               color:
                                 notice.isRead === 0 && notice.urlParams
                                   ? "#3791f8"
-                                  : notice.isRead === 0
-                                  ? "#356599"
-                                  : "lightgray",
+                                  : "#356599",
                               padding: "0",
                               cursor: "pointer",
+                              display: notice.isRead === 0 ? "block" : "none",
                             }}
                             onClick={() => {
                               if (!notice.isRead) {
@@ -326,20 +330,17 @@ export function NoticePopover({
                             }}
                           >
                             읽음
-                          </span>
-                          <DeleteOutline
-                            sx={{
+                          </Check>
+                          <DeleteOutlined
+                            style={{
                               margin: "-4px auto",
                               color:
                                 notice.isRead === 0 && notice.urlParams
                                   ? "#3791f8"
-                                  : notice.isRead === 0
-                                  ? "#356599"
-                                  : "lightgray",
-                              fontSize: "19px",
-                              ":hover": {
-                                cursor: "pointer",
-                              },
+                                  : notice.isRead === 1 && notice.urlParams
+                                  ? "#3791f8"
+                                  : "#356599",
+                              cursor: "pointer",
                             }}
                             onClick={() => {
                               deleteNotice(notice.noticeNo);
@@ -348,7 +349,9 @@ export function NoticePopover({
                                 handleClose();
                               }
                             }}
-                          />
+                          >
+                            삭제
+                          </DeleteOutlined>
                         </Box>
                       </Box>
                       <Box

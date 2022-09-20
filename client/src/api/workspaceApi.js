@@ -27,7 +27,12 @@ export function updateWorkspace(content, workspace, user) {
               "Content-Type": "multipart/form-data;",
             },
           })
-          .then(alert("임시 저장 완료"))
+          .then(
+            Swal.fire({
+              title: "임시저장이 완료되었습니다.",
+              confirmButtonColor: "#3791f8",
+            })
+          )
           .catch((err) => console.log(err));
       } else {
         Swal.fire({
