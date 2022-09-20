@@ -45,7 +45,7 @@ function Workspace() {
       if (workspace.workspaceNo) {
         setClient(
           new w3cwebsocket(
-            "ws://3.39.187.48:8000/document" + window.location.search
+            "ws://43.201.22.120:8000/document" + window.location.search
           ) /**소켓 통신 확인하려고 localhost로 변경했음 */
         );
       }
