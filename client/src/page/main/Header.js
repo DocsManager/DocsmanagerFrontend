@@ -41,9 +41,15 @@ export default function Header() {
   const [isRead, setIsRead] = useState(false);
   const [newNotice, setNewNotice] = useState();
   const [headerCheck, setHeaderCheck] = useState(false);
-  const { setCheckHandler, userInfo, toast, setToastHandler } = useContext(
-    MyContext
-  );
+  const {
+    check,
+    setCheckHandler,
+    userInfo,
+    toast,
+    setToastHandler,
+    noticeCheck,
+    setNoticeCheckHandler,
+  } = useContext(MyContext);
   const setIsReadHandler = (isRead) => setIsRead(isRead);
   useEffect(() => {
     getNoticeList(setNoticeList, userInfo);
@@ -54,8 +60,11 @@ export default function Header() {
       setNoticeList,
       noticeList,
       setCheckHandler,
+      check,
       0,
-      userInfo
+      userInfo,
+      noticeCheck,
+      setNoticeCheckHandler
     );
   }, []);
 

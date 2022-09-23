@@ -85,8 +85,11 @@ export const wsDocsSubscribe = (
   setNoticeList,
   noticeList,
   setCheck,
+  check,
   count,
-  user
+  user,
+  noticeCheck,
+  setNoticeCheck
 ) => {
   client.onConnect = () => {
     // console.log("연결됨");
@@ -95,7 +98,8 @@ export const wsDocsSubscribe = (
       const dataFromServer = JSON.parse(body);
       count += 1;
       setNewNotice(dataFromServer);
-      setCheck(count % 2 === 1 ? true : false);
+      // setCheck(count % 2 === 1 ? true : false);
+      setNoticeCheck(count % 2 === 1 ? true : false);
       getNoticeList(setNoticeList, user);
     });
     client.subscribe(`/queue/workspace/${user.id}`, ({ body }) => {
