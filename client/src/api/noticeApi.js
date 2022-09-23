@@ -96,10 +96,14 @@ export const wsDocsSubscribe = (
     let noticeConunt = 0;
     client.subscribe(`/queue/sharedocs/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
+      let notiCheck = false;
+      if(noticeCount === 0){
+        notiCheck = noticeCheck;
+      }
       noticeConunt += 1;
       setNewNotice(dataFromServer);
       // setCheck(count % 2 === 1 ? true : false);
-      setNoticeCheck(noticeConunt % 2 === 1 ? true : false);
+      setNoticeCheck(!notiCheck);
       getNoticeList(setNoticeList, user);
     });
     client.subscribe(`/queue/workspace/${user.id}`, ({ body }) => {
