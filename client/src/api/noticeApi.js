@@ -88,7 +88,6 @@ export const wsDocsSubscribe = (
 ) => {
   client.onConnect = () => {
     // console.log("연결됨");
-
     client.subscribe(`/queue/sharedocs/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       count += 1;
