@@ -93,14 +93,14 @@ export const wsDocsSubscribe = (
 ) => {
   client.onConnect = () => {
     // console.log("연결됨");
-    let noticeConunt = 0;
+    let noticeCount = 0;
     client.subscribe(`/queue/sharedocs/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       let notiCheck = false;
       if(noticeCount === 0){
         notiCheck = noticeCheck;
       }
-      noticeConunt += 1;
+      noticeCount += 1;
       setNewNotice(dataFromServer);
       // setCheck(count % 2 === 1 ? true : false);
       setNoticeCheck(!notiCheck);
