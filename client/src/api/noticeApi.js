@@ -84,15 +84,22 @@ export const wsDocsSubscribe = (
   setCheck,
   check,
   count,
-  user
+  user,
+  noticeCheck,
+  setNoticeCheck
 ) => {
   client.onConnect = () => {
     // console.log("연결됨");
+    let notiCount = 0;
+
     client.subscribe(`/queue/sharedocs/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
       count += 1;
+      notiCount += 1;
+
       setNewNotice(dataFromServer);
-      setCheck(count % 2 === 1 ? true : false);
+      // setCheck(count % 2 === 1 ? false : true);
+      setNoticeCheck(notiCount % 2 === 1 ? true : false);
       getNoticeList(setNoticeList, user);
     });
     client.subscribe(`/queue/workspace/${user.id}`, ({ body }) => {
