@@ -14,8 +14,6 @@ export const MyContext = createContext({
   setToastHandler: (toast) => {},
   searchData: "",
   setSearchDataHandler: (searchData) => {},
-  noticeCheck: false,
-  setNoticeCheckHandler: (check) => {},
 });
 
 function Main() {
@@ -23,10 +21,8 @@ function Main() {
   const [userInfo, setUserInfo] = useState({});
   const [toast, setToast] = useState(true);
   const [searchData, setSearchData] = useState("");
-  const [noticeCheck, setNoticeCheck] = useState(false);
   const setSearchDataHandler = (searchData) => setSearchData(searchData);
   const setCheckHandler = (check) => setCheck(check);
-  const setNoticeCheckHandler = (check) => setNoticeCheck(check);
   const location = useLocation();
   const setUserInfoHandler = (info) => setUserInfo(info);
   const setToastHandler = (toast) => setToast(toast);
@@ -45,8 +41,6 @@ function Main() {
           setToastHandler,
           searchData,
           setSearchDataHandler,
-          noticeCheck,
-          setNoticeCheckHandler,
         }}
       >
         {userInfo.userNo && (
