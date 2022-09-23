@@ -73,7 +73,7 @@ const WriteModal = (props) => {
     (search) => (search = { authority: search.authority, userNo: search })
   );
   const successWrite = () => {
-    const content = `${userInfo.name}님이 문서를 공유했습니다.`;
+    const content = `${userInfo.name}님이 문서 ${file.name}을/를 공유했습니다.`;
     notipublish(searchList, userInfo, content);
     setWriteModal(false);
     setWriteSuccessConfirm(false);
