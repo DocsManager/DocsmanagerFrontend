@@ -40,7 +40,7 @@ export function updateNotice(
 }
 
 //전체 알림 읽음 처리
-export function updateAllNotce(noticeList, user) {
+export function updateAllNotce(noticeList, user, updateModal) {
   const url = baseUrl + `notice/receiver/${user.userNo}/all`;
   let arr = [];
   const unRead = noticeList.filter((notice) => notice.isRead !== 1);
@@ -56,7 +56,10 @@ export function updateAllNotce(noticeList, user) {
     });
     return notice;
   });
-  axios.put(url, arr).catch((err) => console.log(err));
+  axios
+    .put(url, arr)
+    .then(() => updateModal())
+    .catch((err) => console.log(err));
 }
 
 const socketUrl = "ws://3.39.187.48:8080/ws-dm/websocket";

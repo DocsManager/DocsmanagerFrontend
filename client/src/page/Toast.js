@@ -8,8 +8,17 @@ import { Link } from "react-router-dom";
 export const notify = (newNotice) =>
   toast(
     newNotice && (
-      <div style={{ height: "100%" }}>
-        <Typography style={{ fontWeight: "bold" }}>
+      <div
+        style={{
+          height: "100%",
+        }}
+      >
+        <Typography
+          style={{
+            fontWeight: "bold",
+            // color: newNotice.urlParams ? "#3791f8" : "#356599",
+          }}
+        >
           {newNotice.content}
         </Typography>
         {newNotice.urlParams ? (
@@ -17,7 +26,12 @@ export const notify = (newNotice) =>
             to={newNotice.urlParams}
             style={{ marginLeft: "80%", marginTop: "40px" }}
           >
-            <Button sx={{ fontSize: "1.1rem" }} variant="contained">
+            <Button
+              sx={{
+                fontSize: "1.1rem",
+              }}
+              variant="contained"
+            >
               이동하기
             </Button>
           </Link>
@@ -30,7 +44,9 @@ export const notify = (newNotice) =>
       autoClose: 4000,
       position: "bottom-right",
       hideProgressBar: true,
-      className: "toast-message",
+      className: newNotice.urlParams
+        ? "toast-message-url"
+        : "toast-message-nourl",
       limit: 5,
     }
   );
