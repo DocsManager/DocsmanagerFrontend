@@ -121,7 +121,6 @@ export default function DmTable(props) {
     userInfo,
     searchData,
     setSearchDataHandler,
-    noticeCheck,
   } = useContext(MyContext);
   const rowsPerPage = 10;
 
@@ -141,7 +140,7 @@ export default function DmTable(props) {
           props.documentUrl ? props.documentUrl : "",
           userInfo
         );
-  }, [check, page, noticeCheck]);
+  }, [check, page]);
   if (list.dtoList) {
     if (page !== 0 && list.totalPage === page - 1) {
       setPage(page - 1);

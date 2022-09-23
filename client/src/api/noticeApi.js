@@ -40,7 +40,7 @@ export function updateNotice(
 }
 
 //전체 알림 읽음 처리
-export function updateAllNotce(noticeList, user, updateModal) {
+export function updateAllNotce(noticeList, user) {
   const url = baseUrl + `notice/receiver/${user.userNo}/all`;
   let arr = [];
   const unRead = noticeList.filter((notice) => notice.isRead !== 1);
@@ -56,10 +56,7 @@ export function updateAllNotce(noticeList, user, updateModal) {
     });
     return notice;
   });
-  axios
-    .put(url, arr)
-    .then(() => updateModal())
-    .catch((err) => console.log(err));
+  axios.put(url, arr).catch((err) => console.log(err));
 }
 
 const socketUrl = "ws://3.39.187.48:8080/ws-dm/websocket";
@@ -87,23 +84,15 @@ export const wsDocsSubscribe = (
   setCheck,
   check,
   count,
-  user,
-  noticeCheck,
-  setNoticeCheck
+  user
 ) => {
   client.onConnect = () => {
     // console.log("연결됨");
-    let noticeCount = 0;
     client.subscribe(`/queue/sharedocs/${user.id}`, ({ body }) => {
       const dataFromServer = JSON.parse(body);
-      let notiCheck = false;
-      if(noticeCount === 0){
-        notiCheck = noticeCheck;
-      }
-      noticeCount += 1;
+      count += 1;
       setNewNotice(dataFromServer);
-      // setCheck(count % 2 === 1 ? true : false);
-      setNoticeCheck(!notiCheck);
+      setCheck(count % 2 === 1 ? true : false);
       getNoticeList(setNoticeList, user);
     });
     client.subscribe(`/queue/workspace/${user.id}`, ({ body }) => {
