@@ -157,7 +157,12 @@ export const notipublish = (searchList, user, content, type, workspaceNo) => {
     });
   });
 };
-export const worksapcepublish = (searchList, newWorkspaceNo, user) => {
+export const worksapcepublish = (
+  searchList,
+  newWorkspaceTitle,
+  newWorkspaceNo,
+  user
+) => {
   if (!client.connected) {
     return;
   }
@@ -167,7 +172,9 @@ export const worksapcepublish = (searchList, newWorkspaceNo, user) => {
       body: JSON.stringify({
         sender: user,
         receiver: element,
-        content: `${user.name}님이 워크스페이스에 초대했습니다`,
+        content: `${
+          user.name
+        }님이 워크스페이스 ${newWorkspaceTitle}에 초대했습니다`,
         isRead: 0,
         urlParams: `/main/document?room=${newWorkspaceNo}`,
       }),
@@ -195,7 +202,9 @@ export const workspaceMemberAddPublish = (
         body: JSON.stringify({
           sender: user,
           receiver: element,
-          content: `${user.name}님이 공유 문서 멤버로 추가했습니다!`,
+          content: `${user.name}님이 공유 문서 ${
+            row.originalName
+          } 멤버로 추가했습니다!`,
           isRead: 0,
           urlParams: "/main/share",
         }),
@@ -208,7 +217,9 @@ export const workspaceMemberAddPublish = (
         body: JSON.stringify({
           sender: user,
           receiver: element,
-          content: `${user.name}님이 워크스페이스 멤버로 추가했습니다!`,
+          content: `${user.name}님이 워크스페이스 ${
+            row.title
+          } 멤버로 추가했습니다!`,
           isRead: 0,
           urlParams: "/main/document?room=" + row.workspaceNo,
         }),
