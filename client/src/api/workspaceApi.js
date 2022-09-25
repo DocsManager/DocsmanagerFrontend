@@ -112,6 +112,7 @@ export function addWorkspace(
       // setNewWorkspace(res.data.at(-1)); //workspace 받아오기 위한 용도
       worksapcepublish(
         searchList,
+        res.data.at(-1).workspaceNo.title,
         res.data.at(-1).workspaceNo.workspaceNo,
         user
       );
